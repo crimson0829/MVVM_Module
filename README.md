@@ -29,8 +29,6 @@
 ## 使用
 
 Application初始化
-<br>
-<br>
 
 ```
 
@@ -64,7 +62,6 @@ class AppApplication : BaseApplication() {
 ```
 
 Koin新建 Module 对象
-<br>
 
 
 ```
@@ -94,12 +91,9 @@ val dataModule= module {
 }
 
 ```
-<br>
 页面使用:
 <br>
-<br>
 layout绑定ViewModel
-<br>
 
 
 ```
@@ -111,10 +105,9 @@ layout绑定ViewModel
     </data>
 
 ```
-<br>
+
 Activity继承BaseActivity:
-<br>
-<br>
+
 
 ```
 class TabActivity : BaseActivity<ActivityTabBinding, TabViewModel>() {
@@ -137,11 +130,9 @@ class TabActivity : BaseActivity<ActivityTabBinding, TabViewModel>() {
 }
 ```
 
-<br>
 ViewModel层接收数据并处理逻辑,最后通过LiveData通知View层展示页面;
 <br>
 TabViewModel:
-<br>
 
 
 ```
@@ -189,10 +180,9 @@ TabViewModel:
 
         }
 ```
-<br>
+
 Model层获取数据：
-<br>
-<br>
+
 
 ```
     val androidService by inject<AndroidService>()
@@ -209,10 +199,8 @@ Model层获取数据：
     }
 ```
 
-<br>
 View层展示数据：
-<br>
-<br>
+
 
 ```
     vm?.tabDataCompleteLD?.observe(this, Observer { it ->
@@ -243,8 +231,6 @@ View层展示数据：
 ```
 
 
-<br>
-<br>
 具体使用可参考sample，代码简洁
 <br>
 <br>
