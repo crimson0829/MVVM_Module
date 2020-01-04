@@ -9,7 +9,7 @@ import retrofit2.http.Path
 
 /**
  * @author crimson
- * @date   2020-12-22
+ * @date   2019-12-22
  */
 interface AndroidService : RemoteService {
 
