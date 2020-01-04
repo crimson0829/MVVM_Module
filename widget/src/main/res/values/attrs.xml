@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <declare-styleable name="LoadingProgressView">
+        <attr name="lpv_progressIndeterminate" format="boolean" />
+        <attr name="lpv_barColor" format="color" />
+        <attr name="lpv_rimColor" format="color" />
+        <attr name="lpv_rimWidth" format="dimension" />
+        <attr name="lpv_spinSpeed" format="float" />
+        <attr name="lpv_barSpinCycleTime" format="integer" />
+        <attr name="lpv_circleRadius" format="dimension" />
+        <attr name="lpv_fillRadius" format="boolean" />
+        <attr name="lpv_barWidth" format="dimension" />
+        <attr name="lpv_linearProgress" format="boolean" />
+    </declare-styleable>
+
+
+    <declare-styleable name="SwipeMenuLayout">
+        <attr name="swipeEnable" format="boolean" />
+        <attr name="ios" format="boolean" />
+        <attr name="leftSwipe" format="boolean" />
+    </declare-styleable>
+
+
+
+</resources>

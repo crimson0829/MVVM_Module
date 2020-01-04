@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <com.crimson.widget.loading.LoadingProgressView
+        android:layout_width="40dp"
+        app:lpv_progressIndeterminate="true"
+        app:lpv_barColor="@color/widget_colorPrimary"
+        android:layout_gravity="center"
+        android:layout_height="40dp" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:layout_width="wrap_content"
+        android:text="@string/widget_loading"
+        android:layout_gravity="center"
+        android:layout_marginTop="40dp"
+        android:textSize="14sp"
+        android:textColor="#333333"
+        android:layout_height="wrap_content" />
+
+
+</FrameLayout>

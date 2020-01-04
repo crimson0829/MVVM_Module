@@ -1,0 +1,2 @@
+include ':sample', ':mvvm_library', ':widget'
+rootProject.name='mvvm_frame'

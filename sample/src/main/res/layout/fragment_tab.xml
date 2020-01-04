@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+        <import type="com.crimson.mvvm.binding.recyclerview.LayoutManagers" />
+
+        <variable
+            name="viewModel"
+            type="com.crimson.mvvm_frame.AuthorViewModel" />
+    </data>
+    <com.scwang.smartrefresh.layout.SmartRefreshLayout
+        android:id="@+id/refresh_layout"
+        android:layout_width="match_parent"
+        app:srlEnableAutoLoadMore="true"
+        app:bindRefresh="@{viewModel.refreshConsumer}"
+        app:bindLoadMore="@{viewModel.loadMoreConsumer}"
+        android:layout_height="match_parent">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recycler_view"
+            android:layout_width="match_parent"
+            android:overScrollMode="never"
+            app:adapter="@{viewModel.adapter}"
+            app:layoutManager="@{LayoutManagers.INSTANCE.linear()}"
+            android:layout_height="match_parent" />
+
+        <com.scwang.smartrefresh.layout.footer.ClassicsFooter
+            android:layout_width="match_parent"
+            app:srlFinishDuration="0"
+            android:layout_height="60dp" />
+
+
+    </com.scwang.smartrefresh.layout.SmartRefreshLayout>
+
+
+</layout>
