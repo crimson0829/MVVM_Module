@@ -22,7 +22,7 @@
 <br>
 8.Retrofit封装，网络请求更方便，提供了协程和RxJava两种方式获取数据方式，具体实现可参照 sample
 <br>
-9.RxBu全局处理事件
+9.RxBus全局处理事件
 <br>
 10.[感谢wanandroid提供的Api接口，感谢大佬](https://github.com/hongyangAndroid/wanandroid)
 
