@@ -98,11 +98,10 @@ layout绑定ViewModel
 
 ```
  <data>
-
         <variable
             name="viewModel"
             type="com.crimson.mvvm_frame.TabViewModel" />
-    </data>
+ </data>
 
 ```
 
