@@ -5,7 +5,7 @@
 一个Kotlin编写，以 MVVM 模式为基础的快速集成框架,整合了大量优秀开源项目构建。
 
 ## 特点
-<br>
+
 1.可作为项目Base库，快速开发项目
 <br>
 2.支持AndroidX库，集成了AndroidX库下的一些常用组件，如AppCompat,RecyclerView等
@@ -25,11 +25,9 @@
 9.RxBu全局处理事件
 <br>
 10.[感谢wanandroid提供的Api接口，感谢大佬](https://github.com/hongyangAndroid/wanandroid)
-<br>
 
 ## 使用
 
-<br>
 Application初始化
 <br>
 <br>
@@ -64,10 +62,10 @@ class AppApplication : BaseApplication() {
 }
 
 ```
-<br>
+
 Koin新建 Module 对象
 <br>
-<br>
+
 
 ```
 
@@ -100,11 +98,9 @@ val dataModule= module {
 页面使用:
 <br>
 <br>
-
 layout绑定ViewModel
+<br>
 
-<br>
-<br>
 
 ```
  <data>
@@ -142,11 +138,11 @@ class TabActivity : BaseActivity<ActivityTabBinding, TabViewModel>() {
 ```
 
 <br>
-ViewModel层接收数据并处理逻辑,最后通过LiveData通知View层展示页面
+ViewModel层接收数据并处理逻辑,最后通过LiveData通知View层展示页面;
 <br>
 TabViewModel:
 <br>
-<br>
+
 
 ```
     //koin inject
@@ -283,8 +279,7 @@ View层展示数据：
 <br>
 13.[Timber](https://github.com/JakeWharton/timber)
 <br>
-14.[BaseRecyclerViewAdapterHelper:非常好用的RecyclerViewAdapter的封装库]
-(https://github.com/CymChad/BaseRecyclerViewAdapterHelper)
+14.[BaseRecyclerViewAdapterHelper:非常好用的RecyclerViewAdapter的封装库](https://github.com/CymChad/BaseRecyclerViewAdapterHelper)
 <br>
 15.[SmartRefreshLayout:非常好用的下拉刷新框架](https://github.com/scwang90/SmartRefreshLayout)
 <br>
