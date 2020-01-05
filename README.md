@@ -24,7 +24,7 @@
 <br>
 9.RxBus全局处理事件
 <br>
-10.[感谢wanandroid提供的Api接口，感谢大佬](https://github.com/hongyangAndroid/wanandroid)
+
 
 ## 引入
 
@@ -243,7 +243,7 @@ View层展示数据：
 ```
 
 
-具体使用可参考sample，代码简洁
+具体使用可参考sample
 <br>
 <br>
 
@@ -287,6 +287,7 @@ View层展示数据：
 <br>
 18.[Stetho:FaceBook出品的在Chrome上调试App的工具](https://github.com/facebook/stetho)
 <br>
+19.[感谢wanandroid提供的Api接口，感谢大佬](https://github.com/hongyangAndroid/wanandroid)
 
 ## License
 
