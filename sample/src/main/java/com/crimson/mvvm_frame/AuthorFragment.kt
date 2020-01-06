@@ -5,7 +5,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.webkit.WebView
-import androidx.lifecycle.Observer
 import com.afollestad.materialdialogs.MaterialDialog
 import com.afollestad.materialdialogs.bottomsheets.BottomSheet
 import com.afollestad.materialdialogs.callbacks.onShow
@@ -54,17 +53,6 @@ class AuthorFragment : BaseFragment<FragmentTabBinding, AuthorViewModel>() {
         vm?.getArticles()
     }
 
-    override fun initViewObservable() {
-
-        vm?.refreshFinishLD?.observe(this, Observer {
-            if (it == 1) {
-                vb?.refreshLayout?.finishRefresh(0)
-            } else {
-                vb?.refreshLayout?.finishLoadMore(0)
-            }
-        })
-    }
-
 }
 
 /**
@@ -82,6 +70,9 @@ class AuthorViewModel(val id: Int) : BaseViewModel() {
 
     //test liveData
     val refreshFinishLD by inject<SingleLiveData<Int>>()
+
+    //test refreshlayout
+     var refreshLayout: RefreshLayout?=null
 
     init {
         //click init
@@ -127,12 +118,14 @@ class AuthorViewModel(val id: Int) : BaseViewModel() {
 
     //bind refresh
     val refreshConsumer = bindConsumer<RefreshLayout> {
+        refreshLayout=this
         page = 1
         getArticles()
     }
 
     //bind loadmore
     val loadMoreConsumer = bindConsumer<RefreshLayout> {
+        refreshLayout=this
         page++
         getArticles()
     }
@@ -149,9 +142,11 @@ class AuthorViewModel(val id: Int) : BaseViewModel() {
 
             }
             .subscribeNet({
-                refreshFinishLD.postValue(page)
+
+                finishLoading()
             }, {
-                refreshFinishLD.postValue(page)
+
+                finishLoading()
             }, {
                 if (page == 1) {
                     adapter.data.clear()
@@ -160,6 +155,14 @@ class AuthorViewModel(val id: Int) : BaseViewModel() {
             })
 
 
+    }
+
+    private fun finishLoading(){
+        if (page == 1) {
+            refreshLayout?.finishRefresh(0)
+        } else {
+            refreshLayout?.finishLoadMore(0)
+        }
     }
 
 

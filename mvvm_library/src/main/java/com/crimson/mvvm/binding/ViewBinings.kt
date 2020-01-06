@@ -38,10 +38,10 @@ interface BindConsumer<T> : Consumer<T>
 /**
  * bind consumer
  */
-fun <T> bindConsumer(call: BindConsumer<T>.() -> Unit): BindConsumer<T> {
+fun <T> bindConsumer(call: T.() -> Unit): BindConsumer<T> {
     return object : BindConsumer<T> {
         override fun accept(t: T) {
-            call()
+            call(t)
         }
     }
 
@@ -195,6 +195,7 @@ fun EditText.textChanges(changesConsumer: BindConsumer<CharSequence>?) {
     }
 
 }
+
 
 
 

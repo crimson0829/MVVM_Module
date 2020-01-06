@@ -26,11 +26,12 @@ class LoggerInterceptor @JvmOverloads constructor(
             val builder = response.newBuilder()
             val clone = builder.build()
             logw(
-                "========response'log=======" +
+                "============response'log==============" +
                         "\nurl : " + clone.request.url +
                         "\ncode : " + clone.code +
                         "\nprotocol : " + clone.protocol +
-                        "\nmessage : " + if (clone.message.isEmpty()) "" else clone.message
+                        "\nmessage : " + if (clone.message.isEmpty()) "" else clone.message+
+                        "\n============response'log=============="
             )
             if (showResponse) {
                 var body = clone.body
@@ -59,10 +60,11 @@ class LoggerInterceptor @JvmOverloads constructor(
             val url = request.url.toString()
             val headers = request.headers
             logw(
-                "========request'log=======" +
+                "============request'log============" +
                         "\nmethod : " + request.method +
                         "\nurl : " + url +
-                        "\nheaders : " + if (headers.size > 0) headers.toString() else ""
+                        "\nheaders : " + if (headers.size > 0) headers.toString() else ""+
+                        "\n============request'log============"
             )
             if (showRequest) {
                 val requestBody = request.body

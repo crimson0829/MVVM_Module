@@ -30,7 +30,6 @@ class CommonViewLoading( context: Context) : IViewDataLoading {
     }
 
 
-
     override fun onLoadingViewInjectToRoot(view:View?) {
         if (view is ViewGroup){
             //如果有error view,就先移除
