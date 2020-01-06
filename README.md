@@ -18,13 +18,11 @@
 <br>
 6.提供全局的Activity,Fragment生命周期管理，提供App统一配置方案
 <br>
-7.封装了一些常用的顶层、扩展和内联函数
+7.Retrofit封装，网络请求更方便，提供了协程和RxJava两种方式获取数据方式，具体实现可参照 sample
 <br>
-8.Retrofit封装，网络请求更方便，提供了协程和RxJava两种方式获取数据方式，具体实现可参照 sample
+8.RxBus全局处理事件
 <br>
-9.RxBus全局处理事件
-<br>
-10.[感谢wanandroid提供的Api接口，感谢大佬](https://github.com/hongyangAndroid/wanandroid)
+
 
 ## 引入
 
@@ -243,7 +241,7 @@ View层展示数据：
 ```
 
 
-具体使用可参考sample，代码简洁
+具体使用可参考sample
 <br>
 <br>
 
@@ -283,10 +281,13 @@ View层展示数据：
 <br>
 16.[AndroidAutoSize:非常好用的屏幕适配解决方案，思想值得借鉴](https://github.com/JessYanCoding/AndroidAutoSize)
 <br>
-17.[LeakCanary](https://github.com/square/leakcanary)
+17.[Material Dialogs](https://github.com/afollestad/material-dialogs)
 <br>
-18.[Stetho:FaceBook出品的在Chrome上调试App的工具](https://github.com/facebook/stetho)
+18.[LeakCanary](https://github.com/square/leakcanary)
 <br>
+19.[Stetho:FaceBook出品的在Chrome上调试App的工具](https://github.com/facebook/stetho)
+<br>
+20.[感谢wanandroid提供的Api接口，感谢大佬](https://github.com/hongyangAndroid/wanandroid)
 
 ## License
 
