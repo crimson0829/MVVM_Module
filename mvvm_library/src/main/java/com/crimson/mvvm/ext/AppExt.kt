@@ -3,11 +3,12 @@
 package com.crimson.mvvm.ext
 
 import android.app.Application
-import android.content.Context
-import android.net.ConnectivityManager
 import com.crimson.mvvm.base.BaseApplication
+import com.crimson.mvvm.utils.ConvertUtils
+import com.crimson.mvvm.utils.NetWorkUtils
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 
 
@@ -33,8 +34,8 @@ inline fun <T, R> T.tryCatch(block: T.() -> R?): R? {
 /**
  * coroutine run on IO
  */
-fun <T> T.runOnIO(block: T.() -> Unit) {
-    GlobalScope.launch(Dispatchers.IO) {
+fun <T> T.runOnIO(block: T.() -> Unit): Job {
+    return GlobalScope.launch(Dispatchers.IO) {
         block()
     }
 }
@@ -54,20 +55,21 @@ fun appContext() = BaseApplication.context
  * dip to px
  */
 fun dp2px(dpValue: Int): Int {
-    val scale = appContext()?.resources?.displayMetrics?.density ?: 0f
-    return (dpValue * scale + 0.5).toInt()
+    appContext()?.apply {
+        return ConvertUtils.dp2px(this, dpValue.toFloat())
+    }
+    return 0
 }
 
 /**
  * check net connected
  */
 fun isNetConnected(): Boolean {
-    val cm = appContext()?.getSystemService(Context.CONNECTIVITY_SERVICE) as? ConnectivityManager
-        ?: return false
-    val networkInfo = cm.activeNetworkInfo
-    return networkInfo != null && networkInfo.isConnected
+    appContext()?.apply {
+        return NetWorkUtils.isNetworkConnected(this)
+    }
+    return false
 }
-
 
 
 

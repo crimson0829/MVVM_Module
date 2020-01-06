@@ -20,7 +20,7 @@ class PictureActivity : BaseActivity<ActivityPictureBinding,BaseViewModel>() {
     override fun initView() {
 
         vb?.ivPicture?.bindImage("https://uploadbeta.com/api/pictures/random/?key=%E6%8E%A8%E5%A5%B3%E9%83%8E",
-            true,"4",R.drawable.icon_picture)
+            "2",5,true,"4",R.drawable.icon_picture)
 
     }
 }

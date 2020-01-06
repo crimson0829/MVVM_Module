@@ -14,6 +14,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.chad.library.adapter.base.viewholder.BaseViewHolder
 import com.crimson.mvvm.binding.recyclerview.LayoutManagers
 import com.crimson.mvvm.binding.recyclerview.LineManagers
+import com.crimson.mvvm.ext.dp2px
 import com.jakewharton.rxbinding3.view.clicks
 import com.jakewharton.rxbinding3.view.longClicks
 import com.jakewharton.rxbinding3.widget.textChanges
@@ -23,6 +24,7 @@ import com.scwang.smartrefresh.layout.listener.OnRefreshLoadMoreListener
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.functions.Consumer
 import jp.wasabeef.glide.transformations.BlurTransformation
+import jp.wasabeef.glide.transformations.RoundedCornersTransformation
 import java.util.concurrent.TimeUnit
 
 
@@ -52,26 +54,29 @@ fun <T> bindConsumer(call: T.() -> Unit): BindConsumer<T> {
  */
 @BindingAdapter(
     "app:imageUrl",
+    "app:imageStyle",
+    "app:imageRoundShape",
     "app:skipMemoryCache",
     "app:diskMemoryCache",
     "app:imagePlaceholder",
     "app:imageError",
-    "app:imageStyle",
     requireAll = false
 )
 fun ImageView.bindImage(
     imageUrl: String?,
+    imageStyle: String? = "1",
+    imageRoundShape: Int? = 0,
     skipMemoryCache: Boolean = false,
     diskMemoryCache: String? = "1",
     @DrawableRes imagePlaceholder: Int = 0,
-    @DrawableRes imageError: Int = 0,
-    imageStyle: String? = "1"
+    @DrawableRes imageError: Int = 0
 ) {
 
     val builder = Glide.with(context)
         .load(imageUrl)
         .skipMemoryCache(skipMemoryCache)
         .placeholder(imagePlaceholder)
+        .centerCrop()
         .error(imageError)
 
     when (diskMemoryCache) {
@@ -86,10 +91,24 @@ fun ImageView.bindImage(
     }
 
     when (imageStyle) {
+        //默认
         "1" -> builder.centerCrop()
-        "2" -> builder.circleCrop()
-        "3" -> builder.transform(BlurTransformation(25, 5))
+        //round shape，设置imageStyle=2 再设置imageRoundShape>0才有效果
+        "2" -> {
+            if (imageRoundShape != 0) {
+                builder.transform(RoundedCornersTransformation(dp2px(imageRoundShape ?: 0), 0))
+            } else {
+                builder.centerCrop()
+            }
+        }
+        //circle
+        "3" -> builder.circleCrop()
+        //blur 高斯模糊
+        "4" -> builder.transform(BlurTransformation(25, 5))
+        "5" -> builder.centerInside()
+        "6" -> builder.fitCenter()
         else -> builder.centerCrop()
+
     }
 
     builder.into(this)
@@ -115,7 +134,6 @@ fun RecyclerView.bindAdapter(
     lineManager?.let {
         this.addItemDecoration(lineManager.create(this))
     }
-
 
 }
 
@@ -161,7 +179,6 @@ fun View.bindClick(clickConsumer: BindConsumer<Unit?>?, duration: Long = 500) {
                 clickConsumer.accept(it)
             }
     }
-
 
 }
 
