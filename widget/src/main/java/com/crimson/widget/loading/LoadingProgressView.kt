@@ -32,9 +32,9 @@ class LoadingProgressView : View {
      * **********
      */
 //Sizes (with defaults in DP)
-    private var circleRadius = 28
-    private var barWidth = 4
-    private var rimWidth = 4
+    private var circleRadius = 40
+    private var barWidth = 6
+    private var rimWidth = 6
     private var fillRadius = false
     private var timeStartGrowing = 0.0
     private var barSpinCycleTime = 460.0

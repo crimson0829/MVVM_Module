@@ -14,7 +14,6 @@ import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
 import java.io.File
-import java.util.*
 import java.util.concurrent.TimeUnit
 import javax.net.ssl.HostnameVerifier
 
@@ -25,9 +24,20 @@ class RetrofitApi private constructor(private val context: Context) {
 
     companion object {
 
+        //Base Url
         private var BASE_URL = "https://github.com/"
+
         //链接时间
         private var CONNECT_TIMEOUT = 30L
+
+        //response log
+        private var SHOW_RESPONSE_LOG = true
+
+        //request log
+        private var SHOW_REQUEST_LOG = true
+
+        //header map
+        private var HEADERS = hashMapOf<String, String>()
 
         //缓存文件大小
         private var CACHE_FILE_SIZE = AppConfigOptions.APP_HTTP_CACHE_SIZE
@@ -55,39 +65,47 @@ class RetrofitApi private constructor(private val context: Context) {
     //缓存
     private var httpCache: Cache? = null
 
-    init {
-        buildRetrofit(context)
-    }
-
     /**
      * 构建okhttp
      */
-    private fun buildOkHttp(context: Context): OkHttpClient {
+    private fun buildOkHttp(): OkHttpClient {
 
         if (okHttpClient == null) {
-
-            httpCacheDirectory?.apply {
-                if (httpCache == null) {
-                    httpCache = Cache(this, CACHE_FILE_SIZE)
-                }
-            }
-
-            val sslParams = sslSocketFactory
-            val headers = HashMap<String, String>()
-            okHttpClient = OkHttpClient.Builder()
-                .addInterceptor(BaseInterceptor(headers)) //基础拦截器,可添加header
-                .addInterceptor(CacheInterceptor()) //缓存拦截器
-                .addInterceptor(LoggerInterceptor(showResponse = true, showRequest = true)) //log打印
-                .connectTimeout(CONNECT_TIMEOUT, TimeUnit.SECONDS)
-                .readTimeout(CONNECT_TIMEOUT, TimeUnit.SECONDS)
-                .writeTimeout(CONNECT_TIMEOUT, TimeUnit.SECONDS)
-                .cache(httpCache) //设置缓存
-                .cookieJar(CookieJarImpl(PersistentCookieStore(context))) //持久化session
-                .sslSocketFactory(sslParams.sSLSocketFactory!!, sslParams.trustManager!!) //信任证书
-                .hostnameVerifier(HostnameVerifier { _, _ -> true })
-                .build()
+            okHttpClient = createOkHttpClient()
         }
         return okHttpClient ?: OkHttpClient()
+    }
+
+    /**
+     * 新建okHttpClient
+     */
+    private fun createOkHttpClient(): OkHttpClient? {
+
+        httpCacheDirectory?.apply {
+            if (httpCache == null) {
+                httpCache = Cache(this, CACHE_FILE_SIZE)
+            }
+        }
+
+        val sslParams = sslSocketFactory
+        return OkHttpClient.Builder()
+            .addInterceptor(BaseInterceptor(HEADERS)) //基础拦截器,可添加header
+            .addInterceptor(CacheInterceptor()) //缓存拦截器
+            .addInterceptor(
+                //log打印
+                LoggerInterceptor(
+                    showResponse = SHOW_RESPONSE_LOG,
+                    showRequest = SHOW_REQUEST_LOG
+                )
+            )
+            .connectTimeout(CONNECT_TIMEOUT, TimeUnit.SECONDS)
+            .readTimeout(CONNECT_TIMEOUT, TimeUnit.SECONDS)
+            .writeTimeout(CONNECT_TIMEOUT, TimeUnit.SECONDS)
+            .cache(httpCache) //设置缓存
+            .cookieJar(CookieJarImpl(PersistentCookieStore(context))) //持久化session
+            .sslSocketFactory(sslParams.sSLSocketFactory!!, sslParams.trustManager!!) //信任证书
+            .hostnameVerifier(HostnameVerifier { _, _ -> true })
+            .build()
     }
 
     /**
@@ -95,9 +113,9 @@ class RetrofitApi private constructor(private val context: Context) {
      *
      * @return
      */
-    private fun buildRetrofit(context: Context): Retrofit? {
+    private fun buildRetrofit(): Retrofit? {
         if (retrofit == null) {
-            val okHttpClient = buildOkHttp(context)
+            val okHttpClient = buildOkHttp()
             retrofit = Retrofit.Builder()
                 .baseUrl(BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create())
@@ -112,9 +130,9 @@ class RetrofitApi private constructor(private val context: Context) {
     /**
      * 重构okhttp
      */
-    fun rebuildOkhttp(okHttpClient: OkHttpClient): RetrofitApi {
+    fun rebuildOkHttp(okHttpClient: OkHttpClient): RetrofitApi {
         this.okHttpClient = okHttpClient
-        retrofit = buildRetrofit(context)
+        retrofit = buildRetrofit()
             ?.newBuilder()
             ?.client(okHttpClient)
             ?.build()
@@ -123,21 +141,23 @@ class RetrofitApi private constructor(private val context: Context) {
     }
 
     /**
-     * 重构链接时间
+     * 重构okHttp参数
      */
-    fun rebuildConnectTime(time: Long = 30): RetrofitApi {
-        CONNECT_TIMEOUT = time
-        okHttpClient = obtainOkHttp()
-            ?.newBuilder()
-            ?.connectTimeout(CONNECT_TIMEOUT, TimeUnit.SECONDS)
-            ?.readTimeout(CONNECT_TIMEOUT, TimeUnit.SECONDS)
-            ?.writeTimeout(CONNECT_TIMEOUT, TimeUnit.SECONDS)
-            ?.build()
+    fun rebuildOkHttpOptions(
+        baseUrl: String = BASE_URL,
+        connectTime: Long = 30,
+        showResponseLog: Boolean = true,
+        showRequestLoG: Boolean = true,
+        headers: HashMap<String, String> = hashMapOf()
+    ): RetrofitApi {
+        CONNECT_TIMEOUT = connectTime
+        SHOW_RESPONSE_LOG = showResponseLog
+        SHOW_REQUEST_LOG = showRequestLoG
+        HEADERS = headers
+        okHttpClient = createOkHttpClient()
             ?.also {
-                retrofit = buildRetrofit(context)
-                    ?.newBuilder()
-                    ?.client(it)
-                    ?.build()
+                rebuildOkHttp(it)
+                    .rebuildBaseURL(baseUrl)
             }
         return this
 
@@ -146,11 +166,11 @@ class RetrofitApi private constructor(private val context: Context) {
     /**
      * 重构 base_url
      */
-    fun rebuildBaseURL(baseUr: String): RetrofitApi {
-        BASE_URL = baseUr
-        retrofit = buildRetrofit(context)
+    fun rebuildBaseURL(baseUrl: String): RetrofitApi {
+        BASE_URL = baseUrl
+        retrofit = buildRetrofit()
             ?.newBuilder()
-            ?.baseUrl(baseUr)
+            ?.baseUrl(baseUrl)
             ?.build()
         return this
     }
@@ -159,6 +179,9 @@ class RetrofitApi private constructor(private val context: Context) {
      * 获取retrofit
      */
     fun obtainRetrofit(): Retrofit? {
+        if (retrofit == null) {
+            buildRetrofit()
+        }
         return retrofit
     }
 
@@ -166,6 +189,9 @@ class RetrofitApi private constructor(private val context: Context) {
      * 获取okHttp
      */
     fun obtainOkHttp(): OkHttpClient? {
+        if (okHttpClient == null) {
+            buildOkHttp()
+        }
         return okHttpClient
     }
 

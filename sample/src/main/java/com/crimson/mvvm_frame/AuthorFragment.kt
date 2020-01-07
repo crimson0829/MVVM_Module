@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.webkit.WebView
 import com.afollestad.materialdialogs.MaterialDialog
+import com.afollestad.materialdialogs.MaterialDialog.Companion.DEFAULT_BEHAVIOR
 import com.afollestad.materialdialogs.bottomsheets.BottomSheet
 import com.afollestad.materialdialogs.callbacks.onShow
 import com.afollestad.materialdialogs.customview.customView
@@ -32,9 +33,9 @@ import org.koin.core.inject
 class AuthorFragment : BaseFragment<FragmentTabBinding, AuthorViewModel>() {
 
     override fun initContentView(
-        inflater: LayoutInflater?,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
+            inflater: LayoutInflater?,
+            container: ViewGroup?,
+            savedInstanceState: Bundle?
     ): Int = R.layout.fragment_tab
 
     override fun initVariableId(): Int = BR.viewModel
@@ -62,17 +63,19 @@ class AuthorViewModel(val id: Int) : BaseViewModel() {
 
     var page = 1
 
+    var refresh = false
+
     //lazy init
     val model: AuthorModel by inject()
 
     //即时初始化
-    val adapter=get<ArticleAdapter> ()
+    val adapter = get<ArticleAdapter>()
 
     //test liveData
     val refreshFinishLD by inject<SingleLiveData<Int>>()
 
     //test refreshlayout
-     var refreshLayout: RefreshLayout?=null
+    var refreshLayout: RefreshLayout? = null
 
     init {
         //click init
@@ -81,51 +84,53 @@ class AuthorViewModel(val id: Int) : BaseViewModel() {
             val entity = adapter.data[position]
 //            startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(entity?.link)))
 
-            showWebViewDialog(entity?.link)
+            showWebViewDialog(entity?.link, position)
 
 
         }
     }
 
     @SuppressLint("SetJavaScriptEnabled")
-    private fun showWebViewDialog(url: String? = "") {
+    private fun showWebViewDialog(url: String? = "", position: Int) {
         context()?.apply {
-            MaterialDialog(this, BottomSheet())
-                .show {
-                    customView(R.layout.custom_web, noVerticalPadding = true)
-                    debugMode(false)
-                }.also {
-                    it.onShow {
-                        val webView: WebView = it.getCustomView()
-                            .findViewById(R.id.web_view)
+            MaterialDialog(this, if (position % 2 == 0) BottomSheet() else DEFAULT_BEHAVIOR)
+                    .show {
+                        customView(R.layout.custom_web, noVerticalPadding = true)
+                        debugMode(false)
+                    }.also {
+                        it.onShow {
+                            val webView: WebView = it.getCustomView()
+                                    .findViewById(R.id.web_view)
 
-                        webView.apply {
+                            webView.apply {
 
-                            settings.run {
-                                javaScriptEnabled = true
-                                domStorageEnabled = true
-                                useWideViewPort = true
+                                settings.run {
+                                    javaScriptEnabled = true
+                                    domStorageEnabled = true
+                                    useWideViewPort = true
+                                }
+
+                                loadUrl(url)
+
                             }
-
-                            loadUrl(url)
-
                         }
                     }
-                }
         }
     }
 
 
     //bind refresh
     val refreshConsumer = bindConsumer<RefreshLayout> {
-        refreshLayout=this
+        refreshLayout = this
+        refresh = true
         page = 1
         getArticles()
     }
 
     //bind loadmore
     val loadMoreConsumer = bindConsumer<RefreshLayout> {
-        refreshLayout=this
+        refresh = false
+        refreshLayout = this
         page++
         getArticles()
     }
@@ -134,30 +139,37 @@ class AuthorViewModel(val id: Int) : BaseViewModel() {
     fun getArticles() {
 
         model.getAuthorListData(id, page)
-            .bindToLifecycle(lifecycleOwner)
-            .doOnSubscribe {
-                //can do something  before subscribe
-                //can show loading view
-                logw("doOnSubscribe -> onStart")
+                .bindToLifecycle(lifecycleOwner)
+                .doOnSubscribe {
+                    //can do something  before subscribe
+                    //can show loading view
+                    logw("doOnSubscribe -> onStart")
+                    if (page == 1 && !refresh) {
+                        onLoadingViewInjectToRoot()
+                    }
 
-            }
-            .subscribeNet({
-
-                finishLoading()
-            }, {
-
-                finishLoading()
-            }, {
-                if (page == 1) {
-                    adapter.data.clear()
                 }
-                adapter.addData(it.data.datas)
-            })
+                .subscribeNet({
+                    finishLoading()
+                    if (page == 1) {
+                        onLoadingError()
+                    }
+                }, {
+                    finishLoading()
+                    if (page == 1 && !refresh) {
+                        onLoadingViewResult()
+                    }
+                }, {
+                    if (page == 1) {
+                        adapter.data.clear()
+                    }
+                    adapter.addData(it.data.datas)
+                })
 
 
     }
 
-    private fun finishLoading(){
+    private fun finishLoading() {
         if (page == 1) {
             refreshLayout?.finishRefresh(0)
         } else {

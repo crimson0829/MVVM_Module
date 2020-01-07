@@ -15,7 +15,7 @@ import com.crimson.widget.loading.LoadingLayout
  * @date   2019-12-29
  * 默认 view loading impl
  */
-class CommonViewLoading( context: Context) : IViewDataLoading {
+class CommonViewLoading(context: Context) : IViewDataLoading {
 
     private val loadingView by lazy {
         LoadingLayout(context)
@@ -30,19 +30,19 @@ class CommonViewLoading( context: Context) : IViewDataLoading {
     }
 
 
-    override fun onLoadingViewInjectToRoot(view:View?) {
-        if (view is ViewGroup){
+    override fun onLoadingViewInjectToRoot(view: View?) {
+        if (view is ViewGroup) {
             //如果有error view,就先移除
-            if (view.contains(loadingError)){
+            if (view.contains(loadingError)) {
                 view.removeView(loadingError)
             }
-            view.addView(loadingView,0)
+            view.addView(loadingView)
         }
 
     }
 
-    override fun onLoadingViewResult(view:View?) {
-        if (view is ViewGroup){
+    override fun onLoadingViewResult(view: View?) {
+        if (view is ViewGroup) {
             view.removeView(loadingView)
         }
 
@@ -61,16 +61,16 @@ class CommonViewLoading( context: Context) : IViewDataLoading {
     }
 
     override fun onLoadingError(view: View?) {
-        if (view is ViewGroup){
+        if (view is ViewGroup) {
             //先移除loading view
-            if (view.contains(loadingView)){
+            if (view.contains(loadingView)) {
                 view.removeView(loadingView)
             }
             //添加error view
-            view.addView(loadingError,0)
+            view.addView(loadingError)
             loadingError.setOnClickListener {
                 //post rxBus，在对应的ViewModel中注册处理
-                RxBus.get().post(RxCode.POST_CODE,RxCode.ERROR_LAYOUT_CLICK_CODE)
+                RxBus.get().post(RxCode.POST_CODE, RxCode.ERROR_LAYOUT_CLICK_CODE)
             }
 
         }

@@ -1,6 +1,7 @@
 package com.crimson.mvvm_frame.app
 
 import com.crimson.mvvm.base.BaseApplication
+import com.crimson.mvvm.base.CommonViewLoading
 import com.crimson.mvvm.base.injectKoinModules
 import com.crimson.mvvm.config.AppConfigOptions
 import com.crimson.mvvm_frame.model.AndroidService
@@ -27,7 +28,10 @@ class AppApplication : BaseApplication() {
      * more config will be add
      */
     private fun appConfig() {
+
+
         AppConfigOptions()
+            .buildAppLoadingViewImplClass(CommonViewLoading::class.java)
             .buildRetrofit(this, AndroidService.BASE_URL, 20)
             .initStetho(this)
             .initDefaultSmartRefresh()

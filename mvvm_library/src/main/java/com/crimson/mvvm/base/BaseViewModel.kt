@@ -144,14 +144,14 @@ open class BaseViewModel : AndroidViewModel(application()), IViewModel {
      * call view on create loading when get data
      */
     fun onLoadingViewInjectToRoot() {
-        onLoadingViewInjectToRootLD.call()
+        onLoadingViewInjectToRootLD.postValue(null)
     }
 
     /**
      *call view on create when get data finish
      */
     fun onLoadingViewResult() {
-        onLoadingViewResultLD.call()
+        onLoadingViewResultLD.postValue(null)
     }
 
 
@@ -166,18 +166,18 @@ open class BaseViewModel : AndroidViewModel(application()), IViewModel {
      * data result event to view
      */
     fun onDataResult() {
-        dataResultLD.call()
+        dataResultLD.postValue(null)
     }
 
     fun onLoadingError() {
-        dataLoadingErrorLD.call()
+        dataLoadingErrorLD.postValue(null)
     }
 
     /**
      * view finish event
      */
     fun onViewFinished() {
-        viewFinishedLD.call()
+        viewFinishedLD.postValue(null)
     }
 
 

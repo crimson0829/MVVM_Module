@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string-array name="imageStyles">
+        <item>center crop</item>
+        <item>round shape</item>
+        <item>circle</item>
+        <item>blur</item>
+        <item>center inside</item>
+        <item>fit center</item>
+    </string-array>
+</resources>

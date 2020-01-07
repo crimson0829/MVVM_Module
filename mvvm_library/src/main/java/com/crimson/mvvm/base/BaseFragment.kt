@@ -2,13 +2,17 @@
 
 package com.crimson.mvvm.base
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.FrameLayout
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.lifecycle.Observer
+import com.crimson.mvvm.config.AppConfigOptions
+import com.crimson.mvvm.ext.tryCatch
 import com.trello.rxlifecycle3.components.support.RxFragment
 import java.lang.reflect.ParameterizedType
 import java.lang.reflect.Type
@@ -51,6 +55,8 @@ abstract class BaseFragment<VB : ViewDataBinding, VM : BaseViewModel> : RxFragme
     var vb: VB? = null
     var vm: VM? = null
 
+    var rootLayout: ViewGroup? = null
+
     var loadingView: IViewDataLoading? = null
 
     /**
@@ -91,11 +97,24 @@ abstract class BaseFragment<VB : ViewDataBinding, VM : BaseViewModel> : RxFragme
         savedInstanceState: Bundle?
     ): View? {
         initViewBinding(inflater, container, savedInstanceState)
+        initRootLayout()
         initViewModelLiveDataObserver()
         initView()
         isPrepared = true
         lazyLoad()
-        return vb?.root
+        return rootLayout
+    }
+
+    private fun initRootLayout() {
+        context?.apply {
+            rootLayout = FrameLayout(this)
+            rootLayout?.layoutParams = ViewGroup.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.MATCH_PARENT
+            )
+            rootLayout?.addView(vb?.root)
+        }
+
     }
 
     /**
@@ -128,7 +147,7 @@ abstract class BaseFragment<VB : ViewDataBinding, VM : BaseViewModel> : RxFragme
             setVariable(vmId, vm)
         }
         vm?.run {
-            //让ViewModel拥有View的生命周期感应
+            //让ViewModel拥有View的生命周期
             lifecycle.addObserver(this)
             //注入RxLifecycle生命周期
             rxlifecycle = this@BaseFragment
@@ -162,7 +181,6 @@ abstract class BaseFragment<VB : ViewDataBinding, VM : BaseViewModel> : RxFragme
             onLoadingError()
         })
 
-
         vm?.viewFinishedLD?.observe(this, Observer {
             activity?.finish()
         })
@@ -173,32 +191,23 @@ abstract class BaseFragment<VB : ViewDataBinding, VM : BaseViewModel> : RxFragme
      * run on view create with get data
      */
     open fun onLoadingViewInjectToRoot() {
-        if (loadingView == null && context != null) {
-            loadingView = CommonViewLoading(context!!)
-        }
-        loadingView?.onLoadingViewInjectToRoot(vb?.root)
+        checkLoadingViewImpl()
+        loadingView?.onLoadingViewInjectToRoot(rootLayout)
     }
 
     /**
      * run on view get data finish
      */
     open fun onLoadingViewResult() {
-        loadingView?.onLoadingViewResult(vb?.root)
+        loadingView?.onLoadingViewResult(rootLayout)
     }
 
     /**
      * run on data loading
      */
     open fun onDataLoading(it: String?) {
-
-        if (loadingView == null) {
-            context?.let {
-                loadingView = CommonViewLoading(it)
-            }
-        }
-
+        checkLoadingViewImpl()
         loadingView?.onDataLoading(it)
-
     }
 
     /**
@@ -211,14 +220,29 @@ abstract class BaseFragment<VB : ViewDataBinding, VM : BaseViewModel> : RxFragme
     /**
      * data loading error
      */
-    open fun onLoadingError(){
+    open fun onLoadingError() {
+        checkLoadingViewImpl()
+        loadingView?.onLoadingError(rootLayout)
+    }
+
+    /**
+     * 检查loadingView的实现，如果自己实现LoadingView,需重写 initLoadingView() 方法
+     */
+    private fun checkLoadingViewImpl() {
         if (loadingView == null) {
-            context?.let {
-                loadingView = CommonViewLoading(it)
+            val clazz = AppConfigOptions.LOADING_VIEW_CLAZZ
+            if (clazz != null) {
+                tryCatch {
+                    val constructor = clazz.getConstructor(Context::class.java)
+                    loadingView = constructor.newInstance(context)
+                }
+            }
+            if (loadingView == null) {
+                context?.let {
+                    loadingView = CommonViewLoading(it)
+                }
             }
         }
-        loadingView?.onLoadingError(vb?.root)
-
     }
 
 
@@ -289,14 +313,19 @@ abstract class BaseFragment<VB : ViewDataBinding, VM : BaseViewModel> : RxFragme
 
     override fun onDestroy() {
         super.onDestroy()
-        //解除ViewModel生命周期感应
+        //解除ViewModel生命周期
         vm?.let {
             lifecycle.removeObserver(it)
             it.removeRxBus()
             null
         }
+
         vb?.apply {
             unbind()
+        }
+
+        loadingView?.let {
+            null
         }
     }
 
@@ -328,5 +357,6 @@ abstract class BaseFragment<VB : ViewDataBinding, VM : BaseViewModel> : RxFragme
     override fun initView() {}
     override fun initData() {}
     override fun initViewObservable() {}
+
 
 }

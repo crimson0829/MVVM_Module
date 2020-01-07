@@ -71,6 +71,7 @@ class TabActivity : BaseActivity<ActivityTabBinding, TabViewModel>() {
 
 
     }
+
 }
 
 /**
@@ -86,7 +87,7 @@ class TabViewModel : BaseViewModel() {
 
     val fragments = arrayListOf<Fragment>()
 
-    var errorDis:Disposable?=null
+    var errorDis: Disposable? = null
 
     /**
      * run with 协程
@@ -103,7 +104,7 @@ class TabViewModel : BaseViewModel() {
             // can test with loading error
 //            onLoadingError()
 
-            withContext(Dispatchers.IO){
+            withContext(Dispatchers.IO) {
 
                 val titles = arrayListOf<String>()
 

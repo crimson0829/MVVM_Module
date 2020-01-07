@@ -10,8 +10,8 @@ import okio.Buffer
 import java.io.IOException
 
 class LoggerInterceptor @JvmOverloads constructor(
-    private val showResponse: Boolean,
-    private val showRequest: Boolean = false
+     val showResponse: Boolean,
+     val showRequest: Boolean = false
 ) : Interceptor {
     @Throws(IOException::class)
     override fun intercept(chain: Interceptor.Chain): Response {

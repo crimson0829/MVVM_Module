@@ -5,9 +5,9 @@ import java.io.IOException
 
 /**
  * @author crimson
- * @date   2020-12-26
+ * @date   2019-12-26
  */
-object IoUtils {
+object IOUtils {
     /**
      * 关闭IO
      *

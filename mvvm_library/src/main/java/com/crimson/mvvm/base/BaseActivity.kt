@@ -4,9 +4,12 @@ package com.crimson.mvvm.base
 
 import android.content.Context
 import android.os.Bundle
+import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.lifecycle.Observer
+import com.crimson.mvvm.config.AppConfigOptions
+import com.crimson.mvvm.ext.tryCatch
 import com.trello.rxlifecycle3.components.support.RxAppCompatActivity
 import java.lang.reflect.ParameterizedType
 import java.lang.reflect.Type
@@ -62,7 +65,7 @@ abstract class BaseActivity<VB : ViewDataBinding, VM : BaseViewModel> : RxAppCom
 
         //关联ViewModel
         vm?.run {
-            //让ViewModel拥有View的生命周期感应
+            //让ViewModel拥有View的生命周期
             lifecycle.addObserver(this)
             //注入RxLifecycle生命周期
             rxlifecycle = this@BaseActivity
@@ -106,28 +109,22 @@ abstract class BaseActivity<VB : ViewDataBinding, VM : BaseViewModel> : RxAppCom
      * run on view create with get data
      */
     open fun onLoadingViewInjectToRoot() {
-        if (loadingView == null) {
-            loadingView = CommonViewLoading(this)
-        }
-        loadingView?.onLoadingViewInjectToRoot(vb?.root)
+        checkLoadingViewImpl()
+        loadingView?.onLoadingViewInjectToRoot(vb?.root?.parent as? ViewGroup)
     }
 
     /**
      * run on view get data finish
      */
     open fun onLoadingViewResult() {
-        loadingView?.onLoadingViewResult(vb?.root)
+        loadingView?.onLoadingViewResult(vb?.root?.parent as? ViewGroup)
     }
 
     /**
      * run on data loading
      */
     open fun onDataLoading(it: String?) {
-
-        if (loadingView == null) {
-            loadingView = CommonViewLoading(this)
-        }
-
+        checkLoadingViewImpl()
         loadingView?.onDataLoading(it)
 
     }
@@ -143,18 +140,33 @@ abstract class BaseActivity<VB : ViewDataBinding, VM : BaseViewModel> : RxAppCom
     /**
      * data loading error
      */
-    open fun onLoadingError(){
-        if (loadingView == null) {
-            loadingView = CommonViewLoading(this)
-        }
-        loadingView?.onLoadingError(vb?.root)
+    open fun onLoadingError() {
+        checkLoadingViewImpl()
+        loadingView?.onLoadingError(vb?.root?.parent as? ViewGroup)
+    }
 
+    /**
+     * 检查loadingView的实现，如果自己实现LoadingView,需重写 initLoadingView() 方法
+     */
+    private fun checkLoadingViewImpl() {
+        if (loadingView == null) {
+            val clazz = AppConfigOptions.LOADING_VIEW_CLAZZ
+            if (clazz != null) {
+                tryCatch {
+                    val constructor = clazz.getConstructor(Context::class.java)
+                    loadingView = constructor.newInstance(this)
+                }
+            }
+            if (loadingView == null) {
+                loadingView = CommonViewLoading(this)
+            }
+        }
     }
 
 
     override fun onDestroy() {
         super.onDestroy()
-        //解除ViewModel生命周期感应
+        //移除ViewModel生命周期
         vm?.let {
             lifecycle.removeObserver(it)
             it.removeRxBus()
@@ -181,7 +193,7 @@ abstract class BaseActivity<VB : ViewDataBinding, VM : BaseViewModel> : RxAppCom
      *
      * @return BR的id
      */
-     abstract fun initViewModelId(): Int
+    abstract fun initViewModelId(): Int
 
     /**
      * 初始化viewModel
@@ -191,6 +203,7 @@ abstract class BaseActivity<VB : ViewDataBinding, VM : BaseViewModel> : RxAppCom
     override fun initView() {}
     override fun initData() {}
     override fun initViewObservable() {}
+
 
 }
 

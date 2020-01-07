@@ -2,6 +2,7 @@ package com.crimson.mvvm.config
 
 import android.app.Activity
 import android.content.Context
+import com.crimson.mvvm.base.IViewDataLoading
 import com.crimson.mvvm.ext.appContext
 import com.crimson.mvvm.ext.logd
 import com.crimson.mvvm.net.RetrofitApi
@@ -27,6 +28,12 @@ import java.util.*
 class AppConfigOptions {
 
     companion object {
+
+        /**
+         * loading View 的实现class
+         */
+        var LOADING_VIEW_CLAZZ: Class<out IViewDataLoading>? = null
+
         /**
          * 默认图片缓存路径
          */
@@ -70,21 +77,33 @@ class AppConfigOptions {
 
     }
 
+    /**
+     * 设置App的全局LoadingView实现类
+     * 如果不设置，就使用默认实现类
+     */
+    fun buildAppLoadingViewImplClass(clazz: Class<out IViewDataLoading>): AppConfigOptions {
+        LOADING_VIEW_CLAZZ = clazz
+        return this
+    }
+
 
     /**
      * 设置retrofit参数
      */
-    fun buildRetrofit(context: Context,baseUrl: String, connectTime: Long = 30): AppConfigOptions {
+    fun buildRetrofit(
+        context: Context, baseUrl: String, connectTime: Long = 30,
+        showResponse: Boolean = true, showRequest: Boolean = true,
+        headers: HashMap<String, String> = hashMapOf()
+    ): AppConfigOptions {
         RetrofitApi.get(context)
-            .rebuildBaseURL(baseUrl)
-            .rebuildConnectTime(connectTime)
+            .rebuildOkHttpOptions(baseUrl,connectTime, showResponse, showRequest, headers)
         return this
     }
 
     /**
      * init stetho with debug
      */
-    fun initStetho(context: Context):AppConfigOptions{
+    fun initStetho(context: Context): AppConfigOptions {
         Stetho.initializeWithDefaults(context)
         return this
     }
@@ -123,7 +142,7 @@ class AppConfigOptions {
     /**
      * init auto size
      */
-    fun initAppScreenAutoSize(context: Context) : AppConfigOptions {
+    fun initAppScreenAutoSize(context: Context): AppConfigOptions {
 
         AutoSize.initCompatMultiProcess(context)
         AutoSizeConfig.getInstance()

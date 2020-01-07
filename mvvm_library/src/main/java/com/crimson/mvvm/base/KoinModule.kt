@@ -75,6 +75,5 @@ val appModule = arrayListOf(localModule, remoteModule)
 fun injectKoinModules(vararg module: Module){
     module.forEach {
         appModule.add(it)
-
     }
 }

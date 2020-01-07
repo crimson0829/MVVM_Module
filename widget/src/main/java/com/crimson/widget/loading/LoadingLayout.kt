@@ -28,8 +28,6 @@ class LoadingLayout @JvmOverloads constructor(
         addView(progressView)
         addView(textView)
 
-        layoutParams= LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,ViewGroup.LayoutParams.MATCH_PARENT)
-
         progressView.apply {
             val lp = layoutParams
             lp.width = dp2px(40)
