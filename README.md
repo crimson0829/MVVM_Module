@@ -29,11 +29,11 @@
 ```
 dependencies {
       //mvvm library and widget
-      implementation "com.github.crimson0829:mvvm_library:1.0.3"
+      implementation "com.github.crimson0829:mvvm_library:1.0.4"
       
       //or
-      implementation 'com.github.crimson0829.MVVM_Library:mvvm_library:1.0.3'
-      implementation 'com.github.crimson0829.MVVM_Library:widget:1.0.3'
+      implementation 'com.github.crimson0829.MVVM_Library:mvvm_library:1.0.4'
+      implementation 'com.github.crimson0829.MVVM_Library:widget:1.0.4'
 }
 ```
 
