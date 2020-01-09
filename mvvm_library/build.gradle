@@ -123,4 +123,5 @@ dependencies {
     androidTestImplementation rootProject.ext.dependencies["espresso-core"]
     debugImplementation rootProject.ext.dependencies["canary-debug"]
     implementation rootProject.ext.dependencies["stetho"]
+    implementation rootProject.ext.dependencies["stetho-okhttp"]
 }

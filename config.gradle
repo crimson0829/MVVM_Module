@@ -117,7 +117,9 @@ ext {
             "espresso-contrib"        : "androidx.test.espresso:espresso-contrib:${version["espressoVersion"]}",
             "espresso-intents"        : "androidx.test.espresso:espresso-intents:${version["espressoVersion"]}",
             "canary-debug"            : "com.squareup.leakcanary:leakcanary-android:${version["canaryVersion"]}",
-            "stetho"                  : "com.facebook.stetho:stetho:${version["stethoVersion"]}"
+            "stetho"                  : "com.facebook.stetho:stetho:${version["stethoVersion"]}",
+            "stetho-okhttp"           : "com.facebook.stetho:stetho-okhttp3:${version["stethoVersion"]}",
+            "stetho-js-rhino"         : "com.facebook.stetho:stetho-js-rhino:${version["stethoVersion"]}"
     ]
 
 

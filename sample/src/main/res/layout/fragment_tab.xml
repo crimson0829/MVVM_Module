@@ -5,7 +5,10 @@
 
     <data>
 
+        <import type="android.view.View"/>
+
         <import type="com.crimson.mvvm.binding.recyclerview.LayoutManagers" />
+
 
         <variable
             name="viewModel"
@@ -15,8 +18,8 @@
         android:id="@+id/refresh_layout"
         android:layout_width="match_parent"
         app:srlEnableAutoLoadMore="true"
-        app:bindRefresh="@{viewModel.refreshConsumer}"
-        app:bindLoadMore="@{viewModel.loadMoreConsumer}"
+        app:sm_bindRefresh="@{viewModel.refreshConsumer}"
+        app:sm_bindLoadMore="@{viewModel.loadMoreConsumer}"
         android:layout_height="match_parent">
 
         <RelativeLayout
@@ -27,14 +30,12 @@
                 android:id="@+id/recycler_view"
                 android:layout_width="match_parent"
                 android:overScrollMode="never"
-                app:adapter="@{viewModel.adapter}"
-                app:layoutManager="@{LayoutManagers.INSTANCE.linear()}"
+                app:rv_bindScrolled="@{viewModel.bindScrollConsumer}"
+                app:rv_adapter="@{viewModel.adapter}"
+                app:rv_layoutManager="@{LayoutManagers.INSTANCE.linear()}"
                 android:layout_height="match_parent" />
 
         </RelativeLayout>
-
-
-
 
 
         <com.scwang.smartrefresh.layout.footer.ClassicsFooter

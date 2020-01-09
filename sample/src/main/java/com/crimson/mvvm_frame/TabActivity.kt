@@ -6,16 +6,20 @@ import androidx.lifecycle.Observer
 import com.crimson.mvvm.base.BaseActivity
 import com.crimson.mvvm.base.BaseViewModel
 import com.crimson.mvvm.binding.adapter.ViewPager2FragmentAdapter
+import com.crimson.mvvm.binding.bindAdapter
+import com.crimson.mvvm.binding.bindConsumer
+import com.crimson.mvvm.binding.bindTabLayout
+import com.crimson.mvvm.binding.bindTiConsumer
 import com.crimson.mvvm.ext.logw
 import com.crimson.mvvm.livedata.SingleLiveData
 import com.crimson.mvvm.rx.bus.RxCode
 import com.crimson.mvvm.rx.bus.RxDisposable
 import com.crimson.mvvm_frame.databinding.ActivityTabBinding
 import com.crimson.mvvm_frame.model.AuthorModel
-import com.google.android.material.tabs.TabLayoutMediator
 import io.reactivex.disposables.Disposable
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import org.koin.androidx.viewmodel.ext.android.getViewModel
 import org.koin.core.inject
 
 /**
@@ -35,34 +39,30 @@ class TabActivity : BaseActivity<ActivityTabBinding, TabViewModel>() {
         return BR.viewModel
     }
 
+    override fun initViewModel(): TabViewModel? {
+        return getViewModel()
+    }
+
     override fun initView() {
 
         vm?.getData()
 
     }
 
+
     override fun initViewObservable() {
+
 
         vm?.tabDataCompleteLD?.observe(this, Observer { it ->
 
             vb?.viewPager?.apply {
+
                 vm?.fragments?.let {
                     //设置viewpager2 adapter
-                    adapter = ViewPager2FragmentAdapter(this@TabActivity, it)
+                    bindAdapter(null,ViewPager2FragmentAdapter(this@TabActivity, it))
                 }
 
-                vb?.tabLayout?.let { layout ->
-                    //tab绑定viewpager2
-                    TabLayoutMediator(layout, this,
-                        TabLayoutMediator.TabConfigurationStrategy { tab, position ->
-                            it?.let {
-                                val s = it[position]
-                                logw("title -> $s")
-                                tab.text = s
-                            }
-                        })
-                        .attach()
-                }
+                bindTabLayout( vb?.tabLayout,it)
 
 
             }
@@ -83,11 +83,22 @@ class TabViewModel : BaseViewModel() {
     val model by inject<AuthorModel>()
 
     //live data
-    val tabDataCompleteLD by inject<SingleLiveData<Array<String>>>()
+    val tabDataCompleteLD by inject<SingleLiveData<MutableList<String>>>()
 
     val fragments = arrayListOf<Fragment>()
 
     var errorDis: Disposable? = null
+
+    val vp2SelectedConsumer= bindConsumer<Int> {
+
+        logw("vp2page -> $this")
+    }
+
+    val vp2ScrolledConsumer= bindTiConsumer<Int,Float,Int> { t1, t2, t3 ->
+        logw("vp2pos -> $t1 positionOffset->$t2 positionOffsetPixels -> $t3")
+    }
+
+
 
     /**
      * run with 协程
@@ -118,8 +129,7 @@ class TabViewModel : BaseViewModel() {
                     fragments.add(fragment)
                 }
 
-                val titleArr = Array(titles.size) { titles[it] }
-                tabDataCompleteLD.postValue(titleArr)
+                tabDataCompleteLD.postValue(titles)
 
             }
 

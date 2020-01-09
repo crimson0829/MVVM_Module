@@ -2,7 +2,7 @@
 
 ## 介绍
 
-一个Kotlin编写，以 MVVM 模式为基础的快速集成框架,整合了大量优秀开源项目构建。
+以 MVVM 模式为基础的快速集成框架,整合了大量优秀开源项目构建。
 
 ## 特点
 
@@ -42,7 +42,6 @@ dependencies {
 Application初始化
 
 ```
-
 class AppApplication : BaseApplication() {
 
     override fun onCreate() {
@@ -61,21 +60,28 @@ class AppApplication : BaseApplication() {
      * more config will be add
      */
     private fun appConfig() {
-        AppConfigOptions()
-            .buildRetrofit(this, AndroidService.BASE_URL, 20)
-            .initStetho(this)
-            .initDefaultSmartRefresh()
-            .initAppScreenAutoSize(this)
+       AppConfigOptions(this)
+                  .buildAppLoadingViewImplClass(CommonViewLoading::class.java)
+                  .buildRetrofit(AndroidService.BASE_URL, 20)
+                  .initStetho()
+                  .initDefaultSmartRefresh()
+                  .initAppScreenAutoSize()
     }
 
 }
-
 ```
 
 Koin新建 Module 对象
 
 
 ```
+
+val viewModelModule = module {
+
+    factory { TabViewModel() }
+    factory { (id: Int) -> AuthorViewModel(id) }
+
+}
 
 val modelModule= module {
 
@@ -108,6 +114,7 @@ layout绑定ViewModel
 
 
 ```
+
  <data>
         <variable
             name="viewModel"
@@ -116,10 +123,11 @@ layout绑定ViewModel
 
 ```
 
-Activity继承BaseActivity:
+View层Activity继承BaseActivity:
 
 
 ```
+
 class TabActivity : BaseActivity<ActivityTabBinding, TabViewModel>() {
 
 
@@ -138,6 +146,7 @@ class TabActivity : BaseActivity<ActivityTabBinding, TabViewModel>() {
     }
 
 }
+
 ```
 
 ViewModel层接收数据并处理逻辑,最后通过LiveData通知View层展示页面;
@@ -155,46 +164,47 @@ TabViewModel:
     val fragments = arrayListOf<Fragment>()
 
     /**
-     * run with 协程
-     */
-    fun getData() =
-
-        launchCoroutine {
-
-            onLoadingViewInjectToRoot()
-//            delay(2000)
-            val tabData = model.getTabData()
-            onLoadingViewResult()
-
-            // can test with loading error
-//            onLoadingError()
-
-            withContext(Dispatchers.IO){
-
-                val titles = arrayListOf<String>()
-
-                tabData.data.forEach {
-                    titles.add(it.name)
-                    val fragment = AuthorFragment()
-
-                    fragment.arguments = Bundle().apply {
-                        putInt("id", it.id)
-                    }
-                    fragments.add(fragment)
-                }
-
-                val titleArr = Array(titles.size) { titles[it] }
-                tabDataCompleteLD.postValue(titleArr)
-
-            }
-
-        }
+        * run with 协程
+        */
+       fun getData() =
+   
+           launchCoroutine {
+   
+               onLoadingViewInjectToRoot()
+   //            delay(2000)
+               val tabData = model.getTabData()
+               onLoadingViewResult()
+   
+               // can test with loading error
+   //            onLoadingError()
+   
+               withContext(Dispatchers.IO) {
+   
+                   val titles = arrayListOf<String>()
+   
+                   tabData.data.forEach {
+                       titles.add(it.name)
+                       val fragment = AuthorFragment()
+   
+                       fragment.arguments = Bundle().apply {
+                           putInt("id", it.id)
+                       }
+                       fragments.add(fragment)
+                   }
+   
+                   tabDataCompleteLD.postValue(titles)
+   
+               }
+   
+           }
+           
 ```
 
 Model层获取数据：
 
 
 ```
+
     val androidService by inject<AndroidService>()
 
     /**
@@ -207,36 +217,29 @@ Model层获取数据：
     private suspend fun callRemoteTabData(call: suspend () -> TabListEntity): TabListEntity {
         return withContext(Dispatchers.IO) { call.invoke() }
     }
+    
 ```
 
 View层展示数据：
 
 
 ```
-    vm?.tabDataCompleteLD?.observe(this, Observer { it ->
 
-            vb?.viewPager?.apply {
-                vm?.fragments?.let {
-                    //设置viewpager2 adapter
-                    adapter = ViewPager2FragmentAdapter(this@TabActivity, it)
-                }
+       vm?.tabDataCompleteLD?.observe(this, Observer { it ->
+   
+               vb?.viewPager?.apply {
+   
+                   vm?.fragments?.let {
+                       //设置viewpager2 adapter
+                       bindAdapter(null,ViewPager2FragmentAdapter(this@TabActivity, it))
+                   }
+   
+                   bindTabLayout( vb?.tabLayout,it)
+   
+               }
+   
+           })
 
-                vb?.tabLayout?.let { layout ->
-                    //tab绑定viewpager2
-                    TabLayoutMediator(layout, this,
-                        TabLayoutMediator.TabConfigurationStrategy { tab, position ->
-                            it?.let {
-                                val s = it[position]
-                                logw("title -> $s")
-                                tab.text = s
-                            }
-                        })
-                        .attach()
-                }
-
-            }
-
-        })
 
 ```
 

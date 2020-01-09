@@ -20,6 +20,17 @@ fun <T> Flowable<T>.applyThread(): Flowable<T> =
         .unsubscribeOn(Schedulers.io())
         .observeOn(AndroidSchedulers.mainThread())
 
+fun <T> Observable<T>.subOnIOThread(): Observable<T> =
+    this.subscribeOn(Schedulers.io())
+
+fun <T> Flowable<T>.subOnIOThread(): Flowable<T> =
+    this.subscribeOn(Schedulers.io())
+
+fun <T> Observable<T>.observeOnMainThread(): Observable<T> =
+    this.observeOn(AndroidSchedulers.mainThread())
+
+fun <T> Flowable<T>.observeOnMainThread(): Flowable<T> =
+    this.observeOn(AndroidSchedulers.mainThread())
 
 
 

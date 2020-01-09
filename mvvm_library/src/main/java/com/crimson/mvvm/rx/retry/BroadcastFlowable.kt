@@ -6,6 +6,7 @@ import android.content.Intent
 import android.content.IntentFilter
 import android.net.ConnectivityManager
 import android.os.Looper
+import com.crimson.mvvm.utils.NetWorkUtils
 import io.reactivex.BackpressureStrategy
 import io.reactivex.Flowable
 import io.reactivex.FlowableEmitter
@@ -20,7 +21,6 @@ import io.reactivex.functions.Action
  * @date 2019/7/19
  * rx 广播订阅者.判断有无网络
  */
-@Suppress("DEPRECATION")
 class BroadcastFlowable(private val context: Context) :
     FlowableOnSubscribe<Boolean?> {
 
@@ -55,12 +55,10 @@ class BroadcastFlowable(private val context: Context) :
 
     private val isConnectedToInternet: Boolean
         get() {
-            val manager =
-                (context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager)
-            val networkInfo = manager.activeNetworkInfo
-            return networkInfo != null && networkInfo.isConnected
+            return NetWorkUtils.isNetworkConnected(context)
         }
 
+    @Suppress("DEPRECATION")
     override fun subscribe(emitter: FlowableEmitter<Boolean?>) {
         val receiver: BroadcastReceiver = object : BroadcastReceiver() {
             override fun onReceive(

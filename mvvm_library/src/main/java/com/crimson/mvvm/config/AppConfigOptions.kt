@@ -25,7 +25,7 @@ import java.util.*
  * 统一管理app图片，文件等缓存路径和大小
  *
  */
-class AppConfigOptions {
+class AppConfigOptions(val context: Context) {
 
     companion object {
 
@@ -91,19 +91,19 @@ class AppConfigOptions {
      * 设置retrofit参数
      */
     fun buildRetrofit(
-        context: Context, baseUrl: String, connectTime: Long = 30,
+         baseUrl: String, connectTime: Long = 30,
         showResponse: Boolean = true, showRequest: Boolean = true,
         headers: HashMap<String, String> = hashMapOf()
     ): AppConfigOptions {
         RetrofitApi.get(context)
-            .rebuildOkHttpOptions(baseUrl,connectTime, showResponse, showRequest, headers)
+            .buildOkHttpOptions(baseUrl,connectTime, showResponse, showRequest, headers)
         return this
     }
 
     /**
      * init stetho with debug
      */
-    fun initStetho(context: Context): AppConfigOptions {
+    fun initStetho(): AppConfigOptions {
         Stetho.initializeWithDefaults(context)
         return this
     }
@@ -142,7 +142,7 @@ class AppConfigOptions {
     /**
      * init auto size
      */
-    fun initAppScreenAutoSize(context: Context): AppConfigOptions {
+    fun initAppScreenAutoSize(): AppConfigOptions {
 
         AutoSize.initCompatMultiProcess(context)
         AutoSizeConfig.getInstance()

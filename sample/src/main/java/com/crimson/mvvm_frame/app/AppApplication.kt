@@ -30,12 +30,12 @@ class AppApplication : BaseApplication() {
     private fun appConfig() {
 
 
-        AppConfigOptions()
+        AppConfigOptions(this)
             .buildAppLoadingViewImplClass(CommonViewLoading::class.java)
-            .buildRetrofit(this, AndroidService.BASE_URL, 20)
-            .initStetho(this)
+            .buildRetrofit(AndroidService.BASE_URL, 20)
+            .initStetho()
             .initDefaultSmartRefresh()
-            .initAppScreenAutoSize(this)
+            .initAppScreenAutoSize()
 
 
     }

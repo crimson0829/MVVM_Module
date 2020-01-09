@@ -3,6 +3,9 @@
 
     <data>
 
+        <import type="android.view.View" />
+
+
         <variable
             name="model"
             type="com.crimson.mvvm_frame.model.kdo.ArticleEntity" />

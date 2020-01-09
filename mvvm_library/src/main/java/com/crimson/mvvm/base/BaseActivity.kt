@@ -146,7 +146,7 @@ abstract class BaseActivity<VB : ViewDataBinding, VM : BaseViewModel> : RxAppCom
     }
 
     /**
-     * 检查loadingView的实现，如果自己实现LoadingView,需重写 initLoadingView() 方法
+     * 检查loadingView的实现
      */
     private fun checkLoadingViewImpl() {
         if (loadingView == null) {
