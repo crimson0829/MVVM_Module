@@ -18,7 +18,7 @@ import java.lang.reflect.Type
  * @author crimson
  * @date 19/12/15
  * base Activity
- * 默认单个ViewModel,不需要koin注入，如果想一个activity有多个ViewModel,可以用viewModelModule创建viewModel并注入
+ * 默认单个ViewModel,如果想一个activity有多个ViewModel,可以用viewModelModule创建viewModel并注入
  */
 abstract class BaseActivity<VB : ViewDataBinding, VM : BaseViewModel> : RxAppCompatActivity(),
     IView {

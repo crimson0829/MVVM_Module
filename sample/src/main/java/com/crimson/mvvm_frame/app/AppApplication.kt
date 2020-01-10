@@ -4,6 +4,9 @@ import com.crimson.mvvm.base.BaseApplication
 import com.crimson.mvvm.base.CommonViewLoading
 import com.crimson.mvvm.base.injectKoinModules
 import com.crimson.mvvm.config.AppConfigOptions
+import com.crimson.mvvm.config.RetrofitConfig
+import com.crimson.mvvm.config.SmartRefreshHeaderConfig
+import com.crimson.mvvm_frame.R
 import com.crimson.mvvm_frame.model.AndroidService
 
 /**
@@ -29,13 +32,11 @@ class AppApplication : BaseApplication() {
      */
     private fun appConfig() {
 
-
         AppConfigOptions(this)
-            .buildAppLoadingViewImplClass(CommonViewLoading::class.java)
-            .buildRetrofit(AndroidService.BASE_URL, 20)
-            .initStetho()
-            .initDefaultSmartRefresh()
-            .initAppScreenAutoSize()
+            .buildLoadingViewImplClass(CommonViewLoading::class.java)
+            .buildRetrofit(RetrofitConfig(AndroidService.BASE_URL, 20))
+            .initDefaultSmartRefresh(SmartRefreshHeaderConfig(R.drawable.refresh_head_arrow))
+            .initScreenAutoSize()
 
 
     }

@@ -300,7 +300,9 @@ fun ViewPager2.bindTabLayout(tabLayout: TabLayout?, titles: MutableList<String>?
             TabLayoutMediator.TabConfigurationStrategy { tab, position ->
                 titles?.let {
                     //设置 title
-                    tab.text = it[position]
+                    if (it.size > position) {
+                        tab.text = it[position]
+                    }
                 }
             })
             .attach()

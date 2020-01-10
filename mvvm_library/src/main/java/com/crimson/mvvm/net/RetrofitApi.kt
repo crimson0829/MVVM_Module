@@ -9,7 +9,6 @@ import com.crimson.mvvm.net.interceptor.CacheInterceptor
 import com.crimson.mvvm.net.interceptor.LoggerInterceptor
 import com.crimson.mvvm.net.ssl.HttpsSecurityUtils
 import com.crimson.mvvm.net.ssl.HttpsSecurityUtils.sslSocketFactory
-import com.facebook.stetho.okhttp3.StethoInterceptor
 import okhttp3.Cache
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
@@ -26,7 +25,7 @@ class RetrofitApi private constructor(private val context: Context) {
     companion object {
 
         //Base Url
-        private var BASE_URL = "https://github.com/"
+        var BASE_URL = "https://github.com/"
 
         //链接时间
         private var CONNECT_TIMEOUT = 30L
@@ -99,7 +98,6 @@ class RetrofitApi private constructor(private val context: Context) {
                     showRequest = SHOW_REQUEST_LOG
                 )
             )
-            .addNetworkInterceptor(StethoInterceptor())
             .connectTimeout(CONNECT_TIMEOUT, TimeUnit.SECONDS)
             .readTimeout(CONNECT_TIMEOUT, TimeUnit.SECONDS)
             .writeTimeout(CONNECT_TIMEOUT, TimeUnit.SECONDS)

@@ -20,6 +20,9 @@ ext {
 
             //java库
             androidXVersion       : "1.1.0",
+            lifecycleArchVersion  : "2.1.0",
+            viewPager2Version     : "1.0.0",
+            googleMaterialVersion : "1.2.0-alpha03",
             rxjava2Version        : "2.2.16",
             rxandroid2Verson      : "2.1.1",
             rxlifecycle3Version   : "3.1.0",
@@ -32,8 +35,9 @@ ext {
             roomVersion           : "2.1.0",
             gsonVersion           : "2.8.6",
 
-            brvahVersion          : "3.0.0-beta5",
+            brvahVersion          : "3.0.0-beta11",
             smartRefreshVersion   : "1.1.0",
+            autoSizeVersion       : "1.1.2",
             materialDialogsVersion: "3.1.1",
 
             //test库
@@ -58,16 +62,16 @@ ext {
             "androidx-appcompat"      : "androidx.appcompat:appcompat:${version["androidXVersion"]}",
             "androidx-core"           : "androidx.core:core-ktx:${version["androidXVersion"]}",
             "androidx-recyclerview"   : "androidx.recyclerview:recyclerview:${version["androidXVersion"]}",
-            "androidx-viewpager2"     : "androidx.viewpager2:viewpager2:1.0.0",
-            "google-material"         : "com.google.android.material:material:1.2.0-alpha03",
+            "androidx-viewpager2"     : "androidx.viewpager2:viewpager2:${version["viewPager2Version"]}",
+            "google-material"         : "com.google.android.material:material:${version["googleMaterialVersion"]}",
             "multidex"                : "androidx.multidex:multidex:2.0.0",
-            "lifecycle"               : "androidx.lifecycle:lifecycle-extensions:2.1.0",
+            "lifecycle"               : "androidx.lifecycle:lifecycle-extensions:${version["lifecycleArchVersion"]}",
 
 
             //view
             "brvah"                   : "com.github.CymChad:BaseRecyclerViewAdapterHelper:${version["brvahVersion"]}",
             "SmartRefresh"            : "com.scwang.smartrefresh:SmartRefreshLayout:${version["smartRefreshVersion"]}",
-            "autosize"                : "me.jessyan:autosize:1.1.2",
+            "autosize"                : "me.jessyan:autosize:${version["autoSizeVersion"]}",
             "dialogs-core"            : "com.afollestad.material-dialogs:core:${version["materialDialogsVersion"]}",
             "dialogs-input"           : "com.afollestad.material-dialogs:input:${version["materialDialogsVersion"]}",
             "dialogs-datetime"        : "com.afollestad.material-dialogs:datetime:${version["materialDialogsVersion"]}",
@@ -117,9 +121,6 @@ ext {
             "espresso-contrib"        : "androidx.test.espresso:espresso-contrib:${version["espressoVersion"]}",
             "espresso-intents"        : "androidx.test.espresso:espresso-intents:${version["espressoVersion"]}",
             "canary-debug"            : "com.squareup.leakcanary:leakcanary-android:${version["canaryVersion"]}",
-            "stetho"                  : "com.facebook.stetho:stetho:${version["stethoVersion"]}",
-            "stetho-okhttp"           : "com.facebook.stetho:stetho-okhttp3:${version["stethoVersion"]}",
-            "stetho-js-rhino"         : "com.facebook.stetho:stetho-js-rhino:${version["stethoVersion"]}"
     ]
 
 

@@ -20,7 +20,9 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".TabActivity" />
+        <activity android:name=".TabActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            />
 
         <activity android:name=".PictureActivity" />
 

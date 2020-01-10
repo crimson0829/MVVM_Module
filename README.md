@@ -243,16 +243,13 @@ View层展示数据：
 
 ```
 
-
-具体使用可参考sample
 <br>
 <br>
-
 
 
 ## 使用的官方库和开源库
 
-1.[AndroidX库：包括Appcompat、Lifecycle、Recyclerview、Viewpager2、Room组件、Google_Material等](https://developer.android.com/jetpack/androidx/versions/stable-channel)
+1.[AndroidX库：包括Appcompat、Lifecycle、RecyclerView、Viewpager2、Google_Material等](https://developer.android.com/jetpack/androidx/versions/stable-channel)
 <br>
 2.[Koin:轻量级的依赖注入框架，无代理，无代码生成，无反射，比Dagger2简洁点-_-](https://github.com/InsertKoinIO/koin)
 <br>
@@ -284,13 +281,11 @@ View层展示数据：
 <br>
 16.[AndroidAutoSize:非常好用的屏幕适配解决方案，思想值得借鉴](https://github.com/JessYanCoding/AndroidAutoSize)
 <br>
-17.[Material Dialogs](https://github.com/afollestad/material-dialogs)
+17.[Material-Dialogs](https://github.com/afollestad/material-dialogs)
 <br>
 18.[LeakCanary](https://github.com/square/leakcanary)
 <br>
-19.[Stetho:FaceBook出品的在Chrome上调试App的工具](https://github.com/facebook/stetho)
-<br>
-20.[感谢wanandroid提供的Api接口，感谢大佬](https://github.com/hongyangAndroid/wanandroid)
+19.[感谢wanandroid提供的Api接口，感谢大佬](https://github.com/hongyangAndroid/wanandroid)
 
 ## License
 
