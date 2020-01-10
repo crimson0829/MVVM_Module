@@ -29,11 +29,11 @@
 ```
 dependencies {
       //mvvm library and widget
-      implementation "com.github.crimson0829:mvvm_library:1.0.6"
+      implementation "com.github.crimson0829:mvvm_library:1.0.7"
       
       //or
-      implementation 'com.github.crimson0829.MVVM_Library:mvvm_library:1.0.6'
-      implementation 'com.github.crimson0829.MVVM_Library:widget:1.0.6'
+      implementation 'com.github.crimson0829.MVVM_Library:mvvm_library:1.0.7'
+      implementation 'com.github.crimson0829.MVVM_Library:widget:1.0.7'
 }
 ```
 
@@ -60,12 +60,11 @@ class AppApplication : BaseApplication() {
      * more config will be add
      */
     private fun appConfig() {
-       AppConfigOptions(this)
-                  .buildAppLoadingViewImplClass(CommonViewLoading::class.java)
-                  .buildRetrofit(AndroidService.BASE_URL, 20)
-                  .initStetho()
-                  .initDefaultSmartRefresh()
-                  .initAppScreenAutoSize()
+        AppConfigOptions(this)
+            .buildLoadingViewImplClass(CommonViewLoading::class.java)
+            .buildRetrofit(RetrofitConfig(AndroidService.BASE_URL, 20))
+            .initDefaultSmartRefresh(SmartRefreshHeaderConfig(R.drawable.refresh_head_arrow))
+            .initScreenAutoSize()
     }
 
 }
@@ -75,7 +74,6 @@ Koin新建 Module 对象
 
 
 ```
-
 val viewModelModule = module {
 
     factory { TabViewModel() }
@@ -114,7 +112,6 @@ layout绑定ViewModel
 
 
 ```
-
  <data>
         <variable
             name="viewModel"
@@ -127,7 +124,6 @@ View层Activity继承BaseActivity:
 
 
 ```
-
 class TabActivity : BaseActivity<ActivityTabBinding, TabViewModel>() {
 
 
@@ -204,7 +200,6 @@ Model层获取数据：
 
 
 ```
-
     val androidService by inject<AndroidService>()
 
     /**
@@ -224,7 +219,6 @@ View层展示数据：
 
 
 ```
-
        vm?.tabDataCompleteLD?.observe(this, Observer { it ->
    
                vb?.viewPager?.apply {
@@ -240,7 +234,6 @@ View层展示数据：
    
            })
 
-
 ```
 
 <br>
@@ -251,9 +244,9 @@ View层展示数据：
 
 1.[AndroidX库：包括Appcompat、Lifecycle、RecyclerView、Viewpager2、Google_Material等](https://developer.android.com/jetpack/androidx/versions/stable-channel)
 <br>
-2.[Koin:轻量级的依赖注入框架，无代理，无代码生成，无反射，比Dagger2简洁点-_-](https://github.com/InsertKoinIO/koin)
+2.[Koin：轻量级的依赖注入框架，无代理，无代码生成，无反射，比Dagger2简洁点-_-](https://github.com/InsertKoinIO/koin)
 <br>
-3.[RxJava:大名鼎鼎-_-](https://github.com/ReactiveX/RxJava)
+3.[RxJava：大名鼎鼎-_-](https://github.com/ReactiveX/RxJava)
 <br>
 4.[RxAndroid](https://github.com/ReactiveX/RxAndroid)
 <br>
@@ -275,11 +268,11 @@ View层展示数据：
 <br>
 13.[Timber](https://github.com/JakeWharton/timber)
 <br>
-14.[BaseRecyclerViewAdapterHelper:非常好用的RecyclerViewAdapter的封装库](https://github.com/CymChad/BaseRecyclerViewAdapterHelper)
+14.[BaseRecyclerViewAdapterHelper：非常好用的RecyclerViewAdapter的封装库](https://github.com/CymChad/BaseRecyclerViewAdapterHelper)
 <br>
-15.[SmartRefreshLayout:非常好用的下拉刷新框架](https://github.com/scwang90/SmartRefreshLayout)
+15.[SmartRefreshLayout：非常好用的下拉刷新框架](https://github.com/scwang90/SmartRefreshLayout)
 <br>
-16.[AndroidAutoSize:非常好用的屏幕适配解决方案，思想值得借鉴](https://github.com/JessYanCoding/AndroidAutoSize)
+16.[AndroidAutoSize：屏幕适配解决方案，思想值得借鉴](https://github.com/JessYanCoding/AndroidAutoSize)
 <br>
 17.[Material-Dialogs](https://github.com/afollestad/material-dialogs)
 <br>
