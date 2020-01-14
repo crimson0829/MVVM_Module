@@ -28,12 +28,9 @@
 
 ```
 dependencies {
-      //mvvm library and widget
-      implementation "com.github.crimson0829:mvvm_library:1.0.7"
       
-      //or
-      implementation 'com.github.crimson0829.MVVM_Library:mvvm_library:1.0.7'
-      implementation 'com.github.crimson0829.MVVM_Library:widget:1.0.7'
+      implementation "com.github.crimson0829:mvvm_library:1.0.7"
+    
 }
 ```
 
