@@ -6,6 +6,8 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+        <!--    toolbar图标颜色设置    -->
+        <item name="colorControlNormal">@color/colorText</item>
     </style>
 
 </resources>

@@ -18,6 +18,8 @@
         android:orientation="vertical"
         tools:context=".MainActivity">
 
+        <include layout="@layout/base_title_bar" />
+
         <androidx.appcompat.widget.AppCompatButton
             app:bindClick="@{viewModel.onClickListBtn}"
             android:layout_width="wrap_content"

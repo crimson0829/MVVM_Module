@@ -49,7 +49,7 @@ object ViewLifeCycleExt {
     /**
      * 根据class获取stack中的activity
      */
-    fun obainActivity(cls: Class<Activity>?): Activity? {
+    fun obtainActivity(cls: Class<Activity>?): Activity? {
 
         cls?.apply {
             activityStack.forEach {

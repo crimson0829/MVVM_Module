@@ -4,6 +4,8 @@ package com.crimson.mvvm.base
 
 import android.content.Context
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuItem
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
@@ -21,7 +23,7 @@ import java.lang.reflect.Type
  * 默认单个ViewModel,如果想一个activity有多个ViewModel,可以用viewModelModule创建viewModel并注入
  */
 abstract class BaseActivity<VB : ViewDataBinding, VM : BaseViewModel> : RxAppCompatActivity(),
-    IView {
+    IView, IStatusBar, ITitleBar {
 
     var vb: VB? = null
 
@@ -32,13 +34,11 @@ abstract class BaseActivity<VB : ViewDataBinding, VM : BaseViewModel> : RxAppCom
     protected val context: Context? by lazy { this }
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
 
+        //初始化ViewDataBinding和ViewModel
         initViewBinding(savedInstanceState)
-        initViewModelLiveDataObserver()
-        initView()
-        initData()
-        initViewObservable()
+        //这里调用super就可以在BaseActivityLifecycle中获取contentView,从而对布局View进行操作
+        super.onCreate(savedInstanceState)
 
     }
 
@@ -72,6 +72,9 @@ abstract class BaseActivity<VB : ViewDataBinding, VM : BaseViewModel> : RxAppCom
             //注册RxBus
             registerRxBus()
         }
+
+        initViewModelLiveDataObserver()
+
     }
 
     /**
@@ -163,6 +166,24 @@ abstract class BaseActivity<VB : ViewDataBinding, VM : BaseViewModel> : RxAppCom
         }
     }
 
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        initMenuRes()?.let {
+            if (it != 0) {
+                menuInflater.inflate(it, menu)
+            }
+        }
+        return super.onCreateOptionsMenu(menu)
+    }
+
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        initMenuRes()?.let {
+            if (it != 0) {
+                onMenuItemSelected(item)
+            }
+        }
+        return super.onOptionsItemSelected(item)
+    }
 
     override fun onDestroy() {
         super.onDestroy()
@@ -200,6 +221,45 @@ abstract class BaseActivity<VB : ViewDataBinding, VM : BaseViewModel> : RxAppCom
      */
     open fun initViewModel(): VM? = null
 
+    /**
+     * 初始化statusBar,默认已经在BaseActivityLifecycle中实现，可重写该方法自己定制
+     */
+    override fun initStatusBar() {}
+
+    /**
+     * 初始化titleBar,默认已经在BaseActivityLifecycle中实现，可重写该方法自己定制
+     */
+    override fun initTitleBar() {}
+
+    /**
+     * 设置返回按钮图标，默认使用系统实现
+     */
+    override fun initBackIconRes(): Int? {
+        return 0
+    }
+
+    /**
+     * 重写该方法可设置标题，默认为label,不设label就是projectName
+     */
+    override fun initTitleText(): CharSequence? {
+        return title
+    }
+
+    /**
+     * 初始化menu布局
+     */
+    override fun initMenuRes(): Int? {
+        return 0
+    }
+
+    /**
+     * menu布局条目选中点击
+     */
+    override fun onMenuItemSelected(item: MenuItem) {}
+
+    /**
+     * 在BaseActivityLifecycle已全局调用
+     */
     override fun initView() {}
     override fun initData() {}
     override fun initViewObservable() {}

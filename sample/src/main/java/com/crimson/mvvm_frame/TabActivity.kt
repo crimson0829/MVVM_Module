@@ -1,6 +1,7 @@
 package com.crimson.mvvm_frame
 
 import android.os.Bundle
+import android.view.MenuItem
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import com.crimson.mvvm.base.BaseActivity
@@ -11,6 +12,7 @@ import com.crimson.mvvm.binding.bindConsumer
 import com.crimson.mvvm.binding.bindTabLayout
 import com.crimson.mvvm.binding.bindTiConsumer
 import com.crimson.mvvm.ext.logw
+import com.crimson.mvvm.ext.toast
 import com.crimson.mvvm.livedata.SingleLiveData
 import com.crimson.mvvm.rx.bus.RxCode
 import com.crimson.mvvm.rx.bus.RxDisposable
@@ -41,6 +43,23 @@ class TabActivity : BaseActivity<ActivityTabBinding, TabViewModel>() {
 
     override fun initViewModel(): TabViewModel? {
         return getViewModel()
+    }
+
+   override fun initTitleText(): CharSequence? {
+        return "列表呀@_@"
+    }
+
+    override fun initMenuRes(): Int? {
+        return R.menu.tab_menu
+    }
+
+    override fun onMenuItemSelected(item: MenuItem) {
+        when(item.itemId){
+            R.id.page_refresh-> {
+                logw("refresh page")
+                toast("refresh page")
+            }
+        }
     }
 
     override fun initView() {

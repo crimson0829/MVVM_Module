@@ -98,7 +98,6 @@ abstract class BaseFragment<VB : ViewDataBinding, VM : BaseViewModel> : RxFragme
     ): View? {
         initViewBinding(inflater, container, savedInstanceState)
         initRootLayout()
-        initViewModelLiveDataObserver()
         initView()
         isPrepared = true
         lazyLoad()
@@ -154,6 +153,9 @@ abstract class BaseFragment<VB : ViewDataBinding, VM : BaseViewModel> : RxFragme
             //注册RxBus
             registerRxBus()
         }
+
+        initViewModelLiveDataObserver()
+
     }
 
     /**
