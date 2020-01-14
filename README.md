@@ -29,7 +29,7 @@
 ```
 dependencies {
       
-      implementation "com.github.crimson0829:mvvm_library:1.0.7"
+      implementation "com.github.crimson0829:mvvm_library:1.0.8"
     
 }
 ```
