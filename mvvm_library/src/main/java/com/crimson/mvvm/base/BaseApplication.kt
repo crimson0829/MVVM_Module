@@ -31,8 +31,9 @@ open class BaseApplication : Application() {
         super.onCreate()
 
         context = this
+
         //lifecycle
-        registerActivityLifecycleCallbacks(BaseActivityLifecycle())
+        registerActivityLifecycleCallbacks(initActivityLifecycle())
         //koin
         startKoin {
 
@@ -48,5 +49,11 @@ open class BaseApplication : Application() {
 
     }
 
+    /**
+     * 默认实现 BaseActivityLifecycle
+     */
+    open fun initActivityLifecycle(): ActivityLifecycleCallbacks?{
+        return BaseActivityLifecycle()
+    }
 
 }

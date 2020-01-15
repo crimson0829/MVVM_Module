@@ -31,7 +31,7 @@ abstract class BaseActivity<VB : ViewDataBinding, VM : BaseViewModel> : RxAppCom
 
     var loadingView: IViewDataLoading? = null
 
-    protected val context: Context? by lazy { this }
+    protected val context: Context by lazy { this }
 
     override fun onCreate(savedInstanceState: Bundle?) {
 
@@ -222,9 +222,11 @@ abstract class BaseActivity<VB : ViewDataBinding, VM : BaseViewModel> : RxAppCom
     open fun initViewModel(): VM? = null
 
     /**
-     * 初始化statusBar,默认已经在BaseActivityLifecycle中实现，可重写该方法自己定制
+     * 初始化statusBar，可重写该方法并返回true可自己消费；默认为false，已经在BaseActivityLifecycle中实现
      */
-    override fun initStatusBar() {}
+    override fun initStatusBar(): Boolean {
+        return false
+    }
 
     /**
      * 初始化titleBar,默认已经在BaseActivityLifecycle中实现，可重写该方法自己定制
@@ -242,7 +244,14 @@ abstract class BaseActivity<VB : ViewDataBinding, VM : BaseViewModel> : RxAppCom
      * 重写该方法可设置标题，默认为label,不设label就是projectName
      */
     override fun initTitleText(): CharSequence? {
-        return title
+        return intent.getStringExtra(VIEW_TITLE) ?: ""
+    }
+
+    /**
+     * 标题是否居中，默认false
+     */
+    override fun isTitleTextCenter(): Boolean {
+        return false
     }
 
     /**
@@ -261,11 +270,17 @@ abstract class BaseActivity<VB : ViewDataBinding, VM : BaseViewModel> : RxAppCom
      * 在BaseActivityLifecycle已全局调用
      */
     override fun initView() {}
+
     override fun initData() {}
     override fun initViewObservable() {}
 
 
 }
+
+/**
+ * 默认的view title,可从上个页面传值
+ */
+const val VIEW_TITLE = "view_title"
 
 
 

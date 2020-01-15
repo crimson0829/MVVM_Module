@@ -146,7 +146,6 @@ class AppConfigOptions(val context: Context) {
     }
 
 
-
     /**
      * init auto size
      */

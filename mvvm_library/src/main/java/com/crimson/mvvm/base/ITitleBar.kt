@@ -1,6 +1,8 @@
 package com.crimson.mvvm.base
 
 import android.view.MenuItem
+import androidx.annotation.DrawableRes
+import androidx.annotation.MenuRes
 
 /**
  * @author crimson
@@ -17,6 +19,7 @@ interface ITitleBar {
     /**
      * 初始化返回按钮图标
      */
+    @DrawableRes
     fun initBackIconRes(): Int?
 
     /**
@@ -25,8 +28,14 @@ interface ITitleBar {
     fun initTitleText(): CharSequence?
 
     /**
+     * 是否使标题居中,默认为false
+     */
+    fun isTitleTextCenter(): Boolean
+
+    /**
      * 初始化menu
      */
+    @MenuRes
     fun initMenuRes(): Int?
 
     /**

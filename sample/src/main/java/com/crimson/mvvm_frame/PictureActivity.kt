@@ -1,6 +1,7 @@
 package com.crimson.mvvm_frame
 
 import android.os.Bundle
+import androidx.core.content.ContextCompat
 import com.afollestad.materialdialogs.MaterialDialog
 import com.afollestad.materialdialogs.list.listItems
 import com.crimson.mvvm.base.BaseActivity
@@ -8,6 +9,7 @@ import com.crimson.mvvm.base.BaseViewModel
 import com.crimson.mvvm.binding.bindClick
 import com.crimson.mvvm.binding.bindConsumer
 import com.crimson.mvvm.binding.bindImage
+import com.crimson.mvvm.utils.StatusBarUtils
 import com.crimson.mvvm_frame.databinding.ActivityPictureBinding
 import kotlinx.android.synthetic.main.activity_picture.*
 
@@ -24,6 +26,12 @@ class PictureActivity : BaseActivity<ActivityPictureBinding, BaseViewModel>() {
         R.layout.activity_picture
 
     override fun initViewModelId(): Int = 0
+
+
+    override fun initStatusBar(): Boolean {
+        StatusBarUtils.setColor(this,ContextCompat.getColor(this,R.color.colorPrimaryDark))
+        return true
+    }
 
     override fun initView() {
 

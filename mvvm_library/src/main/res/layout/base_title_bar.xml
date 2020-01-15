@@ -6,19 +6,15 @@
     android:layout_width="match_parent"
     android:layout_height="?attr/actionBarSize"
     android:background="#fff"
-    app:contentInsetStart="0dp"
-
     >
-
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/title_bar_text"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        tools:text="标题"
         android:textColor="#333"
         android:textSize="18sp"
-        />
+        tools:text="标题" />
 
 
 </androidx.appcompat.widget.Toolbar>

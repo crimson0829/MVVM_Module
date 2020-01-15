@@ -3,6 +3,7 @@ package com.crimson.mvvm.base
 import android.app.Activity
 import android.app.Application.ActivityLifecycleCallbacks
 import android.os.Bundle
+import android.view.Gravity
 import android.widget.FrameLayout
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatTextView
@@ -34,7 +35,7 @@ open class BaseActivityLifecycle : ActivityLifecycleCallbacks {
         initDefaultView(activity)
 
         runOnIO {
-            //添加activity入站
+            //添加activity入栈
             ViewLifeCycleExt.addActivityToStack(activity)
             if (activity is FragmentActivity) {
                 //注册fragment生命周期
@@ -81,6 +82,10 @@ open class BaseActivityLifecycle : ActivityLifecycleCallbacks {
 
         if (activity is IStatusBar) {
 
+            if (activity.initStatusBar()) {
+                return
+            }
+
             if (SDKVersionUtils.isAboveAndroid6()) {
                 StatusBarUtils.setColor(
                     activity,
@@ -99,9 +104,7 @@ open class BaseActivityLifecycle : ActivityLifecycleCallbacks {
                 )
             }
 
-            activity.initStatusBar()
         }
-
 
     }
 
@@ -140,6 +143,17 @@ open class BaseActivityLifecycle : ActivityLifecycleCallbacks {
             activity.findViewById<AppCompatTextView>(R.id.title_bar_text)?.run {
                 val titleText = activity.initTitleText()
                 text = titleText
+
+                if (activity.isTitleTextCenter()) {
+                    //如果是居中显示，就要标题左右对称
+                    post {
+                        val lp = layoutParams
+                        lp.width = this.right - this.left * 2
+                        layoutParams = lp
+                        this.gravity = Gravity.CENTER
+                    }
+                }
+
             }
 
             activity.initTitleBar()
@@ -159,7 +173,6 @@ open class BaseActivityLifecycle : ActivityLifecycleCallbacks {
             activity.initView()
             activity.initData()
             activity.initViewObservable()
-
         }
     }
 }

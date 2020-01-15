@@ -21,6 +21,10 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>() {
         return BR.viewModel
     }
 
+    override fun initTitleText(): CharSequence? {
+        return "木大木大木大"
+    }
+
 }
 
 

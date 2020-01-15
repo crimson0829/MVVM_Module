@@ -46,7 +46,11 @@ class TabActivity : BaseActivity<ActivityTabBinding, TabViewModel>() {
     }
 
    override fun initTitleText(): CharSequence? {
-        return "列表呀@_@"
+        return "欧拉欧拉欧拉"
+    }
+
+    override fun isTitleTextCenter(): Boolean {
+        return true
     }
 
     override fun initMenuRes(): Int? {

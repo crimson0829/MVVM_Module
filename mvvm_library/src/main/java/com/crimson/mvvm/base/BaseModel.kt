@@ -20,7 +20,7 @@ open class BaseModel : IModel {
     /**
      * call with coroutines
      */
-    suspend fun <T> remoteCall(call: suspend () -> BaseEntity<T>): BaseEntity<T> {
+    suspend fun <T> callRemote(call: suspend () -> BaseEntity<T>): BaseEntity<T> {
 
         return withContext(IO) { call.invoke() }
     }
