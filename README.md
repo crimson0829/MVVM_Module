@@ -1,4 +1,4 @@
-# MVVM_Library
+# MVVM_Module
 
 ## 介绍
 
@@ -8,7 +8,7 @@
 
 1.可作为项目Base库，快速开发项目
 <br>
-2.支持AndroidX库，集成了AndroidX库下的一些常用组件，如AppCompat,RecyclerView等
+2.支持AndroidX库，集成了AndroidX库下的一些常用组件，如RecyclerView,ViewPager2等
 <br>
 3.提供了Base类(BaseActivity、BaseFragment、BaseViewModel等)统一封装，绑定生命周期，快速进行页面开发
 <br>
