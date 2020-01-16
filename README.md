@@ -213,16 +213,17 @@ class TabActivity : BaseActivity<ActivityTabBinding, TabViewModel>() {
   override fun initMenuRes(): Int? {
         return R.menu.tab_menu
         
-     
+  }
+  
    //menu点击回调   
   override fun onMenuItemSelected(item: MenuItem) {
          when (item.itemId) {
                R.id.page_refresh -> {
                   logw("refresh page")
                   toast("refresh page")
-                  }
                }
-             }        
+         }
+  }        
 ```
 
 
@@ -382,7 +383,7 @@ ViewModel:
   helper.getBinding<AdapterItemArticleBinding>()?.model = item
  ```
  
- 2.3 DataBinding扩展函数：提供了Glide，RecyclerView，ViewPager2，SmartRefreshLayout等绑定函数，方便扩展xml和控件调用;实现[ViewBindingsExt](https://github.com/crimson0829/MVVM_Module/blob/master/mvvm_library/src/main/java/com/crimson/mvvm/binding/ViewBindingsExt.kt)
+ 2.3 DataBinding扩展函数：提供了Glide，RecyclerView，ViewPager2，SmartRefreshLayout等绑定函数，方便扩展xml和控件调用；实现类[ViewBindingsExt](https://github.com/crimson0829/MVVM_Module/blob/master/mvvm_library/src/main/java/com/crimson/mvvm/binding/ViewBindingsExt.kt)
  
  Glide绑定图片：可在xml或者View中设置，具体使用可参考[PictureActivity](https://github.com/crimson0829/MVVM_Module/blob/master/sample/src/main/java/com/crimson/mvvm_frame/PictureActivity.kt)
  
@@ -460,7 +461,7 @@ ViewModel:
   
   }
 ```
-RecyclerView绑定：具体使用可参考 xml:[fragment_tab](https://github.com/crimson0829/MVVM_Module/blob/master/sample/src/main/res/layout/fragment_tab.xmlhttps://github.com/crimson0829/MVVM_Module/blob/master/sample/src/main/res/layout/fragment_tab.xml)
+RecyclerView绑定：具体使用可参考 xml:[fragment_tab](https://github.com/crimson0829/MVVM_Module/blob/master/sample/src/main/res/layout/fragment_tab.xml)
 
 ```
 /**
@@ -662,7 +663,7 @@ fun ViewPager2.bindTabLayout(tabLayout: TabLayout?, titles: MutableList<String>?
 }
 ```
 
-SmartRefreshLayout绑定：具体使用可参考[AuthorViewModel](https://github.com/crimson0829/MVVM_Module/blob/master/sample/src/main/java/com/crimson/mvvm_frame/AuthorFragment.kt)和xml:[fragment_tab](https://github.com/crimson0829/MVVM_Module/blob/master/sample/src/main/res/layout/fragment_tab.xmlhttps://github.com/crimson0829/MVVM_Module/blob/master/sample/src/main/res/layout/fragment_tab.xml)
+SmartRefreshLayout绑定：具体使用可参考[AuthorViewModel](https://github.com/crimson0829/MVVM_Module/blob/master/sample/src/main/java/com/crimson/mvvm_frame/AuthorFragment.kt)和xml:[fragment_tab](https://github.com/crimson0829/MVVM_Module/blob/master/sample/src/main/res/layout/fragment_tab.xml)
 
 ```
 
@@ -776,11 +777,13 @@ AppConfigOptions(context).buildRetrofit()
 
 4.1 数据处理：
 
-协程处理数据：ViewModel中处理数据；用同步的代码实现异步得到操作-_-
+协程处理数据：ViewModel中处理数据；用同步的代码实现异步操作-_-
 
 ```
 //主线程处理
  launchCoroutine {
+ 
+ //获取数据
  
  //IO子线程处理
    withContext(Dispatchers.IO) {
@@ -864,7 +867,8 @@ fun <T : Any> Flowable<T>.subscribeNet(
              .subscribe {
                 //这里处理逻辑
              }
-       
+  
+  //添加事件     
  RxDisposable.add(dispose)  
  
  //移除事件
@@ -876,6 +880,9 @@ fun <T : Any> Flowable<T>.subscribeNet(
 
 ```
  RxBus.get().post(<对应code>, <对应类型>)
+ 
+ //or
+  RxBus.get().post(<对应类型>)
 ```
 
 5.1 一些扩展类和工具类
