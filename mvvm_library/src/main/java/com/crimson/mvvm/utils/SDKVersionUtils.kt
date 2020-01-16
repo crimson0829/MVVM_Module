@@ -13,7 +13,7 @@ object SDKVersionUtils {
     val SDK_VERSION = Build.VERSION.SDK_INT
 
     //4.0
-    val API_15=Build.VERSION_CODES.ICE_CREAM_SANDWICH_MR1
+    val API_15 = Build.VERSION_CODES.ICE_CREAM_SANDWICH_MR1
     //4.1
     val API_16 = Build.VERSION_CODES.JELLY_BEAN
     //4.4
@@ -37,25 +37,35 @@ object SDKVersionUtils {
     //10.0
     val API_29 = Build.VERSION_CODES.Q
 
+    //大于置顶的sdk version
+    fun isAboveSDKVersion(sdkVersion: Int): Boolean = SDK_VERSION >= sdkVersion
+
     //系统大于4.0
     fun isAboveAndroid4(): Boolean = SDK_VERSION >= API_15
+
     //系统大于4.1
     fun isAboveAndroid4D1(): Boolean = SDK_VERSION >= API_16
+
     //系统大于4.4
     fun isAboveAndroid4D4(): Boolean = SDK_VERSION >= API_19
+
     //系统大于5.0
     fun isAboveAndroid5(): Boolean = SDK_VERSION >= API_21
+
     //6.0以上系统
     fun isAboveAndroid6(): Boolean = SDK_VERSION >= API_23
+
     //7.0以上系统
     fun isAboveAndroid7(): Boolean = SDK_VERSION >= API_24
+
     //8.0以上系统
     fun isAboveAndroid8(): Boolean = SDK_VERSION >= API_26
+
     //9.0以上系统
     fun isAboveAndroid9(): Boolean = SDK_VERSION >= API_28
+
     //10.0以上系统
     fun isAboveAndroid10(): Boolean = SDK_VERSION >= API_29
-
 
 
 }

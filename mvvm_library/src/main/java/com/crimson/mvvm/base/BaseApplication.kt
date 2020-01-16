@@ -34,7 +34,8 @@ open class BaseApplication : Application() {
 
         //lifecycle
         registerActivityLifecycleCallbacks(initActivityLifecycle())
-        //koin
+
+        //koin init
         startKoin {
 
             androidContext(this@BaseApplication)

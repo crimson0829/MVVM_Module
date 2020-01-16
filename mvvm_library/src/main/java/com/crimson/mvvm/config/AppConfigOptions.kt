@@ -2,7 +2,11 @@ package com.crimson.mvvm.config
 
 import android.app.Activity
 import android.content.Context
+import android.graphics.Color
+import androidx.annotation.ColorInt
+import androidx.annotation.ColorRes
 import androidx.annotation.DrawableRes
+import androidx.annotation.IntRange
 import com.crimson.mvvm.base.IViewDataLoading
 import com.crimson.mvvm.ext.appContext
 import com.crimson.mvvm.ext.logd
@@ -29,6 +33,16 @@ import java.util.*
 class AppConfigOptions(val context: Context) {
 
     companion object {
+
+        /**
+         * 状态栏参数设置
+         */
+        var STATUS_BAR_CONFIG: StatusBarConfig = StatusBarConfig()
+
+        /**
+         * 标题栏参数设置
+         */
+        var TITLE_BAR_CONFIG: TitleBarConfig = TitleBarConfig()
 
         /**
          * loading View 的实现class
@@ -80,6 +94,26 @@ class AppConfigOptions(val context: Context) {
     }
 
     /**
+     * 设置全局状态栏
+     */
+    fun buildStatusBar(
+        statusBarConfig: StatusBarConfig = StatusBarConfig()
+    ): AppConfigOptions {
+        STATUS_BAR_CONFIG = statusBarConfig
+        return this
+
+    }
+
+    /**
+     * 设置全局titleBar，目前只能设置返回图标
+     *
+     */
+    fun buildTitleBar(titleBarConfig: TitleBarConfig = TitleBarConfig()): AppConfigOptions {
+        TITLE_BAR_CONFIG = titleBarConfig
+        return this
+    }
+
+    /**
      * 设置App的全局LoadingView实现类
      * 如果不设置，就使用默认实现类
      */
@@ -87,7 +121,6 @@ class AppConfigOptions(val context: Context) {
         LOADING_VIEW_CLAZZ = clazz
         return this
     }
-
 
     /**
      * 设置retrofit参数
@@ -227,6 +260,37 @@ class AppConfigOptions(val context: Context) {
 
 
 }
+
+
+/**
+ * 状态栏设置
+ */
+data class StatusBarConfig(
+    //背景色，默认白色
+    @ColorRes var bgColor: Int = android.R.color.white,
+    //是否为亮色模式，默认true
+    var isLightMode: Boolean = true,
+    //背景透明度 默认0
+    @IntRange(from = 0, to = 255)
+    var bgAlpha: Int = 0
+)
+
+/**
+ * 标题栏设置,如果想改变 默认图标颜色，可字@style/AppTheme中修改colorControlNormal
+ */
+data class TitleBarConfig(
+    //背景色,默认白色
+    @ColorRes var bgColor: Int = android.R.color.white,
+    //返回图标设置，默认为0不设置，使用系统图标
+    @DrawableRes var backIcon: Int = 0,
+    //字体颜色 默认#333333
+    @ColorInt var titleColor: Int = Color.parseColor("#333333"),
+    //字体大小 默认18sp
+    var titleSize: Float = 18f,
+    //字体是否居中，默认不居中
+    var titleIsCenter: Boolean = false
+
+)
 
 /**
  * retrofit config

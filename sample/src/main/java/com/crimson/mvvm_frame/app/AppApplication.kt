@@ -33,6 +33,9 @@ class AppApplication : BaseApplication() {
     private fun appConfig() {
 
         AppConfigOptions(this)
+//            .buildStatusBar(StatusBarConfig(R.color.colorPrimary,false,100))
+//            .buildTitleBar(TitleBarConfig(R.color.colorPrimary,R.drawable.app_back_icon,
+//                Color.parseColor("#ffffff"),16f,true))
             .buildLoadingViewImplClass(CommonViewLoading::class.java)
             .buildRetrofit(RetrofitConfig(AndroidService.BASE_URL, 20))
             .initDefaultSmartRefresh(SmartRefreshHeaderConfig(R.drawable.refresh_head_arrow))

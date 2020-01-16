@@ -11,6 +11,7 @@ import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.FragmentActivity
 import com.crimson.mvvm.R
+import com.crimson.mvvm.config.AppConfigOptions
 import com.crimson.mvvm.config.ViewLifeCycleExt
 import com.crimson.mvvm.ext.runOnIO
 import com.crimson.mvvm.utils.SDKVersionUtils
@@ -89,18 +90,20 @@ open class BaseActivityLifecycle : ActivityLifecycleCallbacks {
             if (SDKVersionUtils.isAboveAndroid6()) {
                 StatusBarUtils.setColor(
                     activity,
-                    ContextCompat.getColor(activity, android.R.color.white),
-                    0
+                    ContextCompat.getColor(activity, AppConfigOptions.STATUS_BAR_CONFIG.bgColor),
+                    AppConfigOptions.STATUS_BAR_CONFIG.bgAlpha
                 )
-                StatusBarUtils.setLightMode(activity)
+                if (AppConfigOptions.STATUS_BAR_CONFIG.isLightMode) {
+                    StatusBarUtils.setLightMode(activity)
+                }
                 //获取contentView设置fitsSystemWindows
-                activity.findViewById<FrameLayout>(android.R.id.content).getChildAt(0)
-                    .fitsSystemWindows = true
+                activity.findViewById<FrameLayout>(android.R.id.content)?.getChildAt(0)
+                    ?.fitsSystemWindows = true
             } else {
                 StatusBarUtils.setColor(
                     activity,
-                    ContextCompat.getColor(activity, android.R.color.white),
-                    68
+                    ContextCompat.getColor(activity, AppConfigOptions.STATUS_BAR_CONFIG.bgColor),
+                    68//小于6.0默认68 alpha
                 )
             }
 
@@ -116,16 +119,28 @@ open class BaseActivityLifecycle : ActivityLifecycleCallbacks {
 
         if (activity is ITitleBar) {
 
+            if (activity.initTitleBar()) {
+                return
+            }
+
             activity.findViewById<Toolbar>(R.id.title_bar)?.run {
                 //设置toolBar为ActionBar
                 if (activity is AppCompatActivity) {
                     activity.setSupportActionBar(this)
-                    activity.supportActionBar?.setDisplayShowTitleEnabled(false)
-                    val backIconRes = activity.initBackIconRes()
-                    if (backIconRes != null && backIconRes != 0) {
-                        setNavigationIcon(backIconRes)
+                    //设置背景色
+                    setBackgroundColor(
+                        ContextCompat.getColor(
+                            activity,
+                            AppConfigOptions.TITLE_BAR_CONFIG.bgColor
+                        )
+                    )
+
+                    if (activity.initBackIconRes() != 0) {
+                        //设置activity中的返回图标
+                        setNavigationIcon(activity.initBackIconRes())
 
                     } else {
+                        //默认为系统图标
                         //左侧添加一个默认的返回图标
                         activity.supportActionBar?.setDisplayHomeAsUpEnabled(true)
                         //设置返回键可用
@@ -136,13 +151,22 @@ open class BaseActivityLifecycle : ActivityLifecycleCallbacks {
                         activity.finish()
                     }
 
+                    //不显示默认标题，自己添加
+                    activity.supportActionBar?.setDisplayShowTitleEnabled(false)
+
                 }
             }
 
             //设置title
             activity.findViewById<AppCompatTextView>(R.id.title_bar_text)?.run {
+
                 val titleText = activity.initTitleText()
                 text = titleText
+
+                //字体颜色
+                setTextColor(AppConfigOptions.TITLE_BAR_CONFIG.titleColor)
+                //字体大小
+                textSize = AppConfigOptions.TITLE_BAR_CONFIG.titleSize
 
                 if (activity.isTitleTextCenter()) {
                     //如果是居中显示，就要标题左右对称
@@ -156,10 +180,9 @@ open class BaseActivityLifecycle : ActivityLifecycleCallbacks {
 
             }
 
-            activity.initTitleBar()
 
             /**
-             * 如果想添加menu，请在Activity中重写initMenuRes 和 onMenuItemSelected
+             * 如果想添加menu，需在Activity中重写initMenuRes 和 onMenuItemSelected
              */
 
         }

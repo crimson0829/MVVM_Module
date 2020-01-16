@@ -56,7 +56,7 @@ class RxBus private constructor() {
      * @param o
      */
     fun post(code: Int, o: Any?) {
-        bus.onNext(RxBusMessage(code, o!!))
+        bus.onNext(RxBusMessage(code, o))
     }
 
     /**
@@ -95,5 +95,5 @@ class RxBus private constructor() {
  * @date @date 2019-09-20
  * rx bus 数据对象
  */
-data class RxBusMessage(var code: Int, var obj: Any)
+data class RxBusMessage(var code: Int, var obj: Any?)
 

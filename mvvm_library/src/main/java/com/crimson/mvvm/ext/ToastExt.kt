@@ -1,5 +1,6 @@
 package com.crimson.mvvm.ext
 
+import android.annotation.SuppressLint
 import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.drawable.ShapeDrawable
@@ -17,26 +18,35 @@ import android.widget.Toast
  */
 object ToastKt {
 
-    private var toast :Toast?=null
+    private var toast: Toast? = null
 
     /**
      * 显示 Toast
      * @param message 提示信息
      * @param duration 显示时间长短
      */
+    @SuppressLint("ShowToast")
     fun show(
         message: MESSAGE?,
         duration: Int = Toast.LENGTH_SHORT,
         gravity: Int = Gravity.BOTTOM,
         yOffset: Int = dp2px(80)
     ) {
-        if (toast==null){
-            toast=Toast(appContext())
+
+        if (toast == null) {
+            toast = Toast(appContext())
+            toast?.setGravity(gravity, 0, yOffset)
+            toast?.duration = duration
         }
-        toast?.duration = duration
-        toast?.setGravity(gravity, 0, yOffset)
-        toast?.view = createTextToastView(message)
+
+        if (toast?.view !is FrameLayout) {
+            toast?.view = createTextToastView(message)
+        } else {
+            (((toast?.view as? FrameLayout)?.getChildAt(0)) as? TextView)?.text = message
+        }
+
         toast?.show()
+
     }
 
     /**
@@ -45,12 +55,15 @@ object ToastKt {
      * @param message 文本消息
      * @return View
      */
-    private fun createTextToastView(message: MESSAGE?): View? { // 画圆角矩形背景
+    private fun createTextToastView(message: MESSAGE?): View? {
+
+        // 画圆角矩形背景
         val rc = dp2px(6).toFloat()
         val shape =
             RoundRectShape(floatArrayOf(rc, rc, rc, rc, rc, rc, rc, rc), null, null)
         val drawable = ShapeDrawable(shape)
-        drawable.paint.color = Color.argb(225, 240, 240, 240)
+//        drawable.paint.color = Color.argb(225, 25, 240, 240)
+        drawable.paint.color = Color.WHITE
         drawable.paint.style = Paint.Style.FILL
         drawable.paint.isAntiAlias = true
         drawable.paint.flags = Paint.ANTI_ALIAS_FLAG

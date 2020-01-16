@@ -10,11 +10,11 @@ object RxCode {
     /**
      * post标记
      */
-    const val POST_CODE = 0xffff01
+    const val POST_CODE = 0xff0001
 
     /**
      * 加载错误布局点击
      */
-    const val ERROR_LAYOUT_CLICK_CODE = -0xffff01
+    const val ERROR_LAYOUT_CLICK_CODE = -0xff0001
 
 }

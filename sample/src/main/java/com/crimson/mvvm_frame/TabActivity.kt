@@ -45,7 +45,7 @@ class TabActivity : BaseActivity<ActivityTabBinding, TabViewModel>() {
         return getViewModel()
     }
 
-   override fun initTitleText(): CharSequence? {
+    override fun initTitleText(): CharSequence? {
         return "欧拉欧拉欧拉"
     }
 
@@ -57,9 +57,10 @@ class TabActivity : BaseActivity<ActivityTabBinding, TabViewModel>() {
         return R.menu.tab_menu
     }
 
+
     override fun onMenuItemSelected(item: MenuItem) {
-        when(item.itemId){
-            R.id.page_refresh-> {
+        when (item.itemId) {
+            R.id.page_refresh -> {
                 logw("refresh page")
                 toast("refresh page")
             }
@@ -82,10 +83,10 @@ class TabActivity : BaseActivity<ActivityTabBinding, TabViewModel>() {
 
                 vm?.fragments?.let {
                     //设置viewpager2 adapter
-                    bindAdapter(null,ViewPager2FragmentAdapter(this@TabActivity, it))
+                    bindAdapter(null, ViewPager2FragmentAdapter(this@TabActivity, it))
                 }
 
-                bindTabLayout( vb?.tabLayout,it)
+                bindTabLayout(vb?.tabLayout, it)
 
 
             }
@@ -112,15 +113,14 @@ class TabViewModel : BaseViewModel() {
 
     var errorDis: Disposable? = null
 
-    val vp2SelectedConsumer= bindConsumer<Int> {
+    val vp2SelectedConsumer = bindConsumer<Int> {
 
         logw("vp2page -> $this")
     }
 
-    val vp2ScrolledConsumer= bindTiConsumer<Int,Float,Int> { t1, t2, t3 ->
+    val vp2ScrolledConsumer = bindTiConsumer<Int, Float, Int> { t1, t2, t3 ->
         logw("vp2pos -> $t1 positionOffset->$t2 positionOffsetPixels -> $t3")
     }
-
 
 
     /**

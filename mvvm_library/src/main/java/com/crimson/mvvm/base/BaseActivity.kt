@@ -224,42 +224,32 @@ abstract class BaseActivity<VB : ViewDataBinding, VM : BaseViewModel> : RxAppCom
     /**
      * 初始化statusBar，可重写该方法并返回true可自己消费；默认为false，已经在BaseActivityLifecycle中实现
      */
-    override fun initStatusBar(): Boolean {
-        return false
-    }
+    override fun initStatusBar(): Boolean = false
 
     /**
-     * 初始化titleBar,默认已经在BaseActivityLifecycle中实现，可重写该方法自己定制
+     * 初始化titleBar,可重写该方法并返回true为自己消费,下面所有的默认titleBar设置将失效，默认已经在BaseActivityLifecycle中实现
      */
-    override fun initTitleBar() {}
+    override fun initTitleBar(): Boolean = false
 
     /**
-     * 设置返回按钮图标，默认使用系统实现
+     * 设置返回按钮图标，如果没有全局设置就默认使用系统实现
      */
-    override fun initBackIconRes(): Int? {
-        return 0
-    }
+    override fun initBackIconRes(): Int = AppConfigOptions.TITLE_BAR_CONFIG.backIcon
 
     /**
-     * 重写该方法可设置标题，默认为label,不设label就是projectName
+     * 重写该方法可设置标题，默认为上个页面传值，如果不传就显示空标题
      */
-    override fun initTitleText(): CharSequence? {
-        return intent.getStringExtra(VIEW_TITLE) ?: ""
-    }
+    override fun initTitleText(): CharSequence? = intent.getStringExtra(ITitleBar.VIEW_TITLE) ?: ""
 
     /**
      * 标题是否居中，默认false
      */
-    override fun isTitleTextCenter(): Boolean {
-        return false
-    }
+    override fun isTitleTextCenter(): Boolean = AppConfigOptions.TITLE_BAR_CONFIG.titleIsCenter
 
     /**
      * 初始化menu布局
      */
-    override fun initMenuRes(): Int? {
-        return 0
-    }
+    override fun initMenuRes(): Int? = 0
 
     /**
      * menu布局条目选中点击
@@ -277,10 +267,7 @@ abstract class BaseActivity<VB : ViewDataBinding, VM : BaseViewModel> : RxAppCom
 
 }
 
-/**
- * 默认的view title,可从上个页面传值
- */
-const val VIEW_TITLE = "view_title"
+
 
 
 
