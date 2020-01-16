@@ -39,7 +39,7 @@ import java.util.concurrent.TimeUnit
  * @date   2019-12-24
  * View Bind
  * View扩展函数绑定DataBinding，方便xml或者代码调用
- * more bind function will add
+ * more bind function will be add
  */
 
 /**

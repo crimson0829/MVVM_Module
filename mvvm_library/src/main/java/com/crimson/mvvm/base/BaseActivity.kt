@@ -21,6 +21,7 @@ import java.lang.reflect.Type
  * @date 19/12/15
  * base Activity
  * 默认单个ViewModel,如果想一个activity有多个ViewModel,可以用viewModelModule创建viewModel并注入
+ * 全局默认设置了状态栏和标题栏，如果想自己定制，可自行重写对应方法
  */
 abstract class BaseActivity<VB : ViewDataBinding, VM : BaseViewModel> : RxAppCompatActivity(),
     IView, IStatusBar, ITitleBar {

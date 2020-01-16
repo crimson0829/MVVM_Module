@@ -9,7 +9,7 @@ import com.crimson.mvvm.ext.appContext
  * @author crimson
  * @date   2019-12-26
  */
-object KeyBoradUtils {
+object KeyBoardUtils {
     /**
      * 隐藏软键盘
      */

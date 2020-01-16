@@ -27,7 +27,7 @@ class AppApplication : BaseApplication() {
     }
 
     /**
-     * 设置app_config
+     * 设置app_config，全局参数设置，包括状态栏设置，标题栏设置，加载视图设置，Retrofit设置等
      * more config will be add
      */
     private fun appConfig() {
@@ -42,6 +42,14 @@ class AppApplication : BaseApplication() {
             .initScreenAutoSize()
 
 
+    }
+
+    /**
+     * 重写该方法，注册自己继承的ActivityLifecycle类
+     */
+    override fun initActivityLifecycle(): ActivityLifecycleCallbacks? {
+        //继承BaseActivityLifecycle 的类
+        return AppActivityLifecycle()
     }
 
 

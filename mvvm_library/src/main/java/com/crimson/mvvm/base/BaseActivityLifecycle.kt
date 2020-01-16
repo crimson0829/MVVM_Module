@@ -28,7 +28,7 @@ open class BaseActivityLifecycle : ActivityLifecycleCallbacks {
 
     override fun onActivityCreated(activity: Activity, savedInstanceState: Bundle?) {
 
-        //初始全局默认化状态栏
+        //初始化全局默认状态栏
         initDefaultStatusBar(activity)
         //初始化全局默认标题栏
         initDefaultTitleBar(activity)
