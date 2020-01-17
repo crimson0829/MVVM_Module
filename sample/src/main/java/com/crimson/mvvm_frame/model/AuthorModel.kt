@@ -19,8 +19,6 @@ class AuthorModel : BaseModel() {
 
     val androidService by inject<AndroidService>()
 
-
-
     /**
      * get data use coroutine
      */

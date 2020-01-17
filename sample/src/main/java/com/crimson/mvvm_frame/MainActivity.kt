@@ -32,7 +32,6 @@ class MainViewModel : BaseViewModel() {
 
     val onClickListBtn = bindConsumer<Unit> {
         startActivity(TabActivity::class.java)
-
     }
 
 

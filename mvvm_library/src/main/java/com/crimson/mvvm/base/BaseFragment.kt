@@ -142,7 +142,7 @@ abstract class BaseFragment<VB : ViewDataBinding, VM : BaseViewModel> : RxFragme
 
         vb?.run {
             lifecycleOwner = this@BaseFragment
-            val vmId = initVariableId()
+            val vmId = initViewModelId()
             setVariable(vmId, vm)
         }
         vm?.run {
@@ -347,7 +347,7 @@ abstract class BaseFragment<VB : ViewDataBinding, VM : BaseViewModel> : RxFragme
      *
      * @return BR的id
      */
-    abstract fun initVariableId(): Int
+    abstract fun initViewModelId(): Int
 
     /**
      * 初始化ViewModel

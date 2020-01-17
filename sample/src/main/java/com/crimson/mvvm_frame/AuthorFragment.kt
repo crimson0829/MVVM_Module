@@ -42,7 +42,7 @@ class AuthorFragment : BaseFragment<FragmentTabBinding, AuthorViewModel>() {
         savedInstanceState: Bundle?
     ): Int = R.layout.fragment_tab
 
-    override fun initVariableId(): Int = BR.viewModel
+    override fun initViewModelId(): Int = BR.viewModel
 
     override fun initViewModel(): AuthorViewModel? {
 
