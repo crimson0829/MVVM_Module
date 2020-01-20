@@ -5,6 +5,7 @@ import androidx.recyclerview.widget.RecyclerView.ItemDecoration
 
 object LineManagers {
 
+    @JvmStatic
     fun both(): LineManagerFactory {
         return object : LineManagerFactory {
             override fun create(recyclerView: RecyclerView): ItemDecoration {
@@ -13,6 +14,7 @@ object LineManagers {
         }
     }
 
+    @JvmStatic
     fun horizontal(): LineManagerFactory {
         return object : LineManagerFactory {
             override fun create(recyclerView: RecyclerView): ItemDecoration {
@@ -21,6 +23,7 @@ object LineManagers {
         }
     }
 
+    @JvmStatic
     fun vertical(): LineManagerFactory {
         return object : LineManagerFactory {
             override fun create(recyclerView: RecyclerView): ItemDecoration {

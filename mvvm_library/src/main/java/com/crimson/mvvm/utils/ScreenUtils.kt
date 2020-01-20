@@ -7,6 +7,7 @@ import android.view.WindowManager
 /**
  * @author crimson
  * @date   2019-12-26
+ * screen 工具类
  */
 object ScreenUtils {
     /**
@@ -54,7 +55,7 @@ object ScreenUtils {
      * 1.0:mdpi 1.5:hdpi 2.0:xhdpi 2.5:xxhdpi
      * @return
      */
-    fun getSceenDpi(context: Context): Float {
+    fun getScreenDpi(context: Context): Float {
         return context.resources.displayMetrics.density
     }
 

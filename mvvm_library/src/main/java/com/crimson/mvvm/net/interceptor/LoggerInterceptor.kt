@@ -9,6 +9,10 @@ import okhttp3.ResponseBody.Companion.toResponseBody
 import okio.Buffer
 import java.io.IOException
 
+/**
+ * 日志拦截器
+ * 可打印请求数据和返回数据
+ */
 class LoggerInterceptor @JvmOverloads constructor(
      val showResponse: Boolean,
      val showRequest: Boolean = false
@@ -70,7 +74,7 @@ class LoggerInterceptor @JvmOverloads constructor(
                 val requestBody = request.body
                 if (requestBody != null) {
                     val mediaType = requestBody.contentType()
-                    if (mediaType != null) { //                        LogUtils.wtf("requestBody's contentType : " + mediaType.toString());
+                    if (mediaType != null) {
                         if (isText(mediaType)) {
                             logw(
                                 "requestBody's content : " + bodyToString(

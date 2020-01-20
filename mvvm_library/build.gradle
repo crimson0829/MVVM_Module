@@ -45,6 +45,7 @@ dependencies {
     api rootProject.ext.dependencies["androidx-recyclerview"]
     api rootProject.ext.dependencies["androidx-viewpager2"]
     api rootProject.ext.dependencies["lifecycle"]
+    api rootProject.ext.dependencies["lifecycle_rx2"]
     api rootProject.ext.dependencies["multidex"]
 
     //material

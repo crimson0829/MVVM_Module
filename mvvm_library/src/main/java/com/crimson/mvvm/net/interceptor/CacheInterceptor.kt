@@ -7,7 +7,7 @@ import okhttp3.Response
 import java.io.IOException
 
 /**
- *
+ * 缓存拦截器
  * 有网状态下60秒
  * 无网络状态下读取缓存的拦截器
  */

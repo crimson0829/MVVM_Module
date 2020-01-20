@@ -14,6 +14,7 @@ object LayoutManagers {
     /**
      * A [LinearLayoutManager].
      */
+    @JvmStatic
     fun linear(): LayoutManagerFactory {
         return object : LayoutManagerFactory {
             override fun create(recyclerView: RecyclerView): RecyclerView.LayoutManager {
@@ -25,6 +26,7 @@ object LayoutManagers {
     /**
      * A [LinearLayoutManager] with the given orientation and reverseLayout.
      */
+    @JvmStatic
     fun linear(@Orientation orientation: Int, reverseLayout: Boolean): LayoutManagerFactory {
         return object : LayoutManagerFactory {
             override fun create(recyclerView: RecyclerView): RecyclerView.LayoutManager {
@@ -36,6 +38,7 @@ object LayoutManagers {
     /**
      * A [GridLayoutManager] with the given spanCount.
      */
+    @JvmStatic
     fun grid(spanCount: Int): LayoutManagerFactory {
         return object : LayoutManagerFactory {
             override fun create(recyclerView: RecyclerView): RecyclerView.LayoutManager {
@@ -47,6 +50,7 @@ object LayoutManagers {
     /**
      * A [GridLayoutManager] with the given spanCount, orientation and reverseLayout.
      */
+    @JvmStatic
     fun grid(
         spanCount: Int, @Orientation orientation: Int,
         reverseLayout: Boolean
@@ -66,6 +70,7 @@ object LayoutManagers {
     /**
      * A [StaggeredGridLayoutManager] with the given spanCount and orientation.
      */
+    @JvmStatic
     fun staggeredGrid(spanCount: Int, @Orientation orientation: Int): LayoutManagerFactory {
         return object : LayoutManagerFactory {
             override fun create(recyclerView: RecyclerView): RecyclerView.LayoutManager {

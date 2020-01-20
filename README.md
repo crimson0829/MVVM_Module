@@ -887,7 +887,7 @@ fun <T : Any> Flowable<T>.subscribeNet(
  RxBus.get().post(<对应code>, <对应类型>)
  
  //or
-  RxBus.get().post(<对应类型>)
+  RxBus.get().send(<对应类型>)
 ```
 
 5.1 一些扩展类和工具类

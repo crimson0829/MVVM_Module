@@ -19,4 +19,5 @@ class ArticleAdapter : BaseBindingAdapter<ArticleEntity, AdapterItemArticleBindi
 
     }
 
+
 }

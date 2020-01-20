@@ -10,7 +10,7 @@ import androidx.annotation.IntRange
 import com.crimson.mvvm.base.IViewDataLoading
 import com.crimson.mvvm.ext.appContext
 import com.crimson.mvvm.ext.logd
-import com.crimson.mvvm.net.RetrofitApi
+import com.crimson.mvvm.net.NetworkApi
 import com.crimson.mvvm.utils.FileUtils
 import com.crimson.mvvm.utils.constant.MemoryConstants
 import com.scwang.smartrefresh.layout.SmartRefreshLayout
@@ -128,7 +128,7 @@ class AppConfigOptions(val context: Context) {
     fun buildRetrofit(
         config: RetrofitConfig = RetrofitConfig()
     ): AppConfigOptions {
-        RetrofitApi.get(context)
+        NetworkApi.get(context)
             .buildOkHttpOptions(
                 config.baseUrl,
                 config.connectTime,
@@ -296,7 +296,7 @@ data class TitleBarConfig(
  * retrofit config
  */
 data class RetrofitConfig(
-    var baseUrl: String = RetrofitApi.BASE_URL,
+    var baseUrl: String = NetworkApi.BASE_URL,
     var connectTime: Long = 30,
     var showResponse: Boolean = true,
     var showRequest: Boolean = true,

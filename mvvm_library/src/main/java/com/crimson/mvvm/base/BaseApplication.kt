@@ -47,7 +47,6 @@ open class BaseApplication : Application() {
         //other init
         logInit()
 
-
     }
 
     /**

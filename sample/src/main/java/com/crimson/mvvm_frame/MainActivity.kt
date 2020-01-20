@@ -3,7 +3,7 @@ package com.crimson.mvvm_frame
 import android.os.Bundle
 import com.crimson.mvvm.base.BaseActivity
 import com.crimson.mvvm.base.BaseViewModel
-import com.crimson.mvvm.binding.bindConsumer
+import com.crimson.mvvm.binding.consumer.bindConsumer
 import com.crimson.mvvm_frame.databinding.ActivityMainBinding
 
 
@@ -35,9 +35,11 @@ class MainViewModel : BaseViewModel() {
     }
 
 
-    val onClickPictureBtn = bindConsumer<Unit> {
-        startActivity(PictureActivity::class.java)
-    }
+    val onClickPictureBtn =
+        bindConsumer<Unit> {
+            startActivity(PictureActivity::class.java)
+
+        }
 
 
 }

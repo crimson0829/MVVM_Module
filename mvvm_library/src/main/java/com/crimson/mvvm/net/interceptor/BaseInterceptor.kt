@@ -4,6 +4,9 @@ import okhttp3.Interceptor
 import okhttp3.Response
 import java.io.IOException
 
+/**
+ * 基础拦截器
+ */
 class BaseInterceptor(private val headers: Map<String, String>?) :
     Interceptor {
     @Throws(IOException::class)

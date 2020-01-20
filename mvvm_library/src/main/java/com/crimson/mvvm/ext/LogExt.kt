@@ -10,7 +10,7 @@ import timber.log.Timber.DebugTree
 /**
  * log with timber
  */
-internal fun logInit(){
+internal fun logInit() {
     if (BuildConfig.DEBUG) {
         Timber.plant(DebugTree())
     } else {
@@ -21,7 +21,7 @@ internal fun logInit(){
 /**
  * api
  */
-fun logTag(msg: MESSAGE?)=Timber.tag(msg)
+fun logTag(msg: MESSAGE?) = Timber.tag(msg)
 
 fun logi(msg: MESSAGE?) = Timber.i(msg)
 

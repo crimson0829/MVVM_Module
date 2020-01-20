@@ -4,19 +4,41 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
 import io.reactivex.BackpressureStrategy
 import io.reactivex.Flowable
+import io.reactivex.Observable
 import io.reactivex.android.MainThreadDisposable
 
+
+/**
+ * LiveData转化RxJava
+ */
 fun <T> LiveData<T>.toFlowable(): Flowable<T> =
-        Flowable.create({ emitter ->
-            val observer = Observer<T> {
-                it?.let(emitter::onNext)
-            }
-            observeForever(observer)
+    Flowable.create({ emitter ->
+        val observer = Observer<T> {
+            it?.let(emitter::onNext)
+        }
 
-            emitter.setCancellable {
-                object : MainThreadDisposable() {
+        observeForever(observer)
 
-                    override fun onDispose() = removeObserver(observer)
-                }
+        emitter.setCancellable {
+            object : MainThreadDisposable() {
+
+                override fun onDispose() = removeObserver(observer)
             }
-        }, BackpressureStrategy.LATEST)
+        }
+    }, BackpressureStrategy.LATEST)
+
+
+fun <T> LiveData<T>.toObservable(): Observable<T> = Observable.create { emitter ->
+    val observer = Observer<T> {
+        it?.let(emitter::onNext)
+    }
+    observeForever(observer)
+
+    emitter.setCancellable {
+        object : MainThreadDisposable() {
+
+            override fun onDispose() = removeObserver(observer)
+        }
+    }
+
+}

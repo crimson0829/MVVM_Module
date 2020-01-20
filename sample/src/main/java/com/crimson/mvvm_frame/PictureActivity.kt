@@ -7,7 +7,7 @@ import com.afollestad.materialdialogs.list.listItems
 import com.crimson.mvvm.base.BaseActivity
 import com.crimson.mvvm.base.BaseViewModel
 import com.crimson.mvvm.binding.bindClick
-import com.crimson.mvvm.binding.bindConsumer
+import com.crimson.mvvm.binding.consumer.bindConsumer
 import com.crimson.mvvm.binding.bindImage
 import com.crimson.mvvm.utils.StatusBarUtils
 import com.crimson.mvvm_frame.databinding.ActivityPictureBinding
@@ -29,7 +29,7 @@ class PictureActivity : BaseActivity<ActivityPictureBinding, BaseViewModel>() {
 
 
     override fun initStatusBar(): Boolean {
-        StatusBarUtils.setColor(this,ContextCompat.getColor(this,R.color.colorPrimaryDark))
+        StatusBarUtils.setColor(this, ContextCompat.getColor(this, R.color.colorPrimaryDark))
         return true
     }
 
@@ -37,7 +37,7 @@ class PictureActivity : BaseActivity<ActivityPictureBinding, BaseViewModel>() {
 
         btn_change.bindClick(bindConsumer {
 
-            MaterialDialog(this@PictureActivity).show {
+            MaterialDialog(context).show {
                 listItems(R.array.imageStyles) { _, index, _ ->
                     val style = (index + 1).toString()
                     bindImage(style)
@@ -45,7 +45,7 @@ class PictureActivity : BaseActivity<ActivityPictureBinding, BaseViewModel>() {
                 }
             }
 
-        },0)
+        }, 0)
 
 
         bindImage()
@@ -53,8 +53,10 @@ class PictureActivity : BaseActivity<ActivityPictureBinding, BaseViewModel>() {
     }
 
     private fun bindImage(style: String = "2") {
-        vb?.ivPicture?.bindImage(url,
+        vb?.ivPicture?.bindImage(
+            url,
             style, 5, true, "4", R.drawable.icon_picture
         )
     }
+
 }

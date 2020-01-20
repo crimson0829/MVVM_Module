@@ -8,11 +8,11 @@ import com.crimson.mvvm.base.BaseActivity
 import com.crimson.mvvm.base.BaseViewModel
 import com.crimson.mvvm.binding.adapter.ViewPager2FragmentAdapter
 import com.crimson.mvvm.binding.bindAdapter
-import com.crimson.mvvm.binding.bindConsumer
 import com.crimson.mvvm.binding.bindTabLayout
-import com.crimson.mvvm.binding.bindTiConsumer
+import com.crimson.mvvm.binding.consumer.bindConsumer
+import com.crimson.mvvm.binding.consumer.bindTiConsumer
 import com.crimson.mvvm.ext.logw
-import com.crimson.mvvm.ext.toast
+import com.crimson.mvvm.ext.view.toast
 import com.crimson.mvvm.livedata.SingleLiveData
 import com.crimson.mvvm.rx.bus.RxCode
 import com.crimson.mvvm.rx.bus.RxDisposable
@@ -63,13 +63,18 @@ class TabActivity : BaseActivity<ActivityTabBinding, TabViewModel>() {
             R.id.page_refresh -> {
                 logw("refresh page")
                 toast("refresh page")
+
+
             }
+
         }
+
     }
 
     override fun initView() {
 
         vm?.getData()
+
 
     }
 
@@ -91,10 +96,12 @@ class TabActivity : BaseActivity<ActivityTabBinding, TabViewModel>() {
 
             }
 
+
         })
 
 
     }
+
 
 }
 
@@ -102,6 +109,7 @@ class TabActivity : BaseActivity<ActivityTabBinding, TabViewModel>() {
  * data from coroutine
  */
 class TabViewModel : BaseViewModel() {
+
 
     //koin inject
     val model by inject<AuthorModel>()
@@ -113,14 +121,20 @@ class TabViewModel : BaseViewModel() {
 
     var errorDis: Disposable? = null
 
-    val vp2SelectedConsumer = bindConsumer<Int> {
+    val vp2SelectedConsumer =
+        bindConsumer<Int> {
 
-        logw("vp2page -> $this")
-    }
+            logw("vp2page -> $this")
+        }
 
-    val vp2ScrolledConsumer = bindTiConsumer<Int, Float, Int> { t1, t2, t3 ->
-        logw("vp2pos -> $t1 positionOffset->$t2 positionOffsetPixels -> $t3")
-    }
+    val vp2ScrolledConsumer =
+        bindTiConsumer<Int, Float, Int> { t1, t2, t3 ->
+            logw("vp2pos -> $t1 positionOffset->$t2 positionOffsetPixels -> $t3")
+        }
+
+
+
+
 
 
     /**
@@ -154,6 +168,8 @@ class TabViewModel : BaseViewModel() {
 
                 tabDataCompleteLD.postValue(titles)
 
+
+
             }
 
         }
@@ -161,13 +177,14 @@ class TabViewModel : BaseViewModel() {
     override fun registerRxBus() {
 
         errorDis = rxbus.toObservable(RxCode.POST_CODE, Integer::class.java)
-            .subscribe {
-                if (it.toInt() == RxCode.ERROR_LAYOUT_CLICK_CODE) {
-                    getData()
-                }
+        .subscribe {
+            if (it.toInt() == RxCode.ERROR_LAYOUT_CLICK_CODE) {
+                getData()
             }
+        }
 
         RxDisposable.add(errorDis)
+
 
     }
 

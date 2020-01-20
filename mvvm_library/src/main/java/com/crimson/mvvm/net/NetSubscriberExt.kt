@@ -1,7 +1,7 @@
 package com.crimson.mvvm.net
 
 import com.crimson.mvvm.ext.loge
-import com.crimson.mvvm.ext.toast
+import com.crimson.mvvm.ext.view.toast
 import io.reactivex.Flowable
 import io.reactivex.disposables.Disposable
 
@@ -17,6 +17,7 @@ private val onErrorStub: (Throwable?) -> Unit = {
     //全部甩锅网络异常
     toast("网络异常")
 }
+
 private val onCompleteStub: () -> Unit = {}
 
 

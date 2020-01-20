@@ -2,8 +2,8 @@ package com.crimson.mvvm.base
 
 import android.os.Handler
 import com.crimson.mvvm.livedata.SingleLiveData
+import com.crimson.mvvm.net.NetworkApi
 import com.crimson.mvvm.net.RemoteService
-import com.crimson.mvvm.net.RetrofitApi
 import com.crimson.mvvm.rx.bus.RxBus
 import com.google.gson.Gson
 import org.koin.android.ext.koin.androidContext
@@ -46,15 +46,15 @@ val localModule = module {
 val remoteModule = module {
 
     single {
-        RetrofitApi.get(androidContext())
+        NetworkApi.get(androidContext())
     }
 
     single {
-        get<RetrofitApi>().obtainRetrofit()
+        get<NetworkApi>().obtainRetrofit()
     }
 
     single {
-        get<RetrofitApi>().obtainOkHttp()
+        get<NetworkApi>().obtainOkHttp()
     }
 
     single {

@@ -1,4 +1,4 @@
-package com.crimson.mvvm.binding
+package com.crimson.mvvm.binding.consumer
 
 import io.reactivex.functions.BiConsumer
 import io.reactivex.functions.Consumer
@@ -13,7 +13,8 @@ interface BindConsumer<T> : Consumer<T>
 
 interface BindBiConsumer<T1, T2> : BiConsumer<T1, T2>
 
-interface BindTiConsumer<T1, T2, T3> : TiConsumer<T1, T2, T3>
+interface BindTiConsumer<T1, T2, T3> :
+    TiConsumer<T1, T2, T3>
 
 interface TiConsumer<T1, T2, T3> {
 
@@ -53,7 +54,8 @@ inline fun <reified T1, reified T2> bindBiConsumer(crossinline call: (T1, T2) ->
  */
 inline fun <reified T1, reified T2, reified T3> bindTiConsumer(crossinline call: (T1, T2, T3) -> Unit):
         BindTiConsumer<T1, T2, T3> {
-    return object : BindTiConsumer<T1, T2, T3> {
+    return object :
+        BindTiConsumer<T1, T2, T3> {
         override fun accept(t1: T1, t2: T2, t3: T3) {
             call(t1, t2, t3)
         }

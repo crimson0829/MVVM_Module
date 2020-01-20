@@ -26,6 +26,7 @@ import org.koin.core.inject
  * @date   2019-12-21
  * base view model
  * inject model in extends ViewModel
+ * 默认不带参数，如果带参数，需在BaseActivity或BaseFragment的继承类中实现initViewModel()初始化ViewModel
  */
 open class BaseViewModel : AndroidViewModel(application()), IViewModel {
 
@@ -80,7 +81,6 @@ open class BaseViewModel : AndroidViewModel(application()), IViewModel {
 
     override fun onDestroy() {}
 
-
     /**
      *
      * 获取context，如果不是activity或者fragment 上下文 那就返回全局上下文
@@ -114,10 +114,14 @@ open class BaseViewModel : AndroidViewModel(application()), IViewModel {
 
     }
 
+    /**
+     * start a new activity
+     * 可用intent传参
+     *
+     */
     fun startActivity(intent: Intent) {
         context()?.let {
             ContextCompat.startActivity(it, intent, null)
-
         }
     }
 

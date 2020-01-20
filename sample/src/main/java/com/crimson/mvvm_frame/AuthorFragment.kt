@@ -13,8 +13,8 @@ import com.afollestad.materialdialogs.customview.customView
 import com.afollestad.materialdialogs.customview.getCustomView
 import com.crimson.mvvm.base.BaseFragment
 import com.crimson.mvvm.base.BaseViewModel
-import com.crimson.mvvm.binding.bindBiConsumer
-import com.crimson.mvvm.binding.bindConsumer
+import com.crimson.mvvm.binding.consumer.bindBiConsumer
+import com.crimson.mvvm.binding.consumer.bindConsumer
 import com.crimson.mvvm.ext.logw
 import com.crimson.mvvm.livedata.SingleLiveData
 import com.crimson.mvvm.net.subscribeNet
@@ -34,7 +34,6 @@ import org.koin.core.parameter.parametersOf
  * fragment sample
  */
 class AuthorFragment : BaseFragment<FragmentTabBinding, AuthorViewModel>() {
-
 
     override fun initContentView(
         inflater: LayoutInflater?,
@@ -58,6 +57,7 @@ class AuthorFragment : BaseFragment<FragmentTabBinding, AuthorViewModel>() {
         vm?.getArticles()
 
     }
+
 
 }
 
@@ -85,11 +85,13 @@ class AuthorViewModel(val id: Int) : BaseViewModel() {
 
         }
 
+
     }
 
-    val bindScrollConsumer = bindBiConsumer<Int, Int> { t1, t2 ->
-        logw("dx -> $t1 dy -> $t2")
-    }
+    val bindScrollConsumer =
+        bindBiConsumer<Int, Int> { t1, t2 ->
+            logw("dx -> $t1 dy -> $t2")
+        }
 
 
     //test liveData
@@ -124,24 +126,29 @@ class AuthorViewModel(val id: Int) : BaseViewModel() {
                     }
                 }
         }
+
+
     }
 
 
     //bind refresh
-    val refreshConsumer = bindConsumer<RefreshLayout> {
-        refreshLayout = this
-        refresh = true
-        page = 1
-        getArticles()
-    }
+    val refreshConsumer =
+        bindConsumer<RefreshLayout> {
+            refreshLayout = this
+            refresh = true
+            page = 1
+            getArticles()
+
+        }
 
     //bind loadmore
-    val loadMoreConsumer = bindConsumer<RefreshLayout> {
-        refresh = false
-        refreshLayout = this
-        page++
-        getArticles()
-    }
+    val loadMoreConsumer =
+        bindConsumer<RefreshLayout> {
+            refresh = false
+            refreshLayout = this
+            page++
+            getArticles()
+        }
 
 
     fun getArticles() {
@@ -175,6 +182,7 @@ class AuthorViewModel(val id: Int) : BaseViewModel() {
             })
 
 
+
     }
 
     private fun finishLoading() {
@@ -183,7 +191,9 @@ class AuthorViewModel(val id: Int) : BaseViewModel() {
         } else {
             refreshLayout?.finishLoadMore(0)
         }
+
     }
+
 
 
 }

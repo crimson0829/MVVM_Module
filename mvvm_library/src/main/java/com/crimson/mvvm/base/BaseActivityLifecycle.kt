@@ -12,9 +12,10 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.FragmentActivity
 import com.crimson.mvvm.R
 import com.crimson.mvvm.config.AppConfigOptions
-import com.crimson.mvvm.config.ViewLifeCycleExt
+import com.crimson.mvvm.config.ViewLifeCycleManager
+import com.crimson.mvvm.ext.Api
+import com.crimson.mvvm.ext.afterApi
 import com.crimson.mvvm.ext.runOnIO
-import com.crimson.mvvm.utils.SDKVersionUtils
 import com.crimson.mvvm.utils.StatusBarUtils
 
 /**
@@ -37,7 +38,7 @@ open class BaseActivityLifecycle : ActivityLifecycleCallbacks {
 
         runOnIO {
             //添加activity入栈
-            ViewLifeCycleExt.addActivityToStack(activity)
+            ViewLifeCycleManager.addActivityToStack(activity)
             if (activity is FragmentActivity) {
                 //注册fragment生命周期
                 activity.supportFragmentManager.registerFragmentLifecycleCallbacks(
@@ -64,7 +65,7 @@ open class BaseActivityLifecycle : ActivityLifecycleCallbacks {
     override fun onActivityDestroyed(activity: Activity) {
 
         runOnIO {
-            ViewLifeCycleExt.removeActivityFromStack(activity)
+            ViewLifeCycleManager.removeActivityFromStack(activity)
             if (activity is FragmentActivity) {
                 activity.supportFragmentManager.unregisterFragmentLifecycleCallbacks(
                     fragmentLifeCycle
@@ -87,7 +88,7 @@ open class BaseActivityLifecycle : ActivityLifecycleCallbacks {
                 return
             }
 
-            if (SDKVersionUtils.isAboveAndroid6()) {
+            if (afterApi(Api.M)) {
                 StatusBarUtils.setColor(
                     activity,
                     ContextCompat.getColor(activity, AppConfigOptions.STATUS_BAR_CONFIG.bgColor),

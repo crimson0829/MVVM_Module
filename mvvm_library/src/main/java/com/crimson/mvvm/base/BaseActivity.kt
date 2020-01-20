@@ -21,7 +21,7 @@ import java.lang.reflect.Type
  * @date 19/12/15
  * base Activity
  * 默认单个ViewModel,如果想一个activity有多个ViewModel,可以用viewModelModule创建viewModel并注入
- * 全局默认设置了状态栏和标题栏，如果想自己定制，可自行重写对应方法
+ * 全局默认设置了状态栏和标题栏，如果想自己定制，可重写对应方法
  */
 abstract class BaseActivity<VB : ViewDataBinding, VM : BaseViewModel> : RxAppCompatActivity(),
     IView, IStatusBar, ITitleBar {
@@ -37,7 +37,7 @@ abstract class BaseActivity<VB : ViewDataBinding, VM : BaseViewModel> : RxAppCom
     override fun onCreate(savedInstanceState: Bundle?) {
 
         //初始化ViewDataBinding和ViewModel
-        initViewBinding(savedInstanceState)
+        initViewBindingAndViewModel(savedInstanceState)
         //这里调用super就可以在BaseActivityLifecycle中获取contentView,从而对布局View进行操作
         super.onCreate(savedInstanceState)
 
@@ -46,15 +46,17 @@ abstract class BaseActivity<VB : ViewDataBinding, VM : BaseViewModel> : RxAppCom
     /**
      * 初始化ViewBinding 和 ViewModel
      */
-    private fun initViewBinding(savedInstanceState: Bundle?) {
+    private fun initViewBindingAndViewModel(savedInstanceState: Bundle?) {
 
         vb = DataBindingUtil.setContentView(this, initContentView(savedInstanceState))
         vm = initViewModel()
         if (vm == null) {
             val type: Type? = javaClass.genericSuperclass
             if (type is ParameterizedType && type.actualTypeArguments.size == 2) {
-                val viewModel = type.actualTypeArguments[1] as Class<VM>
-                vm = viewModel.newInstance()
+                tryCatch {
+                    val viewModel = type.actualTypeArguments[1] as? Class<VM>
+                    vm = viewModel?.newInstance()
+                }
             }
         }
 
@@ -112,7 +114,7 @@ abstract class BaseActivity<VB : ViewDataBinding, VM : BaseViewModel> : RxAppCom
     /**
      * run on view create with get data
      */
-    open fun onLoadingViewInjectToRoot() {
+    fun onLoadingViewInjectToRoot() {
         checkLoadingViewImpl()
         loadingView?.onLoadingViewInjectToRoot(vb?.root?.parent as? ViewGroup)
     }
@@ -120,14 +122,14 @@ abstract class BaseActivity<VB : ViewDataBinding, VM : BaseViewModel> : RxAppCom
     /**
      * run on view get data finish
      */
-    open fun onLoadingViewResult() {
+    fun onLoadingViewResult() {
         loadingView?.onLoadingViewResult(vb?.root?.parent as? ViewGroup)
     }
 
     /**
      * run on data loading
      */
-    open fun onDataLoading(it: String?) {
+    fun onDataLoading(it: String?) {
         checkLoadingViewImpl()
         loadingView?.onDataLoading(it)
 
@@ -136,7 +138,7 @@ abstract class BaseActivity<VB : ViewDataBinding, VM : BaseViewModel> : RxAppCom
     /**
      * run on data loading finish
      */
-    open fun onDataResult() {
+    fun onDataResult() {
         loadingView?.onDataLoadingResult()
     }
 
@@ -144,15 +146,16 @@ abstract class BaseActivity<VB : ViewDataBinding, VM : BaseViewModel> : RxAppCom
     /**
      * data loading error
      */
-    open fun onLoadingError() {
+    fun onLoadingError() {
         checkLoadingViewImpl()
         loadingView?.onLoadingError(vb?.root?.parent as? ViewGroup)
     }
 
     /**
      * 检查loadingView的实现
+     * 如果想定制化单个页面的LoadingView，可重写该方法实现
      */
-    private fun checkLoadingViewImpl() {
+    open fun checkLoadingViewImpl() {
         if (loadingView == null) {
             val clazz = AppConfigOptions.LOADING_VIEW_CLAZZ
             if (clazz != null) {

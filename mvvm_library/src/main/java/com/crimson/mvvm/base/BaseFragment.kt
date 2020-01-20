@@ -96,7 +96,7 @@ abstract class BaseFragment<VB : ViewDataBinding, VM : BaseViewModel> : RxFragme
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        initViewBinding(inflater, container, savedInstanceState)
+        initViewBindingAndViewModel(inflater, container, savedInstanceState)
         initRootLayout()
         initView()
         isPrepared = true
@@ -119,7 +119,7 @@ abstract class BaseFragment<VB : ViewDataBinding, VM : BaseViewModel> : RxFragme
     /**
      * init viewBinding and ViewModel
      */
-    private fun initViewBinding(
+    private fun initViewBindingAndViewModel(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -135,8 +135,11 @@ abstract class BaseFragment<VB : ViewDataBinding, VM : BaseViewModel> : RxFragme
         if (vm == null) {
             val type: Type? = javaClass.genericSuperclass
             if (type is ParameterizedType && type.actualTypeArguments.size == 2) {
-                val viewModel = type.actualTypeArguments[1] as Class<VM>
-                vm = viewModel.newInstance()
+                tryCatch {
+                    val viewModel = type.actualTypeArguments[1] as? Class<VM>
+                    vm = viewModel?.newInstance()
+                }
+
             }
         }
 
@@ -192,7 +195,7 @@ abstract class BaseFragment<VB : ViewDataBinding, VM : BaseViewModel> : RxFragme
     /**
      * run on view create with get data
      */
-    open fun onLoadingViewInjectToRoot() {
+    fun onLoadingViewInjectToRoot() {
         checkLoadingViewImpl()
         loadingView?.onLoadingViewInjectToRoot(rootLayout)
     }
@@ -200,14 +203,14 @@ abstract class BaseFragment<VB : ViewDataBinding, VM : BaseViewModel> : RxFragme
     /**
      * run on view get data finish
      */
-    open fun onLoadingViewResult() {
+    fun onLoadingViewResult() {
         loadingView?.onLoadingViewResult(rootLayout)
     }
 
     /**
      * run on data loading
      */
-    open fun onDataLoading(it: String?) {
+    fun onDataLoading(it: String?) {
         checkLoadingViewImpl()
         loadingView?.onDataLoading(it)
     }
@@ -215,22 +218,23 @@ abstract class BaseFragment<VB : ViewDataBinding, VM : BaseViewModel> : RxFragme
     /**
      * run on data loading finish
      */
-    open fun onDataResult() {
+    fun onDataResult() {
         loadingView?.onDataLoadingResult()
     }
 
     /**
      * data loading error
      */
-    open fun onLoadingError() {
+    fun onLoadingError() {
         checkLoadingViewImpl()
         loadingView?.onLoadingError(rootLayout)
     }
 
     /**
      * 检查loadingView的实现
+     * 如果想定制化单个页面的LoadingView，可重写该方法实现
      */
-    private fun checkLoadingViewImpl() {
+    open fun checkLoadingViewImpl() {
         if (loadingView == null) {
             val clazz = AppConfigOptions.LOADING_VIEW_CLAZZ
             if (clazz != null) {

@@ -3,6 +3,8 @@
 package com.crimson.mvvm.ext
 
 import android.app.Application
+import android.os.Handler
+import android.os.Looper
 import com.crimson.mvvm.base.BaseApplication
 import com.crimson.mvvm.utils.ConvertUtils
 import com.crimson.mvvm.utils.NetWorkUtils
@@ -10,11 +12,13 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
+import java.util.concurrent.TimeUnit
 
 
 /**
  * @author crimson
  * @date   2019-12-21
+ * App扩展函数
  */
 
 typealias MESSAGE = String
@@ -39,6 +43,47 @@ fun <T> T.runOnIO(block: T.() -> Unit): Job {
         block()
     }
 }
+
+val <T> T.exhaustive: T
+    get() = this
+
+
+/**
+ * Check if is Main Thread.
+ */
+inline val isMainThread: Boolean get() = Looper.myLooper() == Looper.getMainLooper()
+
+
+/**
+ * Extension method to run block of code after specific Delay.
+ */
+fun runDelayed(delay: Long, timeUnit: TimeUnit = TimeUnit.MILLISECONDS, action: () -> Unit) {
+    Handler().postDelayed(action, timeUnit.toMillis(delay))
+}
+
+/**
+ * Extension method to run block of code on UI Thread after specific Delay.
+ */
+fun runDelayedOnUiThread(
+    delay: Long,
+    timeUnit: TimeUnit = TimeUnit.MILLISECONDS,
+    action: () -> Unit
+) {
+    ContextHandler.handler.postDelayed(action, timeUnit.toMillis(delay))
+}
+
+/**
+ * Provides handler and mainThreadScheduler.
+ */
+private object ContextHandler {
+    val handler = Handler(Looper.getMainLooper())
+    val mainThread = Looper.getMainLooper().thread
+}
+
+/**
+ * 当前线程
+ */
+fun currentThread() = Thread.currentThread()
 
 
 /**
@@ -70,6 +115,15 @@ fun isNetConnected(): Boolean {
     }
     return false
 }
+
+/**
+ * get CurrentTimeInMillis from System.currentTimeMillis
+ */
+inline val currentTimeMillis: Long get() = System.currentTimeMillis()
+
+
+
+
 
 
 

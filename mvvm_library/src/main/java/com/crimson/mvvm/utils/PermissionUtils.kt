@@ -3,7 +3,7 @@ package com.crimson.mvvm.utils
 import android.Manifest
 import androidx.annotation.StringDef
 import androidx.fragment.app.FragmentActivity
-import com.crimson.mvvm.config.ViewLifeCycleExt
+import com.crimson.mvvm.config.ViewLifeCycleManager
 import com.tbruyelle.rxpermissions2.Permission
 import com.tbruyelle.rxpermissions2.RxPermissions
 import io.reactivex.Observable
@@ -22,6 +22,7 @@ class PermissionUtils private constructor() {
         ACCESS_FINE_LOCATION,
         READ_PHONE_STATE,
         WRITE_EXTERNAL_STORAGE,
+        READ_EXTERNAL_STORAGE,
         CAMERA,
         READ_CALENDAR,
         WRITE_CALENDAR,
@@ -45,6 +46,8 @@ class PermissionUtils private constructor() {
         //读写外部存储
         const val WRITE_EXTERNAL_STORAGE =
             Manifest.permission.WRITE_EXTERNAL_STORAGE
+        const val READ_EXTERNAL_STORAGE =
+            Manifest.permission.READ_EXTERNAL_STORAGE
         //相机
         const val CAMERA = Manifest.permission.CAMERA
         //读写日历
@@ -67,8 +70,8 @@ class PermissionUtils private constructor() {
          * @return
          */
         fun checkPermission(
-            activity: FragmentActivity? = ViewLifeCycleExt.obtainCurrentActivity() as? FragmentActivity,
-            @ManifestPermission vararg permission: String?
+            @ManifestPermission vararg permission: String?,
+            activity: FragmentActivity? = ViewLifeCycleManager.obtainCurrentActivity() as? FragmentActivity
         ): Observable<Boolean>? {
             if (activity == null) {
                 return null
@@ -86,9 +89,9 @@ class PermissionUtils private constructor() {
          * @return
          */
         fun checkEachPermission(
-            activity: FragmentActivity? = ViewLifeCycleExt.obtainCurrentActivity() as? FragmentActivity,
-            @ManifestPermission vararg permission: String?
-        ): Observable<Permission>? {
+            @ManifestPermission vararg permission: String?,
+            activity: FragmentActivity? = ViewLifeCycleManager.obtainCurrentActivity() as? FragmentActivity
+            ): Observable<Permission>? {
             if (activity == null) {
                 return null
             }
@@ -104,9 +107,9 @@ class PermissionUtils private constructor() {
          * @return
          */
         fun composePermission(
-            activity: FragmentActivity? = ViewLifeCycleExt.obtainCurrentActivity() as? FragmentActivity,
-            @ManifestPermission vararg permission: String?
-        ): ObservableTransformer<Any, Permission>? {
+            @ManifestPermission vararg permission: String?,
+            activity: FragmentActivity? = ViewLifeCycleManager.obtainCurrentActivity() as? FragmentActivity
+            ): ObservableTransformer<Any, Permission>? {
             if (activity == null) {
                 return null
             }

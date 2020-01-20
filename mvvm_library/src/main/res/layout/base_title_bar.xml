@@ -5,13 +5,13 @@
     android:id="@+id/title_bar"
     android:layout_width="match_parent"
     android:layout_height="?attr/actionBarSize"
+    app:popupTheme="@style/OverflowMenuStyle"
     >
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/title_bar_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        tools:text="标题" />
-
+        tools:text="titleText" />
 
 </androidx.appcompat.widget.Toolbar>

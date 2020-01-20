@@ -20,7 +20,7 @@ import java.util.concurrent.TimeUnit
 /**
  * 网络请求构建
  */
-class RetrofitApi private constructor(private val context: Context) {
+class NetworkApi private constructor(private val context: Context) {
 
     companion object {
 
@@ -46,18 +46,16 @@ class RetrofitApi private constructor(private val context: Context) {
         private var httpCacheDirectory: File? = AppConfigOptions.APP_HTTP_CACHE_PATH
 
         @Volatile
-        private var INSTANCE: RetrofitApi? = null
+        private var INSTANCE: NetworkApi? = null
 
-        fun get(context: Context): RetrofitApi {
-            if (INSTANCE == null) {
-                synchronized(RetrofitApi::class) {
-                    if (INSTANCE == null) {
-                        INSTANCE = RetrofitApi(context)
-                    }
-                }
-            }
-            return INSTANCE ?: RetrofitApi(context)
+        /**
+         * 获取单例
+         */
+        fun get(context: Context): NetworkApi =
+            INSTANCE ?: synchronized(NetworkApi::class) {
+            INSTANCE ?: NetworkApi(context)
         }
+
     }
 
     private var okHttpClient: OkHttpClient? = null
@@ -130,7 +128,7 @@ class RetrofitApi private constructor(private val context: Context) {
     /**
      * 构建okhttp
      */
-    fun buildOkHttp(okHttpClient: OkHttpClient): RetrofitApi {
+    fun buildOkHttp(okHttpClient: OkHttpClient): NetworkApi {
         this.okHttpClient = okHttpClient
         retrofit = buildRetrofit()
             ?.newBuilder()
@@ -149,7 +147,7 @@ class RetrofitApi private constructor(private val context: Context) {
         showResponseLog: Boolean = true,
         showRequestLoG: Boolean = true,
         headers: HashMap<String, String> = hashMapOf()
-    ): RetrofitApi {
+    ): NetworkApi {
         CONNECT_TIMEOUT = connectTime
         SHOW_RESPONSE_LOG = showResponseLog
         SHOW_REQUEST_LOG = showRequestLoG
@@ -166,7 +164,7 @@ class RetrofitApi private constructor(private val context: Context) {
     /**
      * 构建 base_url
      */
-    fun buildBaseURL(baseUrl: String): RetrofitApi {
+    fun buildBaseURL(baseUrl: String): NetworkApi {
         BASE_URL = baseUrl
         retrofit = buildRetrofit()
             ?.newBuilder()

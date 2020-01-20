@@ -5,8 +5,10 @@ package com.crimson.mvvm.utils
 import android.annotation.SuppressLint
 import android.content.Context
 import android.net.ConnectivityManager
+import android.net.NetworkCapabilities
 import android.net.Uri
 import android.net.wifi.WifiManager
+import android.os.Build
 import android.telephony.TelephonyManager
 import android.text.TextUtils
 import android.util.Log
@@ -25,10 +27,31 @@ object NetWorkUtils {
      * @return
      */
     fun isNetworkConnected(context: Context): Boolean {
-        val connectivityManager = context
-            .getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-        val networkInfo = connectivityManager.activeNetworkInfo
-        return networkInfo != null && networkInfo.isConnected
+        val cm = context
+            .getSystemService(Context.CONNECTIVITY_SERVICE) as? ConnectivityManager
+
+        if (cm != null) {
+            if (Build.VERSION.SDK_INT < 23) {
+                val ni = cm.activeNetworkInfo
+                if (ni != null) {
+                    return ni.isConnected && (ni.type == ConnectivityManager.TYPE_WIFI || ni.type == ConnectivityManager.TYPE_MOBILE)
+                }
+            } else {
+                val n = cm.activeNetwork
+
+                if (n != null) {
+                    val nc = cm.getNetworkCapabilities(n)
+                    return if (nc == null){
+                        false
+                    } else {
+                        nc.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) || nc.hasTransport(
+                            NetworkCapabilities.TRANSPORT_WIFI)
+                    }
+                }
+            }
+        }
+        return false
+
     }
 
     /**
@@ -63,12 +86,32 @@ object NetWorkUtils {
      * @return
      */
     fun getConnectedType(context: Context): Int {
-        val connectivityManager = context
+        val cm = context
             .getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-        val networkInfo = connectivityManager.activeNetworkInfo
-        return if (networkInfo != null && networkInfo.isAvailable) {
-            networkInfo.type
-        } else -1
+        var result = 0 // Returns connection type. 0: none; 1: mobile data; 2: wifi
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            cm.run {
+                cm.getNetworkCapabilities(cm.activeNetwork)?.run {
+                    if (hasTransport(NetworkCapabilities.TRANSPORT_WIFI)) {
+                        result = 2
+                    } else if (hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR)) {
+                        result = 1
+                    }
+                }
+            }
+        } else {
+            cm.run {
+                cm.activeNetworkInfo?.run {
+                    if (type == ConnectivityManager.TYPE_WIFI) {
+                        result = 2
+                    } else if (type == ConnectivityManager.TYPE_MOBILE) {
+                        result = 1
+                    }
+                }
+            }
+        }
+
+        return result
     }
 
     /***

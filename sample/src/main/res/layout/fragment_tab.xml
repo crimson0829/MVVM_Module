@@ -5,7 +5,7 @@
 
     <data>
 
-        <import type="android.view.View"/>
+        <import type="android.view.View" />
 
         <import type="com.crimson.mvvm.binding.recyclerview.LayoutManagers" />
 
@@ -14,13 +14,15 @@
             name="viewModel"
             type="com.crimson.mvvm_frame.AuthorViewModel" />
     </data>
+
     <com.scwang.smartrefresh.layout.SmartRefreshLayout
         android:id="@+id/refresh_layout"
         android:layout_width="match_parent"
-        app:srlEnableAutoLoadMore="true"
-        app:sm_bindRefresh="@{viewModel.refreshConsumer}"
+        android:layout_height="match_parent"
         app:sm_bindLoadMore="@{viewModel.loadMoreConsumer}"
-        android:layout_height="match_parent">
+        app:sm_bindRefresh="@{viewModel.refreshConsumer}"
+        app:srlEnableAutoLoadMore="true">
+
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -29,22 +31,24 @@
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recycler_view"
                 android:layout_width="match_parent"
+                android:layout_height="match_parent"
                 android:overScrollMode="never"
-                app:rv_bindScrolled="@{viewModel.bindScrollConsumer}"
                 app:rv_adapter="@{viewModel.adapter}"
-                app:rv_layoutManager="@{LayoutManagers.INSTANCE.linear()}"
-                android:layout_height="match_parent" />
+                app:rv_bindScrolled="@{viewModel.bindScrollConsumer}"
+                app:rv_layoutManager="@{LayoutManagers.linear()}" />
 
         </RelativeLayout>
 
 
         <com.scwang.smartrefresh.layout.footer.ClassicsFooter
             android:layout_width="match_parent"
-            app:srlFinishDuration="0"
-            android:layout_height="60dp" />
+            android:layout_height="60dp"
+            app:srlFinishDuration="0" />
 
 
     </com.scwang.smartrefresh.layout.SmartRefreshLayout>
+
+
 
 
 </layout>

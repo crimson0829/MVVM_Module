@@ -9,7 +9,7 @@ import java.util.*
  * @date   2019-12-28
  * view lifecycle
  */
-object ViewLifeCycleExt {
+object ViewLifeCycleManager {
 
     /**
      *  app activity stack

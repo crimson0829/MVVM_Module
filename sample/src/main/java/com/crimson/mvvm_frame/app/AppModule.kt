@@ -1,6 +1,6 @@
 package com.crimson.mvvm_frame.app
 
-import com.crimson.mvvm.net.RetrofitApi
+import com.crimson.mvvm.net.NetworkApi
 import com.crimson.mvvm_frame.ArticleAdapter
 import com.crimson.mvvm_frame.AuthorViewModel
 import com.crimson.mvvm_frame.TabViewModel
@@ -10,7 +10,7 @@ import org.koin.dsl.module
 
 /**
  * @author crimson
- * @date   2020-12-22
+ * @date   2019-12-22
  * you can build any object in module which you want to inject
  * and add the module when application onCreate
  */
@@ -19,6 +19,7 @@ val viewModelModule = module {
 
     factory { TabViewModel() }
     factory { (id: Int) -> AuthorViewModel(id) }
+
 
 }
 
@@ -40,7 +41,7 @@ val adapterModule = module {
 val dataModule = module {
 
     single {
-        get<RetrofitApi>()
+        get<NetworkApi>()
             .obtainRetrofit()
             ?.create(AndroidService::class.java)
     }

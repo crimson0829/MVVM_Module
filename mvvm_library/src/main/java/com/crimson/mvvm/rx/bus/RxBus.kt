@@ -13,19 +13,15 @@ import io.reactivex.subjects.Subject
 class RxBus private constructor() {
 
     companion object {
-        @Volatile
-        private var instance: RxBus ?= null
 
-        fun get(): RxBus {
-            if (instance == null) {
-                synchronized(RxBus::class.java) {
-                    if (instance == null) {
-                        instance = RxBus()
-                    }
-                }
-            }
-            return instance?:RxBus()
+        @Volatile
+        private var instance: RxBus? = null
+
+        fun get(): RxBus =
+            instance ?: synchronized(RxBus::class) {
+            instance ?: RxBus()
         }
+
     }
 
     private val bus: Subject<Any> = PublishSubject.create()

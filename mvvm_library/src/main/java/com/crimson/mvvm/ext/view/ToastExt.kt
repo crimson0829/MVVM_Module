@@ -1,4 +1,4 @@
-package com.crimson.mvvm.ext
+package com.crimson.mvvm.ext.view
 
 import android.annotation.SuppressLint
 import android.graphics.Color
@@ -11,10 +11,13 @@ import android.view.ViewGroup
 import android.widget.FrameLayout
 import android.widget.TextView
 import android.widget.Toast
+import com.crimson.mvvm.ext.MESSAGE
+import com.crimson.mvvm.ext.appContext
+import com.crimson.mvvm.ext.dp2px
 
 
 /**
- * app toast
+ *  toast
  */
 object ToastKt {
 
@@ -40,7 +43,8 @@ object ToastKt {
         }
 
         if (toast?.view !is FrameLayout) {
-            toast?.view = createTextToastView(message)
+            toast?.view =
+                createTextToastView(message)
         } else {
             (((toast?.view as? FrameLayout)?.getChildAt(0)) as? TextView)?.text = message
         }
