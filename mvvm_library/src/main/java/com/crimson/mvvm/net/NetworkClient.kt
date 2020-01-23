@@ -6,6 +6,7 @@ import com.crimson.mvvm.net.cookie.CookieJarImpl
 import com.crimson.mvvm.net.cookie.store.PersistentCookieStore
 import com.crimson.mvvm.net.interceptor.BaseInterceptor
 import com.crimson.mvvm.net.interceptor.CacheInterceptor
+import com.crimson.mvvm.net.interceptor.ConnectivityInterceptor
 import com.crimson.mvvm.net.interceptor.LoggerInterceptor
 import com.crimson.mvvm.net.ssl.HttpsSecurityUtils
 import com.crimson.mvvm.net.ssl.HttpsSecurityUtils.sslSocketFactory
@@ -20,7 +21,7 @@ import java.util.concurrent.TimeUnit
 /**
  * 网络请求构建
  */
-class NetworkApi private constructor(private val context: Context) {
+class NetworkClient private constructor(private val context: Context) {
 
     companion object {
 
@@ -46,14 +47,14 @@ class NetworkApi private constructor(private val context: Context) {
         private var httpCacheDirectory: File? = AppConfigOptions.APP_HTTP_CACHE_PATH
 
         @Volatile
-        private var INSTANCE: NetworkApi? = null
+        private var INSTANCE: NetworkClient? = null
 
         /**
          * 获取单例
          */
-        fun get(context: Context): NetworkApi =
-            INSTANCE ?: synchronized(NetworkApi::class) {
-            INSTANCE ?: NetworkApi(context)
+        fun get(context: Context): NetworkClient =
+            INSTANCE ?: synchronized(NetworkClient::class) {
+            INSTANCE ?: NetworkClient(context)
         }
 
     }
@@ -89,6 +90,7 @@ class NetworkApi private constructor(private val context: Context) {
         return OkHttpClient.Builder()
             .addInterceptor(BaseInterceptor(HEADERS)) //基础拦截器,可添加header
             .addInterceptor(CacheInterceptor()) //缓存拦截器
+            .addInterceptor(ConnectivityInterceptor())//网络链接拦截器
             .addInterceptor(
                 //log打印
                 LoggerInterceptor(
@@ -128,7 +130,7 @@ class NetworkApi private constructor(private val context: Context) {
     /**
      * 构建okhttp
      */
-    fun buildOkHttp(okHttpClient: OkHttpClient): NetworkApi {
+    fun buildOkHttp(okHttpClient: OkHttpClient): NetworkClient {
         this.okHttpClient = okHttpClient
         retrofit = buildRetrofit()
             ?.newBuilder()
@@ -147,7 +149,7 @@ class NetworkApi private constructor(private val context: Context) {
         showResponseLog: Boolean = true,
         showRequestLoG: Boolean = true,
         headers: HashMap<String, String> = hashMapOf()
-    ): NetworkApi {
+    ): NetworkClient {
         CONNECT_TIMEOUT = connectTime
         SHOW_RESPONSE_LOG = showResponseLog
         SHOW_REQUEST_LOG = showRequestLoG
@@ -164,7 +166,7 @@ class NetworkApi private constructor(private val context: Context) {
     /**
      * 构建 base_url
      */
-    fun buildBaseURL(baseUrl: String): NetworkApi {
+    fun buildBaseURL(baseUrl: String): NetworkClient {
         BASE_URL = baseUrl
         retrofit = buildRetrofit()
             ?.newBuilder()

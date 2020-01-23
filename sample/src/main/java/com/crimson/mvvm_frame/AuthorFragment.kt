@@ -5,6 +5,8 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.webkit.WebView
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Observer
 import com.afollestad.materialdialogs.MaterialDialog
 import com.afollestad.materialdialogs.MaterialDialog.Companion.DEFAULT_BEHAVIOR
 import com.afollestad.materialdialogs.bottomsheets.BottomSheet
@@ -17,9 +19,11 @@ import com.crimson.mvvm.binding.consumer.bindBiConsumer
 import com.crimson.mvvm.binding.consumer.bindConsumer
 import com.crimson.mvvm.ext.logw
 import com.crimson.mvvm.livedata.SingleLiveData
-import com.crimson.mvvm.net.subscribeNet
+import com.crimson.mvvm.net.RetrofitResult
+import com.crimson.mvvm.rx.callRemotePost
 import com.crimson.mvvm_frame.databinding.FragmentTabBinding
 import com.crimson.mvvm_frame.model.AuthorModel
+import com.crimson.mvvm_frame.model.kdo.AuthorListEntity
 import com.scwang.smartrefresh.layout.api.RefreshLayout
 import com.trello.rxlifecycle3.android.lifecycle.kotlin.bindToLifecycle
 import org.koin.androidx.viewmodel.ext.android.getViewModel
@@ -151,36 +155,67 @@ class AuthorViewModel(val id: Int) : BaseViewModel() {
         }
 
 
+    /**
+     * rxJava 获取数据
+     */
     fun getArticles() {
 
         model.getAuthorListData(id, page)
             .bindToLifecycle(lifecycleOwner)
-            .doOnSubscribe {
-                //can do something  before subscribe
-                //can show loading view
-                logw("doOnSubscribe -> onStart")
-                if (page == 1 && !refresh) {
-                    onLoadingViewInjectToRoot()
-                }
+            .callRemotePost(MutableLiveData<RetrofitResult<AuthorListEntity>>().apply {
+                observe(lifecycleOwner, Observer {
+                    //or execute it.handle()
+                    when (it) {
+                        //result success
+                        is RetrofitResult.Success -> {
 
-            }
-            .subscribeNet({
-                finishLoading()
-                if (page == 1) {
-                    onLoadingError()
-                }
-            }, {
-                finishLoading()
-                if (page == 1 && !refresh) {
-                    onLoadingViewResult()
-                }
-            }, {
-                if (page == 1) {
-                    adapter.data.clear()
-                }
-                adapter.addData(it.data.datas)
+                            finishLoading()
+                            if (page == 1 && !refresh) {
+                                onLoadingViewResult()
+                            }
+
+                            if (page == 1) {
+                                adapter.data.clear()
+                            }
+                            adapter.addData(it.value.data.datas)
+
+
+                        }
+                        //when loading
+                        RetrofitResult.Loading -> {
+                            logw("doOnSubscribe -> onStart")
+                            if (page == 1 && !refresh) {
+                                onLoadingViewInjectToRoot()
+                            }
+                        }
+
+                        //result empty
+                        RetrofitResult.EmptyData -> {
+                            finishLoading()
+                            if (page == 1) {
+                                onLoadingViewResult()
+
+                            }
+
+                        }
+                        //result error
+                        is RetrofitResult.Error -> {
+                            finishLoading()
+                            if (page == 1) {
+                                onLoadingError()
+                            }
+                        }
+                        //result remote error
+                        is RetrofitResult.RemoteError -> {
+                            finishLoading()
+                            if (page == 1) {
+                                onLoadingError()
+                            }
+                        }
+                    }
+
+                })
             })
-
 
 
     }
@@ -193,7 +228,6 @@ class AuthorViewModel(val id: Int) : BaseViewModel() {
         }
 
     }
-
 
 
 }

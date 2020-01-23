@@ -1,6 +1,6 @@
 package com.crimson.mvvm_frame.app
 
-import com.crimson.mvvm.net.NetworkApi
+import com.crimson.mvvm.net.NetworkClient
 import com.crimson.mvvm_frame.ArticleAdapter
 import com.crimson.mvvm_frame.AuthorViewModel
 import com.crimson.mvvm_frame.TabViewModel
@@ -41,7 +41,7 @@ val adapterModule = module {
 val dataModule = module {
 
     single {
-        get<NetworkApi>()
+        get<NetworkClient>()
             .obtainRetrofit()
             ?.create(AndroidService::class.java)
     }

@@ -33,6 +33,15 @@ android {
         enabled true
     }
 
+    kapt {
+        correctErrorTypes = true
+        useBuildCache = true
+    }
+
+    androidExtensions {
+        experimental = true
+    }
+
 }
 
 dependencies {
@@ -42,17 +51,28 @@ dependencies {
     //android x
     api rootProject.ext.dependencies["androidx-appcompat"]
     api rootProject.ext.dependencies["androidx-core"]
+    api rootProject.ext.dependencies["androidx-activity"]
+    api rootProject.ext.dependencies["androidx-fragment"]
     api rootProject.ext.dependencies["androidx-recyclerview"]
     api rootProject.ext.dependencies["androidx-viewpager2"]
-    api rootProject.ext.dependencies["lifecycle"]
-    api rootProject.ext.dependencies["lifecycle_rx2"]
     api rootProject.ext.dependencies["multidex"]
+
+    //lifecycle
+    api rootProject.ext.dependencies["lifecycle_runtime"]
+    api rootProject.ext.dependencies["lifecycle_ext"]
+    api rootProject.ext.dependencies["lifecycle_rx2"]
+    api rootProject.ext.dependencies["lifecycle_livedata"]
+    api rootProject.ext.dependencies["lifecycle_viewmodel"]
+    api rootProject.ext.dependencies["lifecycle_savedstate"]
+    kapt rootProject.ext.dependencies["lifecycle_java8_kapt"]
+
 
     //material
     api rootProject.ext.dependencies["google-material"]
 
     //kotlin
     api rootProject.ext.dependencies["kotlin-jdk8"]
+    api rootProject.ext.dependencies["kotlin_coroutines_core"]
     api rootProject.ext.dependencies["kotlin_coroutines"]
     api rootProject.ext.dependencies["rx2kotlin"]
     api rootProject.ext.dependencies["koin_scope"]

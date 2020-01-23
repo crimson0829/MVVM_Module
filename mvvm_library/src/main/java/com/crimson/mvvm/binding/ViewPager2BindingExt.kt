@@ -102,6 +102,7 @@ fun ViewPager2.bindAdapter(
         }
     }
 
+
     //注册page监听事件
     if (pageScrollStateChangedConsumer != null || pageSelectedConsumer != null || pageScrolledConsumer != null) {
         registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {

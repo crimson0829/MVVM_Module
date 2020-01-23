@@ -1,7 +1,7 @@
 package com.crimson.mvvm.net
 
-import com.crimson.mvvm.net.poko.BaseEntity
 import io.reactivex.Flowable
+import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Url
 
@@ -12,17 +12,17 @@ import retrofit2.http.Url
  */
 interface RemoteService {
 
-    //协程获取数据
+    //默认协程获取数据
     @GET
     suspend fun <T> getData(
        @Url url:String
-    ): BaseEntity<T>
+    ): Response<T>
 
     //rxjava获取数据
     @GET
     fun <T> getDataWithRx(
         @Url url:String
-    ): Flowable<BaseEntity<T>>
+    ): Flowable<Response<T>>
 
 
 }

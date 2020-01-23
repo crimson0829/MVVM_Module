@@ -8,17 +8,11 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import com.crimson.mvvm.ext.appContext
 import com.crimson.mvvm.ext.application
-import com.crimson.mvvm.ext.loge
 import com.crimson.mvvm.ext.logw
 import com.crimson.mvvm.livedata.SingleLiveData
 import com.crimson.mvvm.rx.bus.RxBus
-import com.trello.rxlifecycle3.LifecycleProvider
 import com.trello.rxlifecycle3.components.support.RxAppCompatActivity
 import com.trello.rxlifecycle3.components.support.RxFragment
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
 import org.koin.core.inject
 
 /**
@@ -50,17 +44,10 @@ open class BaseViewModel : AndroidViewModel(application()), IViewModel {
     val viewFinishedLD: SingleLiveData<Unit> by inject()
 
     /**
-     * rx lifecycle
-     * from view inject
-     * now is not used
-     * */
-    var rxlifecycle: LifecycleProvider<*>? = null
-
-    /**
+     * from baseActivity or baseFragment inject
      * lifecycle Owner
      */
     lateinit var lifecycleOwner: LifecycleOwner
-
 
     /*lifecycle call back*/
     override fun onAny(owner: LifecycleOwner, event: Lifecycle.Event) {
@@ -124,20 +111,6 @@ open class BaseViewModel : AndroidViewModel(application()), IViewModel {
             ContextCompat.startActivity(it, intent, null)
         }
     }
-
-
-    /**
-     * process coroutine
-     */
-    fun launchCoroutine(block: suspend CoroutineScope.() -> Unit) =
-        GlobalScope.launch(Dispatchers.Main) {
-            try {
-                block()
-            } catch (e: Exception) {
-                onLoadingError()
-                loge(e.message)
-            }
-        }
 
 
     override fun registerRxBus() {}

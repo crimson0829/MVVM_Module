@@ -144,6 +144,7 @@ abstract class BaseFragment<VB : ViewDataBinding, VM : BaseViewModel> : RxFragme
         }
 
         vb?.run {
+            //ViewDataBinding中设置lifecycleOwner
             lifecycleOwner = this@BaseFragment
             val vmId = initViewModelId()
             setVariable(vmId, vm)
@@ -151,8 +152,8 @@ abstract class BaseFragment<VB : ViewDataBinding, VM : BaseViewModel> : RxFragme
         vm?.run {
             //让ViewModel拥有View的生命周期
             lifecycle.addObserver(this)
-            //注入RxLifecycle生命周期
-            rxlifecycle = this@BaseFragment
+            //ViewModel中注入lifecycleOwner
+            lifecycleOwner = this@BaseFragment
             //注册RxBus
             registerRxBus()
         }
@@ -166,27 +167,27 @@ abstract class BaseFragment<VB : ViewDataBinding, VM : BaseViewModel> : RxFragme
      */
     private fun initViewModelLiveDataObserver() {
 
-        vm?.onLoadingViewInjectToRootLD?.observe(this, Observer {
+        vm?.onLoadingViewInjectToRootLD?.observe(viewLifecycleOwner, Observer {
             onLoadingViewInjectToRoot()
         })
 
-        vm?.onLoadingViewResultLD?.observe(this, Observer {
+        vm?.onLoadingViewResultLD?.observe(viewLifecycleOwner, Observer {
             onLoadingViewResult()
         })
 
-        vm?.dataLoadingLD?.observe(this, Observer {
+        vm?.dataLoadingLD?.observe(viewLifecycleOwner, Observer {
             onDataLoading(it)
         })
 
-        vm?.dataResultLD?.observe(this, Observer {
+        vm?.dataResultLD?.observe(viewLifecycleOwner, Observer {
             onDataResult()
         })
 
-        vm?.dataLoadingErrorLD?.observe(this, Observer {
+        vm?.dataLoadingErrorLD?.observe(viewLifecycleOwner, Observer {
             onLoadingError()
         })
 
-        vm?.viewFinishedLD?.observe(this, Observer {
+        vm?.viewFinishedLD?.observe(viewLifecycleOwner, Observer {
             activity?.finish()
         })
 

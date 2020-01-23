@@ -1,9 +1,6 @@
 package com.crimson.mvvm.base
 
 import com.crimson.mvvm.net.RemoteService
-import com.crimson.mvvm.net.poko.BaseEntity
-import kotlinx.coroutines.Dispatchers.IO
-import kotlinx.coroutines.withContext
 import org.koin.core.inject
 
 
@@ -15,15 +12,6 @@ import org.koin.core.inject
 open class BaseModel : IModel {
 
     val remoteService by inject<RemoteService>()
-
-
-    /**
-     * call with coroutines
-     */
-    suspend fun <T> callRemote(call: suspend () -> BaseEntity<T>): BaseEntity<T> {
-
-        return withContext(IO) { call.invoke() }
-    }
 
 
 }

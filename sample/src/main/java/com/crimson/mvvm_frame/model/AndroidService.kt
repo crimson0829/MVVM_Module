@@ -4,6 +4,7 @@ import com.crimson.mvvm.net.RemoteService
 import com.crimson.mvvm_frame.model.kdo.AuthorListEntity
 import com.crimson.mvvm_frame.model.kdo.TabListEntity
 import io.reactivex.Flowable
+import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Path
 
@@ -20,7 +21,7 @@ interface AndroidService : RemoteService {
 
     //协程
     @GET("wxarticle/chapters/json")
-    suspend fun getTab(): TabListEntity
+    suspend fun getTab(): Response<TabListEntity>
 
     //rxjava
     @GET("wxarticle/list/{id}/{page}/json")
@@ -28,5 +29,5 @@ interface AndroidService : RemoteService {
         @Path("id") id: Int,
         @Path("page") page: Int
 
-    ): Flowable<AuthorListEntity>
+    ): Flowable<Response<AuthorListEntity>>
 }

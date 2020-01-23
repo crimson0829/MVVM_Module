@@ -5,24 +5,27 @@
 以MVVM模式为基础的快速集成组件,整合了大量优秀开源项目构建。
 
 ## 特点
-
-1.Kotlin开发，基于AAC+DataBinding作为基础结构，可作为项目Base库，快速开发项目
 <br>
-2.支持AndroidX库，集成了AndroidX库下的一些常用组件，如RecyclerView,ViewPager2等
+* Kotlin开发，基于LifeCycle+LiveData+ViewModel+DataBinding作为基础结构，可作为项目Base库，快速开发项目
 <br>
-3.提供了Base类(BaseActivity、BaseFragment、BaseViewModel等)统一封装，绑定生命周期，快速进行页面开发
+* 支持AndroidX库，集成了AndroidX库下的一些常用组件，如RecyclerView,ViewPager2等
 <br>
-4.使用Koin容器注入对象,可提供任何对象的依赖注入
+* 提供了Base类(BaseActivity、BaseFragment、BaseViewModel等)统一封装，绑定生命周期，快速进行页面开发
 <br>
-5.Kotlin扩展函数结合DataBinding，使DataBinding使用更方便
+* 对LiveData，协程，RxJava进行了扩展，使用更方便
 <br>
-6.提供全局的Activity,Fragment生命周期管理，提供App统一配置方案
+* 使用Koin容器注入对象,可提供任何对象的依赖注入
 <br>
-7.Retrofit封装，网络请求更方便，提供了协程和RxJava两种方式获取数据方式，具体实现可参照 sample
+* 扩展函数结合DataBinding，使DataBinding使用更方便
 <br>
-8.RxBus全局处理事件
+* Retrofit封装和扩展，网络请求更方便，提供了协程和RxJava两种方式获取数据方式并通过LiveData处理数据更容易
 <br>
-
+* RxBus全局处理事件
+<br>
+* 提供全局的Activity,Fragment生命周期管理，提供App统一配置方案
+<br>
+* 提供了简单易用的扩展函数和工具类
+<br>
 
 ## 引入
 
@@ -37,7 +40,7 @@ dataBinding {
 ```
 dependencies {
       
-      implementation "com.github.crimson0829:mvvm_library:1.1.1"
+      implementation "com.github.crimson0829:mvvm_library:1.1.2"
     
 }
 ```
@@ -256,37 +259,48 @@ TabViewModel:
     /**
         * run with 协程
         */
-       fun getData() =
-   
-           launchCoroutine {
-   
-               onLoadingViewInjectToRoot()
-   //            delay(2000)
-               val tabData = model.getTabData()
-               onLoadingViewResult()
-   
-               // can test with loading error
-   //            onLoadingError()
-   
-               withContext(Dispatchers.IO) {
-   
-                   val titles = arrayListOf<String>()
-   
-                   tabData.data.forEach {
-                       titles.add(it.name)
-                       val fragment = AuthorFragment()
-   
-                       fragment.arguments = Bundle().apply {
-                           putInt("id", it.id)
-                       }
-                       fragments.add(fragment)
-                   }
-   
-                   tabDataCompleteLD.postValue(titles)
-   
-               }
-   
-           }
+        /**
+           * run with 协程
+           */
+          fun getData() {
+      
+              callRemoteLiveDataAsync {
+                  model.getData()
+              }
+                      //观察livedata
+                  ?.observe(lifecycleOwner, Observer {
+      
+                      //LiveData.handle() 扩展
+                  it.handle({
+                      //when loading
+                      onLoadingViewInjectToRoot()
+      
+                  },{
+                      //result empty
+                      onLoadingViewResult()
+      
+                  },{
+                      //result error 可做错误处理
+                      toast("网络错误")
+                      onLoadingError()
+      
+                  },{_,responseCode->
+      
+                      //result remote error,可根据responseCode做错误提示
+                      errorResponseCode(responseCode)
+                      onLoadingError()
+      
+                  },{
+                      //result success
+                      onLoadingViewResult()
+                      runOnIO {
+                          handleData(this)
+                      }
+                  })
+              })
+              
+      
+          }
            
 ```
 
@@ -388,7 +402,7 @@ ViewModel:
   helper.getBinding<AdapterItemArticleBinding>()?.model = item
  ```
  
- 2.3 DataBinding扩展函数：提供了Glide，RecyclerView，ViewPager2，SmartRefreshLayout等绑定函数，方便扩展xml和控件调用；实现类[ViewBindingsExt](https://github.com/crimson0829/MVVM_Module/blob/master/mvvm_library/src/main/java/com/crimson/mvvm/binding/ViewBindingsExt.kt)
+ 2.3 DataBinding扩展函数：提供了Glide，RecyclerView，ViewPager2，SmartRefreshLayout等绑定函数，方便扩展xml和控件调用；
  
  Glide绑定图片：可在xml或者View中设置，具体使用可参考[PictureActivity](https://github.com/crimson0829/MVVM_Module/blob/master/sample/src/main/java/com/crimson/mvvm_frame/PictureActivity.kt)
  
@@ -755,19 +769,21 @@ AppConfigOptions(context).buildRetrofit()
 
 ```
   RetrofitApi.get(androidContext()).obtainRetrofit()
+  
+  //or
+   val retrofit by inject<Retrofit>()
+  
 ```
-直接通过Koin获取：
-```
- val retrofit by inject<Retrofit>()
-```
+
 获取OkHttpClient:
 ```
  RetrofitApi.get(androidContext()).obtainOkHttp()
+ 
+ //or
+ val okHttp by inject<OkHttpClient>()
+ 
 ```
-直接通过Koin获取：
-```
-  val okHttp by inject<OkHttpClient>()
-```
+
 获取数据：
 ```
  //获取Retrofit Service
@@ -778,85 +794,65 @@ AppConfigOptions(context).buildRetrofit()
              .applyThread()
 ```
 
-更多Api调用可参考[RetrofitApi](https://github.com/crimson0829/MVVM_Module/blob/master/mvvm_library/src/main/java/com/crimson/mvvm/net/RetrofitApi.kt) [AuthorModel](https://github.com/crimson0829/MVVM_Module/blob/master/sample/src/main/java/com/crimson/mvvm_frame/model/AuthorModel.kt)
+更多Api调用可参考[NetworkClient](https://github.com/crimson0829/MVVM_Module/blob/master/mvvm_library/src/main/java/com/crimson/mvvm/net/NetworkClient.kt) 
 
 4.1 数据处理：
 
-协程处理数据：ViewModel中处理数据；用同步的代码实现异步操作-_-
+协程处理数据：提供了协程扩展类[CoroutineExt.kt](https://github.com/crimson0829/MVVM_Module/blob/master/mvvm_library/src/main/java/com/crimson/mvvm/coroutines/CoroutineExt.kt)和[CoroutineExt2.kt](https://github.com/crimson0829/MVVM_Module/blob/master/mvvm_library/src/main/java/com/crimson/mvvm/coroutines/CoroutineExt2.kt);
+可在ViewModel中处理数据；用同步的代码实现异步操作-_-
 
 ```
-//主线程处理
- launchCoroutine {
- 
- //获取数据
- 
- //IO子线程处理
-   withContext(Dispatchers.IO) {
-   
-   }
- 
- }
-```
-RxJava处理数据：
-```
-  //获取数据
-  model.getAuthorListData(id, page)
-            //绑定生命周期
-            .bindToLifecycle(lifecycleOwner)
-            //onStart
-            .doOnSubscribe {
-                //can do something  before subscribe
-                //can show loading view
-                logw("doOnSubscribe -> onStart")
-                if (page == 1 && !refresh) {
-                    onLoadingViewInjectToRoot()
-                }
+//异步获取远程数据
+callRemoteLiveDataAsync{
+    //getData
+    //hannle Data
 
-            }
-            //扩展函数，实现了请求出错自动弹出toast的操作
-            .subscribeNet({
-                finishLoading()
-                if (page == 1) {
-                    onLoadingError()
-                }
-            }, {
-                finishLoading()
-                if (page == 1 && !refresh) {
-                    onLoadingViewResult()
-                }
-            }, {
-                if (page == 1) {
-                    adapter.data.clear()
-                }
-                adapter.addData(it.data.datas)
-            })
-```
-
-subscribeNet扩展实现：
-
-```
-/**
- * 网络请求统一订阅处理，目前只处理了报错弹出toast的情况
- */
-
-private val onNextStub: (Any) -> Unit = {}
-
-//重写rxkotlin,全局toast异常
-private val onErrorStub: (Throwable?) -> Unit = {
-    loge(it?.message)
-    //全部甩锅网络异常
-    toast("网络异常")
 }
-private val onCompleteStub: () -> Unit = {}
 
 
-fun <T : Any> Flowable<T>.subscribeNet(
-    onError: (Throwable) -> Unit = onErrorStub,
-    onComplete: () -> Unit = onCompleteStub,
-    onNext: (T) -> Unit = onNextStub
-): Disposable = subscribe(onNext, onError, onComplete)
 
 ```
+RxJava处理数据：提供了RxJava扩展类[RxJavaExt.kt](https://github.com/crimson0829/MVVM_Module/blob/master/mvvm_library/src/main/java/com/crimson/mvvm/rx/RxJavaExt.kt);
+可将数据转换成LiveData操作
+
+```
+  //异步获取远程数据
+          Flowable
+                //绑定生命周期
+              .bindToLifecycle(lifecycleOwner)
+              //转化成LiveData 处理数据
+              .callRemotePost(LiveData().apply {
+                  observe(lifecycleOwner, Observer {
+                      //or execute it.handle()
+                      when (it) {
+                          //result success
+                          is RetrofitResult.Success -> {
+                          
+                          }
+                          //when loading
+                          RetrofitResult.Loading -> {
+                              
+                          }
+                          //result empty
+                          RetrofitResult.EmptyData -> {
+                            
+                          }
+                          //result error
+                          is RetrofitResult.Error -> {
+                             
+                          }
+                          //result remote error
+                          is RetrofitResult.RemoteError -> {
+                             
+                          }
+                      }
+  
+                  })
+              })
+
+
+```
+
 4.2 [RxBus](https://github.com/crimson0829/MVVM_Module/blob/master/mvvm_library/src/main/java/com/crimson/mvvm/rx/bus/RxBus.kt)全局事件处理:由[RxDisposable](https://github.com/crimson0829/MVVM_Module/blob/master/mvvm_library/src/main/java/com/crimson/mvvm/rx/bus/RxDisposable.kt)统一管理订阅事件
 
 订阅事件：在ViewModel中订阅和移除
@@ -891,8 +887,6 @@ fun <T : Any> Flowable<T>.subscribeNet(
 ```
 
 5.1 一些扩展类和工具类
-<br>
-[AppExt：常用的扩展和顶层函数](https://github.com/crimson0829/MVVM_Module/blob/master/mvvm_library/src/main/java/com/crimson/mvvm/ext/AppExt.kt)
 <br>
 [LogExt：Timber实现，log顶层函数](https://github.com/crimson0829/MVVM_Module/blob/master/mvvm_library/src/main/java/com/crimson/mvvm/ext/LogExt.kt)
 <br>

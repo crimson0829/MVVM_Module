@@ -11,16 +11,19 @@ import com.crimson.mvvm.binding.bindAdapter
 import com.crimson.mvvm.binding.bindTabLayout
 import com.crimson.mvvm.binding.consumer.bindConsumer
 import com.crimson.mvvm.binding.consumer.bindTiConsumer
+import com.crimson.mvvm.coroutines.callRemoteLiveDataAsync
 import com.crimson.mvvm.ext.logw
+import com.crimson.mvvm.ext.runOnIO
 import com.crimson.mvvm.ext.view.toast
 import com.crimson.mvvm.livedata.SingleLiveData
+import com.crimson.mvvm.net.errorResponseCode
+import com.crimson.mvvm.net.handle
 import com.crimson.mvvm.rx.bus.RxCode
 import com.crimson.mvvm.rx.bus.RxDisposable
 import com.crimson.mvvm_frame.databinding.ActivityTabBinding
 import com.crimson.mvvm_frame.model.AuthorModel
+import com.crimson.mvvm_frame.model.kdo.TabListEntity
 import io.reactivex.disposables.Disposable
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
 import org.koin.androidx.viewmodel.ext.android.getViewModel
 import org.koin.core.inject
 
@@ -133,55 +136,78 @@ class TabViewModel : BaseViewModel() {
         }
 
 
-
-
-
-
     /**
      * run with 协程
      */
-    fun getData() =
+    fun getData() {
 
-        launchCoroutine {
+//        viewModelScope.launch {
+//
+//        }
 
-            onLoadingViewInjectToRoot()
-//            delay(2000)
-            val tabData = model.getTabData()
-            onLoadingViewResult()
-
-            // can test with loading error
-//            onLoadingError()
-
-            withContext(Dispatchers.IO) {
-
-                val titles = arrayListOf<String>()
-
-                tabData.data.forEach {
-                    titles.add(it.name)
-                    val fragment = AuthorFragment()
-
-                    fragment.arguments = Bundle().apply {
-                        putInt("id", it.id)
-                    }
-                    fragments.add(fragment)
-                }
-
-                tabDataCompleteLD.postValue(titles)
-
-
-
-            }
-
+        callRemoteLiveDataAsync {
+            model.getData()
         }
+                //观察livedata
+            ?.observe(lifecycleOwner, Observer {
+
+                //LiveData.handle() 扩展
+            it.handle({
+                //when loading
+                onLoadingViewInjectToRoot()
+
+            },{
+                //result empty
+                onLoadingViewResult()
+
+            },{
+                //result error 可做错误处理
+                toast("网络错误")
+                onLoadingError()
+
+            },{_,responseCode->
+
+                //result remote error,可根据responseCode做错误提示
+                errorResponseCode(responseCode)
+                onLoadingError()
+
+            },{
+                //result success
+                onLoadingViewResult()
+                runOnIO {
+                    handleData(this)
+                }
+            })
+        })
+
+
+    }
+
+
+   private fun handleData(tabData: TabListEntity) {
+        val titles = arrayListOf<String>()
+
+        tabData.data.forEach {
+            titles.add(it.name)
+            val fragment = AuthorFragment()
+
+            fragment.arguments = Bundle().apply {
+                putInt("id", it.id)
+            }
+            fragments.add(fragment)
+        }
+
+        tabDataCompleteLD.postValue(titles)
+    }
 
     override fun registerRxBus() {
 
         errorDis = rxbus.toObservable(RxCode.POST_CODE, Integer::class.java)
-        .subscribe {
-            if (it.toInt() == RxCode.ERROR_LAYOUT_CLICK_CODE) {
-                getData()
+            .subscribe {
+                if (it.toInt() == RxCode.ERROR_LAYOUT_CLICK_CODE) {
+                    getData()
+                }
             }
-        }
 
         RxDisposable.add(errorDis)
 

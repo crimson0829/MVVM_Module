@@ -6,7 +6,7 @@ import android.content.Intent
 import android.content.IntentFilter
 import android.net.ConnectivityManager
 import android.os.Looper
-import com.crimson.mvvm.utils.NetWorkUtils
+import com.crimson.mvvm.ext.isNetConnected
 import io.reactivex.BackpressureStrategy
 import io.reactivex.Flowable
 import io.reactivex.FlowableEmitter
@@ -55,7 +55,7 @@ class BroadcastFlowable(private val context: Context) :
 
     private val isConnectedToInternet: Boolean
         get() {
-            return NetWorkUtils.isNetworkConnected(context)
+            return isNetConnected()
         }
 
     @Suppress("DEPRECATION")

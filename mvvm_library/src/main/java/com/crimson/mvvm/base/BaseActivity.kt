@@ -70,8 +70,8 @@ abstract class BaseActivity<VB : ViewDataBinding, VM : BaseViewModel> : RxAppCom
         vm?.run {
             //让ViewModel拥有View的生命周期
             lifecycle.addObserver(this)
-            //注入RxLifecycle生命周期
-            rxlifecycle = this@BaseActivity
+            //ViewModel中注入lifecycleOwner
+            lifecycleOwner=this@BaseActivity
             //注册RxBus
             registerRxBus()
         }
