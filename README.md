@@ -256,30 +256,30 @@ TabViewModel:
         callRemoteLiveDataAsync {
             model.getData()
         }
-                //观察livedata
+             //观察livedata
             ?.observe(lifecycleOwner, Observer {
  
-                //LiveData.handle() 扩展
+             //LiveData.handle() 扩展
             it.handle({
                 //when loading
                 onLoadingViewInjectToRoot()
  
-     },{
-         //result empty
-               onLoadingViewResult()
+            },{
+                 //result empty
+                 onLoadingViewResult()
  
-           },{
+            },{
                //result error 可做错误处理
                toast("网络错误")
                onLoadingError()
  
-           },{_,responseCode->
+            },{_,responseCode->
  
                //result remote error,可根据responseCode做错误提示
                errorResponseCode(responseCode)
                onLoadingError()
  
-           },{
+            },{
                //result success
                onLoadingViewResult()
                runOnIO {
@@ -289,7 +289,7 @@ TabViewModel:
            })
               
       
-     }
+        }
            
 ```
 
@@ -819,23 +819,23 @@ RxJava处理数据：提供了RxJava扩展类[RxJavaExt.kt](https://github.com/c
                 //when loading
                 RetrofitResult.Loading -> {
                     
-            }
-            //result empty
-            RetrofitResult.EmptyData -> {
+                }
+                //result empty
+                RetrofitResult.EmptyData -> {
       
-             }
-             //result error
-            is RetrofitResult.Error -> {
+                 }
+                 //result error
+                is RetrofitResult.Error -> {
        
-             }
-             //result remote error
-            is RetrofitResult.RemoteError -> {
+                 }
+                 //result remote error
+                 is RetrofitResult.RemoteError -> {
         
+                }
             }
-        }
  
+        })
     })
- })
 
 
 ```
@@ -904,8 +904,6 @@ RxJava处理数据：提供了RxJava扩展类[RxJavaExt.kt](https://github.com/c
 [RoomUtils：系统Room相关工具类](https://github.com/crimson0829/MVVM_Module/blob/master/mvvm_library/src/main/java/com/crimson/mvvm/utils/RoomUtils.kt)
 <br>
 [ScreenUtils：屏幕工具类](https://github.com/crimson0829/MVVM_Module/blob/master/mvvm_library/src/main/java/com/crimson/mvvm/utils/ScreenUtils.kt)
-<br>
-[SDKVersionUtils：Android SDK版本工具类](https://github.com/crimson0829/MVVM_Module/blob/master/mvvm_library/src/main/java/com/crimson/mvvm/utils/SDKVersionUtils.kt)
 <br>
 [StatusBarUtils：状态栏工具类](https://github.com/crimson0829/MVVM_Module/blob/master/mvvm_library/src/main/java/com/crimson/mvvm/utils/StatusBarUtils.kt)
 <br>
