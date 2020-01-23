@@ -6,7 +6,7 @@
 
 ## 特点
 
-* Kotlin开发，基于LifeCycle+LiveData+ViewModel+DataBinding作为基础结构，可作为项目Base库，快速开发项目
+* Kotlin开发，基于Lifecycle+LiveData+ViewModel+DataBinding作为基础结构，可作为项目Base库，快速开发项目
 * 支持AndroidX库，集成了AndroidX库下的一些常用组件，如RecyclerView,ViewPager2等
 * 提供了Base类(BaseActivity、BaseFragment、BaseViewModel等)统一封装，绑定生命周期，快速进行页面开发
 * 对LiveData，协程，RxJava进行了扩展，使用更方便
