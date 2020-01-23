@@ -5,27 +5,18 @@
 以MVVM模式为基础的快速集成组件,整合了大量优秀开源项目构建。
 
 ## 特点
-<br>
+
 * Kotlin开发，基于LifeCycle+LiveData+ViewModel+DataBinding作为基础结构，可作为项目Base库，快速开发项目
-<br>
 * 支持AndroidX库，集成了AndroidX库下的一些常用组件，如RecyclerView,ViewPager2等
-<br>
 * 提供了Base类(BaseActivity、BaseFragment、BaseViewModel等)统一封装，绑定生命周期，快速进行页面开发
-<br>
 * 对LiveData，协程，RxJava进行了扩展，使用更方便
-<br>
 * 使用Koin容器注入对象,可提供任何对象的依赖注入
-<br>
 * 扩展函数结合DataBinding，使DataBinding使用更方便
-<br>
 * Retrofit封装和扩展，网络请求更方便，提供了协程和RxJava两种方式获取数据方式并通过LiveData处理数据更容易
-<br>
 * RxBus全局处理事件
-<br>
 * 提供全局的Activity,Fragment生命周期管理，提供App统一配置方案
-<br>
 * 提供了简单易用的扩展函数和工具类
-<br>
+
 
 ## 引入
 
@@ -256,51 +247,49 @@ TabViewModel:
      }
     
 
-    /**
-        * run with 协程
-        */
-        /**
-           * run with 协程
-           */
-          fun getData() {
-      
-              callRemoteLiveDataAsync {
-                  model.getData()
-              }
-                      //观察livedata
-                  ?.observe(lifecycleOwner, Observer {
-      
-                      //LiveData.handle() 扩展
-                  it.handle({
-                      //when loading
-                      onLoadingViewInjectToRoot()
-      
-                  },{
-                      //result empty
-                      onLoadingViewResult()
-      
-                  },{
-                      //result error 可做错误处理
-                      toast("网络错误")
-                      onLoadingError()
-      
-                  },{_,responseCode->
-      
-                      //result remote error,可根据responseCode做错误提示
-                      errorResponseCode(responseCode)
-                      onLoadingError()
-      
-                  },{
-                      //result success
-                      onLoadingViewResult()
-                      runOnIO {
-                          handleData(this)
+ 
+  /**
+     * run with 协程
+     */
+    fun getData() {
+ 
+        callRemoteLiveDataAsync {
+            model.getData()
+        }
+                //观察livedata
+            ?.observe(lifecycleOwner, Observer {
+ 
+                //LiveData.handle() 扩展
+            it.handle({
+                //when loading
+                onLoadingViewInjectToRoot()
+ 
+     },{
+         //result empty
+               onLoadingViewResult()
+ 
+           },{
+               //result error 可做错误处理
+               toast("网络错误")
+               onLoadingError()
+ 
+           },{_,responseCode->
+ 
+               //result remote error,可根据responseCode做错误提示
+               errorResponseCode(responseCode)
+               onLoadingError()
+ 
+           },{
+               //result success
+               onLoadingViewResult()
+               runOnIO {
+                   handleData(this)
                       }
-                  })
-              })
+               })
+           })
               
       
-          }
+     }
            
 ```
 
@@ -325,18 +314,18 @@ override fun registerRxBus() {
 
 
 ```
-    val androidService by inject<AndroidService>()
+     val androidService by inject<AndroidService>()
+
 
     /**
-     * get data use coroutine
+     * use 协程
      */
-    suspend fun getTabData(): TabListEntity {
-        return callRemoteTabData { androidService.getTab() }
-    }
+    suspend fun getData() = androidService.getTab()
 
-    private suspend fun callRemoteTabData(call: suspend () -> TabListEntity): TabListEntity {
-        return withContext(Dispatchers.IO) { call.invoke() }
-    }
+    /**
+     * get data use flowable
+     */
+    fun getAuthorListData(id: Int, page: Int) = androidService.getArticles(id, page).applyThread()
     
 ```
 
@@ -776,6 +765,7 @@ AppConfigOptions(context).buildRetrofit()
 ```
 
 获取OkHttpClient:
+
 ```
  RetrofitApi.get(androidContext()).obtainOkHttp()
  
@@ -808,47 +798,44 @@ callRemoteLiveDataAsync{
     //hannle Data
 
 }
-
-
-
 ```
 RxJava处理数据：提供了RxJava扩展类[RxJavaExt.kt](https://github.com/crimson0829/MVVM_Module/blob/master/mvvm_library/src/main/java/com/crimson/mvvm/rx/RxJavaExt.kt);
 可将数据转换成LiveData操作
 
 ```
   //异步获取远程数据
-          Flowable
-                //绑定生命周期
-              .bindToLifecycle(lifecycleOwner)
-              //转化成LiveData 处理数据
-              .callRemotePost(LiveData().apply {
-                  observe(lifecycleOwner, Observer {
-                      //or execute it.handle()
-                      when (it) {
-                          //result success
-                          is RetrofitResult.Success -> {
-                          
-                          }
-                          //when loading
-                          RetrofitResult.Loading -> {
-                              
-                          }
-                          //result empty
-                          RetrofitResult.EmptyData -> {
-                            
-                          }
-                          //result error
-                          is RetrofitResult.Error -> {
-                             
-                          }
-                          //result remote error
-                          is RetrofitResult.RemoteError -> {
-                             
-                          }
-                      }
-  
-                  })
-              })
+ Flowable
+      //绑定生命周期
+    .bindToLifecycle(lifecycleOwner)
+    //转化成LiveData 处理数据
+    .callRemotePost(LiveData().apply {
+        observe(lifecycleOwner, Observer {
+            //or execute it.handle()
+            when (it) {
+                //result success
+                is RetrofitResult.Success -> {
+                
+                }
+                //when loading
+                RetrofitResult.Loading -> {
+                    
+            }
+            //result empty
+            RetrofitResult.EmptyData -> {
+      
+             }
+             //result error
+            is RetrofitResult.Error -> {
+       
+             }
+             //result remote error
+            is RetrofitResult.RemoteError -> {
+        
+            }
+        }
+ 
+    })
+ })
 
 
 ```
@@ -926,43 +913,25 @@ RxJava处理数据：提供了RxJava扩展类[RxJavaExt.kt](https://github.com/c
 
 ## 使用的官方库和开源库
 
-1.[AndroidX库：包括Appcompat、Lifecycle、RecyclerView、Viewpager2、Google_Material等](https://developer.android.com/jetpack/androidx/versions/stable-channel)
-<br>
-2.[Koin：轻量级的依赖注入框架，无代理，无代码生成，无反射，比Dagger2简洁点-_-](https://github.com/InsertKoinIO/koin)
-<br>
-3.[RxJava：大名鼎鼎-_-](https://github.com/ReactiveX/RxJava)
-<br>
-4.[RxAndroid](https://github.com/ReactiveX/RxAndroid)
-<br>
-5.[RxLifecycle](https://github.com/trello/RxLifecycle)
-<br>
-6.[RxPermissions](https://github.com/tbruyelle/RxPermissions)
-<br>
-7.[RxBinding](https://github.com/JakeWharton/RxBinding)
-<br>
-8.[RxKotlin:RxJava在Kotlin上的扩展库](https://github.com/ReactiveX/RxKotlin)
-<br>
-9.[Retrofit](https://github.com/square/retrofit)
-<br>
-10.[OkHttp](https://github.com/square/okhttp)
-<br>
-11.[Glide](https://github.com/bumptech/glide)
-<br>
-12.[Gson](https://github.com/google/gson)
-<br>
-13.[Timber](https://github.com/JakeWharton/timber)
-<br>
-14.[BaseRecyclerViewAdapterHelper：非常好用的RecyclerViewAdapter的封装库](https://github.com/CymChad/BaseRecyclerViewAdapterHelper)
-<br>
-15.[SmartRefreshLayout：非常好用的下拉刷新框架](https://github.com/scwang90/SmartRefreshLayout)
-<br>
-16.[AndroidAutoSize：屏幕适配解决方案，思想值得借鉴](https://github.com/JessYanCoding/AndroidAutoSize)
-<br>
-17.[Material-Dialogs](https://github.com/afollestad/material-dialogs)
-<br>
-18.[LeakCanary](https://github.com/square/leakcanary)
-<br>
-19.[感谢wanandroid提供的Api接口，感谢大佬](https://github.com/hongyangAndroid/wanandroid)
+* [AndroidX库：包括Appcompat、Lifecycle、RecyclerView、Viewpager2、Google_Material等](https://developer.android.com/jetpack/androidx/versions/stable-channel)
+* [Koin：轻量级的依赖注入框架，无代理，无代码生成，无反射，比Dagger2简洁点-_-](https://github.com/InsertKoinIO/koin)
+* [RxJava：大名鼎鼎-_-](https://github.com/ReactiveX/RxJava)
+* [RxAndroid](https://github.com/ReactiveX/RxAndroid)
+* [RxLifecycle](https://github.com/trello/RxLifecycle)
+* [RxPermissions](https://github.com/tbruyelle/RxPermissions)
+* [RxBinding](https://github.com/JakeWharton/RxBinding)
+* [RxKotlin:RxJava在Kotlin上的扩展库](https://github.com/ReactiveX/RxKotlin)
+* [Retrofit](https://github.com/square/retrofit)
+* [OkHttp](https://github.com/square/okhttp)
+* [Glide](https://github.com/bumptech/glide)
+* [Gson](https://github.com/google/gson)
+* [Timber](https://github.com/JakeWharton/timber)
+* [BaseRecyclerViewAdapterHelper：非常好用的RecyclerViewAdapter的封装库](https://github.com/CymChad/BaseRecyclerViewAdapterHelper)
+* [SmartRefreshLayout：非常好用的下拉刷新框架](https://github.com/scwang90/SmartRefreshLayout)
+* [AndroidAutoSize：屏幕适配解决方案，思想值得借鉴](https://github.com/JessYanCoding/AndroidAutoSize)
+* [Material-Dialogs](https://github.com/afollestad/material-dialogs)
+* [LeakCanary](https://github.com/square/leakcanary)
+* [感谢wanandroid提供的Api接口，感谢大佬](https://github.com/hongyangAndroid/wanandroid)
 
 
 ## License
