@@ -120,36 +120,18 @@ class AppApplication : BaseApplication() {
 
 
 ```
-val viewModelModule = module {
 
-    factory { TabViewModel() }
-    factory { (id: Int) -> AuthorViewModel(id) }
+ factory { TabViewModel() }
+ factory { (id: Int) -> AuthorViewModel(id) }
 
-}
-
-val modelModule= module {
-
-    single {
-        AuthorModel()
-    }
-
-}
-
-val adapterModule= module {
-
-    factory {
-        ArticleAdapter()
-    }
-}
-
-val dataModule= module {
-
-    single {
+ //单例对象
+ single {AuthorModel() }
+ 
+ single {
         get<RetrofitApi>()
             .obtainRetrofit()
             ?.create(AndroidService::class.java)
     }
-}
 
 ```
 
@@ -180,6 +162,11 @@ class TabActivity : BaseActivity<ActivityTabBinding, TabViewModel>() {
     override fun initViewModelId(): Int {
         return BR.viewModel
     }
+    
+    //也可从Koin容器中获取ViewModel：
+     override fun initViewModel(): TabViewModel? {
+            return getViewModel()
+        }
 
     override fun initView() {
 
@@ -189,15 +176,6 @@ class TabActivity : BaseActivity<ActivityTabBinding, TabViewModel>() {
 
 }
 
-```
-
-也可从Koin容器中获取ViewModel：
-
-```
-  override fun initViewModel(): TabViewModel? {
-        return getViewModel()
-    }
-    
 ```
 
 设置标题：
@@ -211,12 +189,8 @@ class TabActivity : BaseActivity<ActivityTabBinding, TabViewModel>() {
   override fun isTitleTextCenter(): Boolean {
         return true
     }
-```
-
-如果想添加menu，可设置menu：
-
-```
-
+    
+    //如果想添加menu，可设置menu：
    // 初始化menu布局
   override fun initMenuRes(): Int? {
         return R.menu.tab_menu
@@ -231,8 +205,10 @@ class TabActivity : BaseActivity<ActivityTabBinding, TabViewModel>() {
                   toast("refresh page")
                }
          }
-  }        
+  }  
+    
 ```
+
 
 
 1.4 ViewModel层接收数据并处理逻辑,最后通过LiveData通知View层展示页面;
@@ -255,70 +231,49 @@ TabViewModel:
             logw("vp2page -> $this")
      }
     
-
-    /**
-        * run with 协程
-        */
-        /**
-           * run with 协程
-           */
-          fun getData() {
-      
-              callRemoteLiveDataAsync {
-                  model.getData()
-              }
-                      //观察livedata
-                  ?.observe(lifecycleOwner, Observer {
-      
-                      //LiveData.handle() 扩展
-                  it.handle({
-                      //when loading
-                      onLoadingViewInjectToRoot()
-      
-                  },{
-                      //result empty
-                      onLoadingViewResult()
-      
-                  },{
-                      //result error 可做错误处理
-                      toast("网络错误")
-                      onLoadingError()
-      
-                  },{_,responseCode->
-      
-                      //result remote error,可根据responseCode做错误提示
-                      errorResponseCode(responseCode)
-                      onLoadingError()
-      
-                  },{
-                      //result success
-                      onLoadingViewResult()
-                      runOnIO {
-                          handleData(this)
-                      }
-                  })
-              })
-              
-      
-          }
-           
-```
-
-[RxBus](https://github.com/crimson0829/MVVM_Module/blob/master/mvvm_library/src/main/java/com/crimson/mvvm/rx/bus/RxBus.kt)注册：
-
-```
-override fun registerRxBus() {
-
-        errorDis = rxbus.toObservable(RxCode.POST_CODE, Integer::class.java)
-            .subscribe {
-                if (it.toInt() == RxCode.ERROR_LAYOUT_CLICK_CODE) {
-                    getData()
-                }
-            }
-
-        RxDisposable.add(errorDis)
-
-    }
+  **
+    * run with 协程
+    */
+   fun getData() {
+  
+       callRemoteLiveDataAsync {
+           model.getData()
+       }
+               //观察livedata
+           ?.observe(lifecycleOwner, Observer {
+  
+               //LiveData.handle() 扩展
+           it.handle({
+               //when loading
+               onLoadingViewInjectToRoot()
+  
+           },{
+               //result empty
+               onLoadingViewResult()
+  
+           },{
+               //result error 可做错误处理
+               toast("网络错误")
+               onLoadingError()
+  
+           },{_,responseCode->
+  
+               //result remote error,可根据responseCode做错误提示
+               errorResponseCode(responseCode)
+               onLoadingError()
+  
+           },{
+               //result success
+               onLoadingViewResult()
+               runOnIO {
+                   handleData(this)
+               }
+           })
+       })
+       
+  
+   }
+    
 ```
 
 1.5 Model层获取数据：
@@ -403,86 +358,46 @@ ViewModel:
  ```
  
  2.3 DataBinding扩展函数：提供了Glide，RecyclerView，ViewPager2，SmartRefreshLayout等绑定函数，方便扩展xml和控件调用；
- 
- Glide绑定图片：可在xml或者View中设置，具体使用可参考[PictureActivity](https://github.com/crimson0829/MVVM_Module/blob/master/sample/src/main/java/com/crimson/mvvm_frame/PictureActivity.kt)
+
+<br> 
+ 2.3.1 Glide 绑定 ImageView xml， 可在xml或者View中设置，具体使用可参考[PictureActivity](https://github.com/crimson0829/MVVM_Module/blob/master/sample/src/main/java/com/crimson/mvvm_frame/PictureActivity.kt)
+
  
 ```
-  /**
-   * bind image with glide
-   * imageUrl：图片链接
-   * imageStyle：加载方式
-   * imageRoundShape：设置图片圆角大小
-   * image_skipMemoryCache：是否忽略内存缓存
-   * image_diskMemoryCache：本地缓存策略
-   * imagePlaceholder：欲加载显示图片
-   * imageError：加载错误显示图片
-   */
-  @BindingAdapter(
-      "app:imageUrl",
-      "app:imageStyle",
-      "app:imageRoundShape",
-      "app:image_skipMemoryCache",
-      "app:image_diskMemoryCache",
-      "app:imagePlaceholder",
-      "app:imageError",
-      requireAll = false
-  )
-  fun ImageView.bindImage(
-      imageUrl: String?,
-      imageStyle: String? = "1",
-      imageRoundShape: Int? = 0,
-      skipMemoryCache: Boolean = false,
-      diskMemoryCache: String? = "1",
-      @DrawableRes imagePlaceholder: Int = 0,
-      @DrawableRes imageError: Int = 0
-  ) {
-  
-      val builder = Glide.with(context)
-          .load(imageUrl)
-          .skipMemoryCache(skipMemoryCache)
-          .placeholder(imagePlaceholder)
-          .centerCrop()
-          .error(imageError)
-  
-      when (diskMemoryCache) {
-  
-          "1" -> builder.diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
-          "2" -> builder.diskCacheStrategy(DiskCacheStrategy.RESOURCE)
-          "3" -> builder.diskCacheStrategy(DiskCacheStrategy.DATA)
-          "4" -> builder.diskCacheStrategy(DiskCacheStrategy.NONE)
-          "5" -> builder.diskCacheStrategy(DiskCacheStrategy.ALL)
-          else -> builder.diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
-  
-      }
-  
-      when (imageStyle) {
-          //默认
-          "1" -> builder.centerCrop()
-          //round shape，设置imageStyle=2 再设置imageRoundShape>0才有效果
-          "2" -> {
-              if (imageRoundShape != 0) {
-                  builder.transform(RoundedCornersTransformation(dp2px(imageRoundShape ?: 0), 0))
-              } else {
-                  builder.centerCrop()
-              }
-          }
-          //circle
-          "3" -> builder.circleCrop()
-          //blur 高斯模糊
-          "4" -> builder.transform(BlurTransformation(25, 5))
-          "5" -> builder.centerInside()
-          "6" -> builder.fitCenter()
-          else -> builder.centerCrop()
-  
-      }
-  
-      builder.into(this)
-  
-  }
+
+/**
+ * bind image with glide
+ * imageUrl：图片链接
+ * imageStyle：加载方式
+ * imageRoundShape：设置图片圆角大小
+ * image_skipMemoryCache：是否忽略内存缓存
+ * image_diskMemoryCache：本地缓存策略
+ * imagePlaceholder：欲加载显示图片
+ * imageError：加载错误显示图片
+ */
+   <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/iv_image"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            app:imageUrl="@{model.imageUrl}" 
+            app:imageStyle="@{1}"
+            app:imageRoundShape="@{1}"
+            app:image_diskMemoryCache="@{1}"
+            app:image_skipMemoryCache="@{false}"
+            app:imagePlaceholder="@{@drawablee/icon_picture}"
+            app:imageError="@{@drawablee/icon_picture}"         
+            />
+
+ 
 ```
-RecyclerView绑定：具体使用可参考 xml:[fragment_tab](https://github.com/crimson0829/MVVM_Module/blob/master/sample/src/main/res/layout/fragment_tab.xml)
+2.3.2 RecyclerView绑定：具体使用可参考 xml:[fragment_tab](https://github.com/crimson0829/MVVM_Module/blob/master/sample/src/main/res/layout/fragment_tab.xml)
 
 ```
+
+<import type="com.crimson.mvvm.binding.recyclerview.LayoutManagers" />
+
+<import type="com.crimson.mvvm.binding.recyclerview.LineManagers"/>
+
 /**
  * bind recycler view
  * 适配器viewHolder 必须继承 BaseViewHolder
@@ -492,57 +407,20 @@ RecyclerView绑定：具体使用可参考 xml:[fragment_tab](https://github.com
  * rv_bindScrollStateChanged：滑动状态监听
  * rv_bindScrolled：滑动监听
  */
-@BindingAdapter(
-    "app:rv_adapter",
-    "app:rv_layoutManager",
-    "app:rv_lineManager",
-    "app:rv_bindScrollStateChanged",
-    "app:rv_bindScrolled",
-    requireAll = false
-)
-fun RecyclerView.bindAdapter(
-    adapter: RecyclerView.Adapter<BaseViewHolder>?,
-    layoutManager: LayoutManagers.LayoutManagerFactory?,
-    lineManager: LineManagers.LineManagerFactory? = null,
-    scrollStateChangedConsumer: BindConsumer<Int>? = null,
-    scrolledConsumer: BindBiConsumer<Int, Int>? = null
-) {
+<androidx.recyclerview.widget.RecyclerView
+    android:id="@+id/recycler_view"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:overScrollMode="never"
+    app:rv_adapter="@{viewModel.adapter}"
+    app:rv_bindScrolled="@{viewModel.bindScrollConsumer}"
+    app:rv_lineManager="@{LineManagers.horizontal()}"
+    app:rv_layoutManager="@{LayoutManagers.linear()}" />
 
-    adapter?.let {
-        this.adapter = adapter
-    }
-    layoutManager?.let {
-        this.layoutManager = layoutManager.create(this)
-    }
-    lineManager?.let {
-        this.addItemDecoration(lineManager.create(this))
-    }
 
-    if (scrollStateChangedConsumer != null || scrolledConsumer != null) {
-
-        addOnScrollListener(object : RecyclerView.OnScrollListener() {
-
-            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
-                super.onScrollStateChanged(recyclerView, newState)
-                scrollStateChangedConsumer?.apply {
-                    accept(newState)
-                }
-
-            }
-
-            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                super.onScrolled(recyclerView, dx, dy)
-                scrolledConsumer?.apply {
-                    accept(dx, dy)
-                }
-            }
-        })
-    }
-
-}
 ```
 
-ViewPager2绑定：具体使用可参考TabActivity和xml:[activity_tab](https://github.com/crimson0829/MVVM_Module/blob/master/sample/src/main/res/layout/activity_tab.xml)
+2.3.3 ViewPager2绑定：具体使用可参考TabActivity和xml:[activity_tab](https://github.com/crimson0829/MVVM_Module/blob/master/sample/src/main/res/layout/activity_tab.xml)
 ```
 /**
  * bind viewPager2
@@ -557,132 +435,22 @@ ViewPager2绑定：具体使用可参考TabActivity和xml:[activity_tab](https:/
  * vp2_bindPageScrolled：页面滑动监听
  *
  */
-@BindingAdapter(
-    "app:vp2_adapter",
-    "app:vp2_fragmentAdapter",
-    "app:vp2_orientation",
-    "app:vp2_pageMargin",
-    "app:vp2_needScaleTransformer",
-    "app:vp2_multiPagePadding",
-    "app:vp2_bindPageSelected",
-    "app:vp2_bindPageScrollStateChanged",
-    "app:vp2_bindPageScrolled",
-    requireAll = false
-)
-fun ViewPager2.bindAdapter(
-    adapter: RecyclerView.Adapter<BaseViewHolder>? = null,
-    fragmentAdapter: FragmentStateAdapter? = null,
-    orientation: Int = 0,
-    pageMargin: Int = 0,
-    needScaleTransformer: Boolean = false,
-    multiPagePadding: Int = 0,
-    pageSelectedConsumer: BindConsumer<Int>? = null,
-    pageScrollStateChangedConsumer: BindConsumer<Int>? = null,
-    pageScrolledConsumer: BindTiConsumer<Int, Float, Int>? = null
-
-) {
-
-    //viewpager2绑定适配器，两种绑定方式；
-    // 1：绑定 recyclerView adapter;
-    // 2：绑定 FragmentStateAdapter；
-    if (adapter != null) {
-        this.adapter = adapter
-    } else if (fragmentAdapter != null) {
-        this.adapter = fragmentAdapter
-    }
-
-    //设置方向
-    if (orientation == 0) {
-        this.orientation = ViewPager2.ORIENTATION_HORIZONTAL
-    } else {
-        this.orientation = ViewPager2.ORIENTATION_VERTICAL
-    }
-
-    //设置page transformer
-    //默认绑定了缩放和margin，如果想更多的效果，请自行设置
-    if (pageMargin != 0 || needScaleTransformer) {
-        val compositePageTransformer = CompositePageTransformer()
-        if (needScaleTransformer) {
-            compositePageTransformer.addTransformer(ViewPager2ScaleTransformer())
-        }
-        if (pageMargin != 0) {
-            compositePageTransformer.addTransformer(MarginPageTransformer(dp2px(pageMargin)))
-        }
-        this.setPageTransformer(compositePageTransformer)
-    }
-
-    //设置多页显示
-    if (multiPagePadding != 0) {
-        val recyclerView = getChildAt(0) as? RecyclerView
-        recyclerView?.apply {
-            // setting padding on inner RecyclerView puts overscroll effect in the right place
-            setPadding(dp2px(multiPagePadding), 0, dp2px(multiPagePadding), 0)
-            clipToPadding = false
-        }
-    }
-
-    //注册page监听事件
-    if (pageScrollStateChangedConsumer != null || pageSelectedConsumer != null || pageScrolledConsumer != null) {
-        registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
-
-            override fun onPageScrollStateChanged(state: Int) {
-                super.onPageScrollStateChanged(state)
-                pageScrollStateChangedConsumer?.apply {
-                    accept(state)
-                }
-
-            }
-
-            override fun onPageSelected(position: Int) {
-                super.onPageSelected(position)
-                pageSelectedConsumer?.apply {
-                    accept(position)
-                }
-
-            }
-
-            override fun onPageScrolled(
-                position: Int,
-                positionOffset: Float,
-                positionOffsetPixels: Int
-            ) {
-                super.onPageScrolled(position, positionOffset, positionOffsetPixels)
-                pageScrolledConsumer?.apply {
-                    accept(position, positionOffset, positionOffsetPixels)
-                }
-            }
-
-        })
-
-    }
+ 
+  <androidx.viewpager2.widget.ViewPager2
+             android:id="@+id/view_pager"
+             android:layout_width="match_parent"
+             android:layout_height="match_parent"
+             android:orientation="horizontal"
+             app:vp2_bindPageScrolled="@{viewModel.vp2ScrolledConsumer}"
+             app:vp2_multiPagePadding="@{40}"
+             app:vp2_transformerType="@{2}"
+             app:vp2_bindPageSelected="@{viewModel.vp2SelectedConsumer}"
+              />
 
 
-}
-
-/**
- * bind tabLayout
- * vp2_bindTabLayout:绑定tabLayout
- * vp2_tabLayoutTitles:设置tabLayout标题
- */
-@BindingAdapter("app:vp2_bindTabLayout", "app:vp2_tabLayoutTitles", requireAll = true)
-fun ViewPager2.bindTabLayout(tabLayout: TabLayout?, titles: MutableList<String>?) {
-    tabLayout?.let {
-        TabLayoutMediator(tabLayout, this,
-            TabLayoutMediator.TabConfigurationStrategy { tab, position ->
-                titles?.let {
-                    //设置 title
-                    if (it.size > position) {
-                        tab.text = it[position]
-                    }
-                }
-            })
-            .attach()
-    }
-
-}
 ```
 
-SmartRefreshLayout绑定：具体使用可参考[AuthorViewModel](https://github.com/crimson0829/MVVM_Module/blob/master/sample/src/main/java/com/crimson/mvvm_frame/AuthorFragment.kt)和xml:[fragment_tab](https://github.com/crimson0829/MVVM_Module/blob/master/sample/src/main/res/layout/fragment_tab.xml)
+2.3.4 SmartRefreshLayout绑定：具体使用可参考[AuthorViewModel](https://github.com/crimson0829/MVVM_Module/blob/master/sample/src/main/java/com/crimson/mvvm_frame/AuthorFragment.kt)和xml:[fragment_tab](https://github.com/crimson0829/MVVM_Module/blob/master/sample/src/main/res/layout/fragment_tab.xml)
 
 ```
 
@@ -691,108 +459,141 @@ SmartRefreshLayout绑定：具体使用可参考[AuthorViewModel](https://github
  * sm_bindRefresh：绑定下拉刷新监听
  * sm_bindLoadMore：绑定上拉加载监听
  */
-@BindingAdapter("app:sm_bindRefresh", "app:sm_bindLoadMore", requireAll = false)
-fun SmartRefreshLayout.bindRefresh(
-    refreshConsumer: BindConsumer<RefreshLayout>?,
-    loadMoreConsumer: BindConsumer<RefreshLayout>?
-) {
 
-    setOnRefreshLoadMoreListener(object : OnRefreshLoadMoreListener {
+    <com.scwang.smartrefresh.layout.SmartRefreshLayout
+        android:id="@+id/refresh_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:sm_bindLoadMore="@{viewModel.loadMoreConsumer}"
+        app:sm_bindRefresh="@{viewModel.refreshConsumer}"
+        app:srlEnableAutoLoadMore="true">
+     </com.scwang.smartrefresh.layout.SmartRefreshLayout>    
+     
+    //viewModel中绑定
+    //bind refresh
+    val refreshConsumer = bindConsumer<RefreshLayout> { }
 
-        override fun onRefresh(refreshLayout: RefreshLayout) {
+    //bind loadmore
+    val loadMoreConsumer =bindConsumer<RefreshLayout> {  }
 
-            refreshConsumer?.apply {
-                accept(refreshLayout)
-            }
-
-        }
-
-        override fun onLoadMore(refreshLayout: RefreshLayout) {
-            loadMoreConsumer?.apply {
-                accept(refreshLayout)
-            }
-        }
-    })
-
-}
+             
 
 ```
+2.3.5 TextView 绑定
+```
+/**
+ * bind text changes
+ * textChanges：绑定文字改变监听
+ * keyboardSearch：键盘搜索监听
+ */
+    <androidx.appcompat.widget.AppCompatEditText
+                 android:layout_width="math_parent"
+                 android:layout_height="50dp"
+                 app:textChanges="@{viewModel.textChanged}" 
+                 app:keyboardSearch="@{viewModel.keyboardSearch}"
+                 />
+                 
+     //viewModel中绑定
+    val textChanged = bindConsumer<String> { }
+    val keyboardSearch =bindConsumer<Any> {  }             
+                 
+```
 
-View的点击绑定：
+2.3.6 View 点击绑定：
 
 ```
 /**
  * bind click
  * bindClick：绑定点击
- * clickDuration：下次点击事件间隔
+ * clickDuration：点击事件间隔
+ *bindLongClick：绑定长按点击
  */
-@BindingAdapter("app:bindClick", "app:clickDuration", requireAll = false)
-fun View.bindClick(clickConsumer: BindConsumer<Unit?>?, duration: Long = 500) {
-    clickConsumer?.apply {
-        clicks()
-            .throttleLast(duration, TimeUnit.MILLISECONDS)
-            .observeOnMainThread()
-            .subscribe {
-                accept(it)
-            }
-    }
 
-}
+<View
+ android:layout_width="wrap_content"
+ android:layout_height="wrap_content" 
+ app:bindClick="@{viewModel.viewClick}"
+ app:clickDuration="@{200}"
+ app:bindLongClick="@{viewMoedl.viewLongClick}"
+ />
+
+
+```
+
+2.3.7 SwichCompat 监听绑定：
+
+```
+  <androidx.appcompat.widget.SwitchCompat
+                android:layout_width="wrap_content"
+                app:checkChanged="@{viewModel.checkedChanged}"
+                android:layout_height="wrap_content" />
+  
+  //viewModel中绑定              
+  val checkedChanged = bindConsumer<Boolean> {}
+
+```
+
+2.3.7 FlycoTabLayout 监听绑定：
+
+```
 
 /**
- * bind long click
- * bindLongClick：绑定长按点击
+ * tabTitles：设置标题
+ * tabSelectChanged：标题选中监听
  */
-@BindingAdapter("app:bindLongClick")
-fun View.bindLongClick(clickConsumer: BindConsumer<Unit?>?) {
-    clickConsumer?.apply {
-        longClicks()
-            .observeOnMainThread()
-            .subscribe {
-                accept(it)
-            }
-    }
-
-}
+ <com.flyco.tablayout.CommonTabLayout
+     android:id="@+id/tab_layout"
+     android:layout_width="match_parent"
+     android:layout_height="50dp"
+     android:background="@color/colorWhite"
+     app:tabSelectChanged="@{viewModel.tabSelectChanged}"
+     app:tabTitles="@{viewModel.titles}"
+     app:tl_indicator_color="@color/colorPrimary"
+     app:tl_indicator_corner_radius="2dp"
+     app:tl_indicator_height="4dp"
+     app:tl_indicator_width="20dp"
+     app:tl_tab_space_equal="true"
+     app:tl_textBold="SELECT"
+     app:tl_textSelectColor="@color/colorPrimary"
+     app:tl_textUnselectColor="@color/colorText"
+     app:tl_textsize="17sp"
+     app:tl_underline_color="@color/divideLine"
+     app:tl_underline_gravity="BOTTOM"
+     app:tl_underline_height="1px" />
+     
+ //viewModel中绑定
+   val titles = listOf("标题1", "标题2", "标题3")
+   val tabSelectChanged = bindConsumer<Int> {}
 
 ```
-3.1 网络请求：
 
-全局设置retrofit: 设置可参考RetrofitConfig；目前可设置baseUrl,connectTime,responseLog,requestLog和http headers
+
+3.1 网络请求：使用
+
 
 ```
+
+//全局设置retrofit: 设置可参考RetrofitConfig；目前可设置baseUrl,connectTime,responseLog,requestLog和http headers
 AppConfigOptions(context).buildRetrofit()
 
-```
-
-获取Retrofit:
-
-```
-  RetrofitApi.get(androidContext()).obtainRetrofit()
+//获取Retrofit和获取OkHttpClient:
+  NetworkClient.get(androidContext()).obtainRetrofit()
+  NetworkClient.get(androidContext()).obtainOkHttp()
   
-  //or
-   val retrofit by inject<Retrofit>()
-  
-```
+//or
+val retrofit by inject<Retrofit>()
+val okHttp by inject<OkHttpClient>()
 
-获取OkHttpClient:
-```
- RetrofitApi.get(androidContext()).obtainOkHttp()
- 
- //or
- val okHttp by inject<OkHttpClient>()
- 
-```
-
-获取数据：
-```
- //获取Retrofit Service
+//获取数据：
+//获取Retrofit Service
  val androidService by inject<AndroidService>()
  
  androidService.getArticles(id, page)
               //扩展函数线程切换 从IO线程切换到主线程
              .applyThread()
+
 ```
+
 
 更多Api调用可参考[NetworkClient](https://github.com/crimson0829/MVVM_Module/blob/master/mvvm_library/src/main/java/com/crimson/mvvm/net/NetworkClient.kt) 
 
@@ -817,38 +618,38 @@ RxJava处理数据：提供了RxJava扩展类[RxJavaExt.kt](https://github.com/c
 
 ```
   //异步获取远程数据
-          Flowable
-                //绑定生命周期
-              .bindToLifecycle(lifecycleOwner)
-              //转化成LiveData 处理数据
-              .callRemotePost(LiveData().apply {
-                  observe(lifecycleOwner, Observer {
-                      //or execute it.handle()
-                      when (it) {
-                          //result success
-                          is RetrofitResult.Success -> {
-                          
-                          }
-                          //when loading
-                          RetrofitResult.Loading -> {
-                              
-                          }
-                          //result empty
-                          RetrofitResult.EmptyData -> {
-                            
-                          }
-                          //result error
-                          is RetrofitResult.Error -> {
-                             
-                          }
-                          //result remote error
-                          is RetrofitResult.RemoteError -> {
-                             
-                          }
-                      }
-  
-                  })
-              })
+  Flowable
+      //绑定生命周期
+    .bindToLifecycle(lifecycleOwner)
+    //转化成LiveData 处理数据
+    .callRemotePost(LiveData().apply {
+        observe(lifecycleOwner, Observer {
+            //or execute it.handle()
+            when (it) {
+                //result success
+                is RetrofitResult.Success -> {
+                
+                }
+                //when loading
+                RetrofitResult.Loading -> {
+                    
+                }
+                //result empty
+                RetrofitResult.EmptyData -> {
+                  
+                }
+                //result error
+                is RetrofitResult.Error -> {
+                   
+                }
+                //result remote error
+                is RetrofitResult.RemoteError -> {
+                   
+                }
+            }
+ 
+        })
+    })
 
 
 ```
@@ -858,13 +659,13 @@ RxJava处理数据：提供了RxJava扩展类[RxJavaExt.kt](https://github.com/c
 订阅事件：在ViewModel中订阅和移除
 
 ```
- dispose=RxBus.get().toObservable(<对应code>,<对应类型>)
+ dispose=rxbus.toObservable(<对应code>,<对应类型>)
             .subscribe {
                //这里处理逻辑
             }
             
  //or 
-  dispose=RxBus.get().toObservable(<对应类型>)
+  dispose=rxbus.toObservable(<对应类型>)
              .subscribe {
                 //这里处理逻辑
              }

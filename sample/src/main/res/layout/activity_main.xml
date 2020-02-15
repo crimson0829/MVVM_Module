@@ -22,6 +22,15 @@
         <include layout="@layout/base_title_bar" />
 
 
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="40dp"
+                android:text="api_demo"
+                app:bindClick="@{viewModel.btnDemoClick}" />
+
+
         <androidx.appcompat.widget.AppCompatButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

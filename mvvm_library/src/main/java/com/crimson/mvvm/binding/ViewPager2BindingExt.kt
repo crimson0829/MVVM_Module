@@ -47,7 +47,7 @@ fun ViewPager2.bindAdapter(
     fragmentAdapter: FragmentStateAdapter? = null,
     orientation: Int = 0,
     pageMargin: Int = 0,
-    transformerType: String = "0",
+    transformerType: Int = 0,
     multiPagePadding: Int = 0,
     pageSelectedConsumer: BindConsumer<Int>? = null,
     pageScrollStateChangedConsumer: BindConsumer<Int>? = null,
@@ -73,7 +73,7 @@ fun ViewPager2.bindAdapter(
 
     //设置page transformer
     //默认绑定了缩放和margin，如果想更多的效果，请自行设置
-    if (pageMargin != 0 || transformerType != "0") {
+    if (pageMargin != 0 || transformerType != 0) {
         val compositePageTransformer = CompositePageTransformer()
         if (pageMargin != 0) {
             compositePageTransformer.addTransformer(MarginPageTransformer(dp2px(pageMargin)))
@@ -81,11 +81,11 @@ fun ViewPager2.bindAdapter(
 
         when (transformerType) {
             //scale
-            "1" -> compositePageTransformer.addTransformer(ViewPager2ScaleTransformer())
+            1 -> compositePageTransformer.addTransformer(ViewPager2ScaleTransformer())
             //deptth
-            "2" -> compositePageTransformer.addTransformer(ViewPager2DepthTransformer())
+            2 -> compositePageTransformer.addTransformer(ViewPager2DepthTransformer())
             //ZoomOut
-            "3" -> compositePageTransformer.addTransformer(ViewPager2ZoomOutTransformer())
+            3 -> compositePageTransformer.addTransformer(ViewPager2ZoomOutTransformer())
 
         }
 

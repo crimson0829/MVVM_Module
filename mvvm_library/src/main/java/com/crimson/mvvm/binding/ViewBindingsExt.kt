@@ -25,7 +25,7 @@ import java.util.concurrent.TimeUnit
 /**
  * bind click
  * bindClick：绑定点击
- * clickDuration：下次点击事件间隔
+ * clickDuration：点击事件间隔
  */
 @BindingAdapter("app:bindClick", "app:clickDuration", requireAll = false)
 fun View.bindClick(clickConsumer: BindConsumer<Unit?>?, duration: Long = 500) {

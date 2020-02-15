@@ -6,9 +6,12 @@
 
     <data>
 
+
+
         <variable
             name="viewModel"
             type="com.crimson.mvvm_frame.TabViewModel" />
+
     </data>
 
     <LinearLayout
@@ -31,7 +34,7 @@
             android:orientation="horizontal"
             app:vp2_bindPageScrolled="@{viewModel.vp2ScrolledConsumer}"
             app:vp2_multiPagePadding="@{40}"
-            app:vp2_transformerType="@{String.valueOf(2)}"
+            app:vp2_transformerType="@{2}"
             app:vp2_bindPageSelected="@{viewModel.vp2SelectedConsumer}"
              />
 

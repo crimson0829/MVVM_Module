@@ -38,10 +38,10 @@ import jp.wasabeef.glide.transformations.RoundedCornersTransformation
 )
 fun ImageView.bindImage(
     imageUrl: String?,
-    imageStyle: String? = "1",
+    imageStyle: Int? = 1,
     imageRoundShape: Int? = 0,
     skipMemoryCache: Boolean = false,
-    diskMemoryCache: String? = "1",
+    diskMemoryCache: Int? = 1,
     @DrawableRes imagePlaceholder: Int = 0,
     @DrawableRes imageError: Int = 0
 ) {
@@ -53,22 +53,11 @@ fun ImageView.bindImage(
         .centerCrop()
         .error(imageError)
 
-    when (diskMemoryCache) {
-
-        "1" -> builder.diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
-        "2" -> builder.diskCacheStrategy(DiskCacheStrategy.RESOURCE)
-        "3" -> builder.diskCacheStrategy(DiskCacheStrategy.DATA)
-        "4" -> builder.diskCacheStrategy(DiskCacheStrategy.NONE)
-        "5" -> builder.diskCacheStrategy(DiskCacheStrategy.ALL)
-        else -> builder.diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
-
-    }
-
     when (imageStyle) {
         //默认
-        "1" -> builder.centerCrop()
+        1 -> builder.centerCrop()
         //round shape，设置imageStyle=2 再设置imageRoundShape>0才有效果
-        "2" -> {
+        2 -> {
             if (imageRoundShape != 0) {
                 builder.transform(RoundedCornersTransformation(dp2px(imageRoundShape ?: 0), 0))
             } else {
@@ -76,12 +65,23 @@ fun ImageView.bindImage(
             }
         }
         //circle
-        "3" -> builder.circleCrop()
+        3 -> builder.circleCrop()
         //blur 高斯模糊
-        "4" -> builder.transform(BlurTransformation(25, 5))
-        "5" -> builder.centerInside()
-        "6" -> builder.fitCenter()
+        4 -> builder.transform(BlurTransformation(25, 5))
+        5 -> builder.centerInside()
+        6 -> builder.fitCenter()
         else -> builder.centerCrop()
+
+    }
+
+    when (diskMemoryCache) {
+
+        1 -> builder.diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
+        2 -> builder.diskCacheStrategy(DiskCacheStrategy.RESOURCE)
+        3 -> builder.diskCacheStrategy(DiskCacheStrategy.DATA)
+        4 -> builder.diskCacheStrategy(DiskCacheStrategy.NONE)
+        5 -> builder.diskCacheStrategy(DiskCacheStrategy.ALL)
+        else -> builder.diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
 
     }
 

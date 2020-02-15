@@ -33,8 +33,27 @@ fun TextView.textChanges(changesConsumer: BindConsumer<CharSequence>?) {
         textChanges()
             .observeOnMainThread()
             .subscribe {
-                accept(it)
+                accept(it.toString())
             }
+    }
+
+}
+
+/**
+ * 键盘搜索监听
+ */
+@BindingAdapter("app:keyboardSearch")
+fun TextView.keyboardSearch(consumer: BindConsumer<Any>?) {
+    consumer?.apply {
+        setOnEditorActionListener { _, actionId, event ->
+            if ((actionId == 0 || actionId == 3) && event != null) {
+                //点击搜索要做的操作
+                consumer.accept(event)
+
+            }
+            return@setOnEditorActionListener false
+        }
+
     }
 
 }
@@ -72,17 +91,34 @@ enum class Direction {
 /**
  * UnderLine the TextView.
  */
-fun TextView.underLine() {
-    paint.flags = paint.flags or Paint.UNDERLINE_TEXT_FLAG
-    paint.isAntiAlias = true
+@BindingAdapter("app:underLine")
+fun TextView.underLine(boolean: Boolean = true) {
+    if (boolean) {
+        paint.flags = paint.flags or Paint.UNDERLINE_TEXT_FLAG
+        paint.isAntiAlias = true
+    } else {
+        cancelLine()
+    }
+
 }
 
 /**
  * DeleteLine for a TextView.
  */
-fun TextView.deleteLine() {
-    paint.flags = paint.flags or Paint.STRIKE_THRU_TEXT_FLAG
-    paint.isAntiAlias = true
+@BindingAdapter("app:deleteLine")
+fun TextView.deleteLine(boolean: Boolean = true) {
+    if (boolean) {
+        paint.flags = paint.flags or Paint.STRIKE_THRU_TEXT_FLAG
+        paint.isAntiAlias = true
+    } else {
+        cancelLine()
+    }
+
+}
+
+//取消划线设置
+fun TextView.cancelLine() {
+    paint.flags = 0
 }
 
 

@@ -132,6 +132,7 @@ dependencies {
     api rootProject.ext.dependencies["brvah"]
     api rootProject.ext.dependencies["SmartRefresh"]
     api rootProject.ext.dependencies["autosize"]
+    api rootProject.ext.dependencies["flycoTabLayout"]
     api rootProject.ext.dependencies["dialogs-core"]
     api rootProject.ext.dependencies["dialogs-bottomsheets"]
     api rootProject.ext.dependencies["dialogs-lifecycle"]

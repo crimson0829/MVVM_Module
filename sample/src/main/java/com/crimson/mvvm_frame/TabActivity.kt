@@ -136,6 +136,7 @@ class TabViewModel : BaseViewModel() {
         }
 
 
+
     /**
      * run with 协程
      */
@@ -144,6 +145,7 @@ class TabViewModel : BaseViewModel() {
 //        viewModelScope.launch {
 //
 //        }
+
 
         callRemoteLiveDataAsync {
             model.getData()

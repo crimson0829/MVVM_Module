@@ -22,18 +22,17 @@ ext {
             //androidx
             androidx_coreVersion    : "1.1.0",
             androidx_compatVersion  : "1.1.0",
-            androidx_activityVersion: "1.1.0-rc03",
-            androidx_fragmentVersion: "1.2.0-rc05",
+            androidx_activityVersion: "1.1.0",
+            androidx_fragmentVersion: "1.2.1",
             recyclerViewVersion     : "1.1.0",
             viewPager2Version       : "1.0.0",
             multidex_version        : "2.0.1",
 
             //lifecycle
-            lifecycleArchVersion    : "2.2.0-rc03",
-            lifecycleSavedstate     : "1.0.0-rc03",
+            lifecycleArchVersion    : "2.2.0",
 
             //design
-            googleMaterialVersion   : "1.2.0-alpha03",
+            googleMaterialVersion   : "1.2.0-alpha04",
 
             //rxJava & network & db
             rxjava2Version          : "2.2.16",
@@ -53,6 +52,8 @@ ext {
             smartRefreshVersion     : "1.1.0",
             autoSizeVersion         : "1.1.2",
             materialDialogsVersion  : "3.1.1",
+            flycoTabVersion         : "2.1.2@aar",
+
 
             //test库
             timberVersion           : "4.7.1",
@@ -92,13 +93,14 @@ ext {
             "lifecycle_livedata"      : "androidx.lifecycle:lifecycle-livedata-ktx:${version["lifecycleArchVersion"]}",
             "lifecycle_viewmodel"     : "androidx.lifecycle:lifecycle-viewmodel-ktx:${version["lifecycleArchVersion"]}",
             "lifecycle_java8_kapt"    : "androidx.lifecycle:lifecycle-common-java8:${version["lifecycleArchVersion"]}",
-            "lifecycle_savedstate"    : "androidx.lifecycle:lifecycle-viewmodel-savedstate:${version["lifecycleSavedstate"]}",
+            "lifecycle_savedstate"    : "androidx.lifecycle:lifecycle-viewmodel-savedstate:${version["lifecycleArchVersion"]}",
 
 
             //view
             "brvah"                   : "com.github.CymChad:BaseRecyclerViewAdapterHelper:${version["brvahVersion"]}",
             "SmartRefresh"            : "com.scwang.smartrefresh:SmartRefreshLayout:${version["smartRefreshVersion"]}",
             "autosize"                : "me.jessyan:autosize:${version["autoSizeVersion"]}",
+            "flycoTabLayout"          : "com.flyco.tablayout:FlycoTabLayout_Lib:${version["flycoTabVersion"]}",
             "dialogs-core"            : "com.afollestad.material-dialogs:core:${version["materialDialogsVersion"]}",
             "dialogs-input"           : "com.afollestad.material-dialogs:input:${version["materialDialogsVersion"]}",
             "dialogs-datetime"        : "com.afollestad.material-dialogs:datetime:${version["materialDialogsVersion"]}",

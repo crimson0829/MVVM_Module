@@ -7,8 +7,8 @@ import com.afollestad.materialdialogs.list.listItems
 import com.crimson.mvvm.base.BaseActivity
 import com.crimson.mvvm.base.BaseViewModel
 import com.crimson.mvvm.binding.bindClick
-import com.crimson.mvvm.binding.consumer.bindConsumer
 import com.crimson.mvvm.binding.bindImage
+import com.crimson.mvvm.binding.consumer.bindConsumer
 import com.crimson.mvvm.utils.StatusBarUtils
 import com.crimson.mvvm_frame.databinding.ActivityPictureBinding
 import kotlinx.android.synthetic.main.activity_picture.*
@@ -39,7 +39,7 @@ class PictureActivity : BaseActivity<ActivityPictureBinding, BaseViewModel>() {
 
             MaterialDialog(context).show {
                 listItems(R.array.imageStyles) { _, index, _ ->
-                    val style = (index + 1).toString()
+                    val style = index + 1
                     bindImage(style)
                     dismiss()
                 }
@@ -52,10 +52,10 @@ class PictureActivity : BaseActivity<ActivityPictureBinding, BaseViewModel>() {
 
     }
 
-    private fun bindImage(style: String = "2") {
+    private fun bindImage(style: Int = 2) {
         vb?.ivPicture?.bindImage(
             url,
-            style, 5, true, "4", R.drawable.icon_picture
+            style, 5, true, 4, R.drawable.icon_picture
         )
     }
 
