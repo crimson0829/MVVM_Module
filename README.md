@@ -40,7 +40,7 @@ dataBinding {
 ```
 dependencies {
       
-      implementation "com.github.crimson0829:mvvm_library:1.1.2"
+      implementation "com.github.crimson0829:mvvm_library:1.1.3"
     
 }
 ```
@@ -360,9 +360,9 @@ ViewModel:
  2.3 DataBinding扩展函数：提供了Glide，RecyclerView，ViewPager2，SmartRefreshLayout等绑定函数，方便扩展xml和控件调用；
 
 <br> 
- 2.3.1 Glide 绑定 ImageView xml， 可在xml或者View中设置，具体使用可参考[PictureActivity](https://github.com/crimson0829/MVVM_Module/blob/master/sample/src/main/java/com/crimson/mvvm_frame/PictureActivity.kt)
+ 2.3.1 Glide 绑定 ImageView xml， 可在xml或者View中设置，
 
- 
+
 ```
 
 /**
@@ -533,7 +533,7 @@ ViewModel:
 
 ```
 
-2.3.7 FlycoTabLayout 监听绑定：
+2.3.8 FlycoTabLayout 监听绑定：
 
 ```
 
