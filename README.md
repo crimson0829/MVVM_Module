@@ -5,27 +5,17 @@
 以MVVM模式为基础的快速集成组件,整合了大量优秀开源项目构建。
 
 ## 特点
-<br>
+
 * Kotlin开发，基于LifeCycle+LiveData+ViewModel+DataBinding作为基础结构，可作为项目Base库，快速开发项目
-<br>
 * 支持AndroidX库，集成了AndroidX库下的一些常用组件，如RecyclerView,ViewPager2等
-<br>
 * 提供了Base类(BaseActivity、BaseFragment、BaseViewModel等)统一封装，绑定生命周期，快速进行页面开发
-<br>
 * 对LiveData，协程，RxJava进行了扩展，使用更方便
-<br>
 * 使用Koin容器注入对象,可提供任何对象的依赖注入
-<br>
 * 扩展函数结合DataBinding，使DataBinding使用更方便
-<br>
 * Retrofit封装和扩展，网络请求更方便，提供了协程和RxJava两种方式获取数据方式并通过LiveData处理数据更容易
-<br>
 * RxBus全局处理事件
-<br>
 * 提供全局的Activity,Fragment生命周期管理，提供App统一配置方案
-<br>
 * 提供了简单易用的扩展函数和工具类
-<br>
 
 ## 引入
 
@@ -299,20 +289,20 @@ TabViewModel:
 
 
 ```
-       vm?.tabDataCompleteLD?.observe(this, Observer { it ->
-   
-               vb?.viewPager?.apply {
-   
-                   vm?.fragments?.let {
-                       //设置viewpager2 adapter
-                       bindAdapter(null,ViewPager2FragmentAdapter(this@TabActivity, it))
-                   }
-   
-                   bindTabLayout( vb?.tabLayout,it)
-   
-               }
-   
-           })
+  vm?.tabDataCompleteLD?.observe(this, Observer { it ->
+
+          vb?.viewPager?.apply {
+
+              vm?.fragments?.let {
+                  //设置viewpager2 adapter
+                  bindAdapter(null,ViewPager2FragmentAdapter(this@TabActivity, it))
+              }
+
+              bindTabLayout( vb?.tabLayout,it)
+
+          }
+
+      })
 
 ```
 
@@ -609,9 +599,6 @@ callRemoteLiveDataAsync{
     //hannle Data
 
 }
-
-
-
 ```
 RxJava处理数据：提供了RxJava扩展类[RxJavaExt.kt](https://github.com/crimson0829/MVVM_Module/blob/master/mvvm_library/src/main/java/com/crimson/mvvm/rx/RxJavaExt.kt);
 可将数据转换成LiveData操作
@@ -651,7 +638,6 @@ RxJava处理数据：提供了RxJava扩展类[RxJavaExt.kt](https://github.com/c
         })
     })
 
-
 ```
 
 4.2 [RxBus](https://github.com/crimson0829/MVVM_Module/blob/master/mvvm_library/src/main/java/com/crimson/mvvm/rx/bus/RxBus.kt)全局事件处理:由[RxDisposable](https://github.com/crimson0829/MVVM_Module/blob/master/mvvm_library/src/main/java/com/crimson/mvvm/rx/bus/RxDisposable.kt)统一管理订阅事件
@@ -686,43 +672,6 @@ RxJava处理数据：提供了RxJava扩展类[RxJavaExt.kt](https://github.com/c
  //or
   RxBus.get().send(<对应类型>)
 ```
-
-5.1 一些扩展类和工具类
-<br>
-[LogExt：Timber实现，log顶层函数](https://github.com/crimson0829/MVVM_Module/blob/master/mvvm_library/src/main/java/com/crimson/mvvm/ext/LogExt.kt)
-<br>
-[ToastExt：全局Toast顶层函数](https://github.com/crimson0829/MVVM_Module/blob/master/mvvm_library/src/main/java/com/crimson/mvvm/ext/ToastExt.kt)
-<br>
-[LiveDataExt：将LiveData转化成Flowable的扩展函数](https://github.com/crimson0829/MVVM_Module/blob/master/mvvm_library/src/main/java/com/crimson/mvvm/livedata/LiveDataExt.kt)
-<br>
-[CacheCleanUtils：缓存清理工具类](https://github.com/crimson0829/MVVM_Module/blob/master/mvvm_library/src/main/java/com/crimson/mvvm/utils/CacheCleanUtils.kt)
-<br>
-[CaptureUtils：截图工具类](https://github.com/crimson0829/MVVM_Module/blob/master/mvvm_library/src/main/java/com/crimson/mvvm/utils/CaptureUtils.kt)
-<br>
-[ConvertUtils：转换工具类](https://github.com/crimson0829/MVVM_Module/blob/master/mvvm_library/src/main/java/com/crimson/mvvm/utils/ConvertUtils.kt)
-<br>
-[FileUtils：文件工具类](https://github.com/crimson0829/MVVM_Module/blob/master/mvvm_library/src/main/java/com/crimson/mvvm/utils/FileUtils.kt)
-<br>
-[GsonUtils：Gson工具类](https://github.com/crimson0829/MVVM_Module/blob/master/mvvm_library/src/main/java/com/crimson/mvvm/utils/GsonUtils.kt)
-<br>
-[IOUtils：IO工具类](https://github.com/crimson0829/MVVM_Module/blob/master/mvvm_library/src/main/java/com/crimson/mvvm/utils/IOUtils.kt)
-<br>
-[KeyBoardUtils：键盘工具类](https://github.com/crimson0829/MVVM_Module/blob/master/mvvm_library/src/main/java/com/crimson/mvvm/utils/KeyBoardUtils.kt)
-<br>
-[NetWorkUtils：网络工具类](https://github.com/crimson0829/MVVM_Module/blob/master/mvvm_library/src/main/java/com/crimson/mvvm/utils/NetWorkUtils.kt)
-<br>
-[PermissionUtils：权限工具类](https://github.com/crimson0829/MVVM_Module/blob/master/mvvm_library/src/main/java/com/crimson/mvvm/utils/PermissionUtils.kt)
-<br>
-[RegexUtils：正则工具类](https://github.com/crimson0829/MVVM_Module/blob/master/mvvm_library/src/main/java/com/crimson/mvvm/utils/RegexUtils.kt)
-<br>
-[RoomUtils：系统Room相关工具类](https://github.com/crimson0829/MVVM_Module/blob/master/mvvm_library/src/main/java/com/crimson/mvvm/utils/RoomUtils.kt)
-<br>
-[ScreenUtils：屏幕工具类](https://github.com/crimson0829/MVVM_Module/blob/master/mvvm_library/src/main/java/com/crimson/mvvm/utils/ScreenUtils.kt)
-<br>
-[SDKVersionUtils：Android SDK版本工具类](https://github.com/crimson0829/MVVM_Module/blob/master/mvvm_library/src/main/java/com/crimson/mvvm/utils/SDKVersionUtils.kt)
-<br>
-[StatusBarUtils：状态栏工具类](https://github.com/crimson0829/MVVM_Module/blob/master/mvvm_library/src/main/java/com/crimson/mvvm/utils/StatusBarUtils.kt)
-<br>
 
 
 ## 使用的官方库和开源库
