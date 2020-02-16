@@ -271,17 +271,16 @@ TabViewModel:
 
 ```
     val androidService by inject<AndroidService>()
+    
+    /**
+     * use 协程
+     */
+    suspend fun getData() = androidService.getTab()
 
     /**
-     * get data use coroutine
+     * get data use flowable
      */
-    suspend fun getTabData(): TabListEntity {
-        return callRemoteTabData { androidService.getTab() }
-    }
-
-    private suspend fun callRemoteTabData(call: suspend () -> TabListEntity): TabListEntity {
-        return withContext(Dispatchers.IO) { call.invoke() }
-    }
+    fun getAuthorListData(id: Int, page: Int) = androidService.getArticles(id, page).applyThread()
     
 ```
 
@@ -349,9 +348,7 @@ ViewModel:
  
  2.3 DataBinding扩展函数：提供了Glide，RecyclerView，ViewPager2，SmartRefreshLayout等绑定函数，方便扩展xml和控件调用；
 
-<br> 
  2.3.1 Glide 绑定 ImageView xml， 可在xml或者View中设置，
-
 
 ```
 
@@ -596,7 +593,9 @@ val okHttp by inject<OkHttpClient>()
 //异步获取远程数据
 callRemoteLiveDataAsync{
     //getData
-    //hannle Data
+   model.getDdata()
+   
+   //handle Data
 
 }
 ```
