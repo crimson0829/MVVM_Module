@@ -39,5 +39,5 @@ dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 
 
-    implementation project(':mvvm_library')
+    implementation project(':library_mvvm')
 }

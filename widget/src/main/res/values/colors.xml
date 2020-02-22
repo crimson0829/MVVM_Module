@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-
-    <color name="widget_colorPrimary">#0072ff</color>
-    <color name="widget_tab_pressed">#1133B5E5</color>
-    <color name="widget_text_color">#333333</color>
-    <color name="widget_text_color_error">#999999</color>
-    <color name="widget_loading_dialog_background">#dd333333</color>
-</resources>

@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">widget</string>
+
+    <string name="widget_loading">努力加载中..</string>
+    <string name="widget_loading_error">出错啦,点击重试..</string>
+    <string name="widget_loading_empty">- 暂无数据 -</string>
+
+</resources>

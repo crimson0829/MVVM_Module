@@ -1,48 +1,24 @@
 package com.crimson.mvvm_frame.app
 
-import com.crimson.mvvm.net.NetworkClient
-import com.crimson.mvvm_frame.ArticleAdapter
-import com.crimson.mvvm_frame.AuthorViewModel
-import com.crimson.mvvm_frame.TabViewModel
-import com.crimson.mvvm_frame.model.AndroidService
-import com.crimson.mvvm_frame.model.AuthorModel
-import org.koin.dsl.module
+import android.app.Application
+import com.crimson.mvvm.module.base.IModule
+import com.crimson.mvvm.module.injectKoinModules
 
 /**
  * @author crimson
- * @date   2019-12-22
- * you can build any object in module which you want to inject
- * and add the module when application onCreate
+ * @date   2020-02-22
  */
+class AppModule :IModule{
 
-val viewModelModule = module {
-
-    factory { TabViewModel() }
-    factory { (id: Int) -> AuthorViewModel(id) }
-
-
-}
-
-val modelModule = module {
-
-    single {
-        AuthorModel()
+    override fun initKoinModule() {
+        injectKoinModules(
+            viewModelModule,
+            modelModule,
+            adapterModule,
+            dataModule
+        )
     }
 
-}
-
-val adapterModule = module {
-
-    factory {
-        ArticleAdapter()
-    }
-}
-
-val dataModule = module {
-
-    single {
-        get<NetworkClient>()
-            .obtainRetrofit()
-            ?.create(AndroidService::class.java)
+    override fun initModule(app: Application) {
     }
 }
