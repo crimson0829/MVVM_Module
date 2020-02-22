@@ -30,7 +30,7 @@ dataBinding {
 ```
 dependencies {
       
-      implementation "com.github.crimson0829:mvvm_library:1.1.3"
+      implementation "com.github.crimson0829:mvvm_library:1.1.4"
     
 }
 ```
@@ -60,9 +60,6 @@ class AppApplication : BaseApplication() {
 
     override fun onCreate() {
 
-        //添加新的module，必须在super前调用
-        injectKoinModules(viewModelModule, modelModule, adapterModule, dataModule)
-
         super.onCreate()
 
         appConfig()
@@ -89,7 +86,7 @@ class AppApplication : BaseApplication() {
 }
 ```
 
-如果继承了BaseActivityLifecycle，可重写initActivityLifecycle()方法扩展ActivityLifecycle：
+1.1.1 如果继承了BaseActivityLifecycle，可重写initActivityLifecycle()方法扩展ActivityLifecycle：
 
 ```
   override fun initActivityLifecycle(): ActivityLifecycleCallbacks? {
@@ -99,12 +96,36 @@ class AppApplication : BaseApplication() {
     
 ```
 
-如果自己实现加载视图LoadingView,需继承IViewDataLoading 并在AppConfigOptions中全局设置：
+1.1.2 如果自己实现加载视图LoadingView,需继承IViewDataLoading 并在AppConfigOptions中全局设置：
 
 ```
  AppConfigOptions(context).buildLoadingViewImplClass(<Your LoadingView Impl Class>)
 ```
 
+1.1.3 如组件需初始化，必须实现IModule接口并在ModuleConfig中声明:
+
+```
+
+//AppModule:
+
+class AppModule :IModule{
+
+}
+
+//ModuleConfig:
+
+//app组件
+ private const val APP_MODULE = "com.crimson.mvvm_frame.app.AppModule"
+
+//组件集合
+private var modules =
+        arrayListOf(
+            BASE_MODULE,
+            APP_MODULE
+        )
+
+
+```
 
 1.2 Koin 新建 Module 对象，可根据需求自己定制：
 
@@ -127,7 +148,7 @@ class AppApplication : BaseApplication() {
 
 1.3 页面使用:可参考[TabActivity](https://github.com/crimson0829/MVVM_Module/blob/master/sample/src/main/java/com/crimson/mvvm_frame/TabActivity.kt)
 
-layout绑定ViewModel：
+1.3.1 layout绑定ViewModel：
 
 ```
  <data>
@@ -138,7 +159,7 @@ layout绑定ViewModel：
 
 ```
 
-View层Activity继承BaseActivity:
+1.3.2 View层Activity继承BaseActivity:
 
 
 ```
@@ -168,7 +189,7 @@ class TabActivity : BaseActivity<ActivityTabBinding, TabViewModel>() {
 
 ```
 
-设置标题：
+1.3.3 设置标题：
 
 ```
   override fun initTitleText(): CharSequence? {
