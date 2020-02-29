@@ -40,6 +40,8 @@ open class BaseActivityLifecycle : ActivityLifecycleCallbacks {
 
     override fun onActivityCreated(activity: Activity, savedInstanceState: Bundle?) {
 
+        //将activity添加到全局管理器
+        addActivityToManager(activity)
         //初始化全局默认状态栏
         initDefaultStatusBar(activity)
         //初始化全局默认标题栏
@@ -47,17 +49,6 @@ open class BaseActivityLifecycle : ActivityLifecycleCallbacks {
         //初始化全局contentView函数调用
         initDefaultView(activity)
 
-        runOnIO {
-            //添加activity入栈
-            ViewLifeCycleManager.addActivityToStack(activity)
-            if (activity is FragmentActivity) {
-                //注册fragment生命周期
-                activity.supportFragmentManager.registerFragmentLifecycleCallbacks(
-                    fragmentLifeCycle,
-                    true
-                )
-            }
-        }
 
 
     }
@@ -98,6 +89,32 @@ open class BaseActivityLifecycle : ActivityLifecycleCallbacks {
 
     override fun onActivityDestroyed(activity: Activity) {
 
+        removeActivityFromManager(activity)
+
+    }
+
+
+    /**
+     * 将activity添加到全局管理器
+     */
+    private fun addActivityToManager(activity: Activity) {
+        runOnIO {
+            //添加activity入栈
+            ViewLifeCycleManager.addActivityToStack(activity)
+            if (activity is FragmentActivity) {
+                //注册fragment生命周期
+                activity.supportFragmentManager.registerFragmentLifecycleCallbacks(
+                    fragmentLifeCycle,
+                    true
+                )
+            }
+        }
+    }
+
+    /**
+     * 将activity在全局管理器中移除
+     */
+    private fun removeActivityFromManager(activity: Activity) {
         runOnIO {
             ViewLifeCycleManager.removeActivityFromStack(activity)
             if (activity is FragmentActivity) {
@@ -106,8 +123,8 @@ open class BaseActivityLifecycle : ActivityLifecycleCallbacks {
                 )
             }
         }
-
     }
+
 
     /**
      * 初始化默认状态栏

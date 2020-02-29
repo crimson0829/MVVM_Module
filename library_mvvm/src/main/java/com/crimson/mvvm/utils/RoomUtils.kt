@@ -2,9 +2,6 @@ package com.crimson.mvvm.utils
 
 
 import android.annotation.SuppressLint
-import android.content.Context
-import android.content.Intent
-import android.net.Uri
 import android.os.Build
 import android.os.Environment
 import android.text.TextUtils
@@ -503,78 +500,6 @@ object RoomUtils {
             return "RomInfo{name: " + name +
                     "\nversion: " + version + "}"
         }
-    }
-
-    /**
-     * 检测是否安装支付宝
-     *
-     * @param context
-     * @return
-     */
-    fun isAliPayInstall(context: Context): Boolean {
-        val uri = Uri.parse("alipays://platformapi/startApp")
-        val intent = Intent(Intent.ACTION_VIEW, uri)
-        val componentName = intent.resolveActivity(context.packageManager)
-        return componentName != null
-    }
-
-    /**
-     * 判断 用户是否安装微信客户端
-     */
-    fun isWeChatInstall(context: Context): Boolean {
-        val packageManager = context.packageManager // 获取packagemanager
-        val pinfo =
-            packageManager.getInstalledPackages(0) // 获取所有已安装程序的包信息
-        if (pinfo != null) {
-            for (i in pinfo.indices) {
-                val pn = pinfo[i].packageName
-                if (pn == "com.tencent.mm") {
-                    return true
-                }
-            }
-        }
-        return false
-    }
-
-    /**
-     * 判断 用户是否安装QQ客户端
-     */
-    fun isQQInstall(context: Context): Boolean {
-        val packageManager = context.packageManager
-        val pinfo =
-            packageManager.getInstalledPackages(0)
-        if (pinfo != null) {
-            for (i in pinfo.indices) {
-                val pn = pinfo[i].packageName
-                if (pn.equals(
-                        "com.tencent.qqlite",
-                        ignoreCase = true
-                    ) || pn.equals("com.tencent.mobileqq", ignoreCase = true)
-                ) {
-                    return true
-                }
-            }
-        }
-        return false
-    }
-
-    /**
-     * sina
-     * 判断是否安装新浪微博
-     */
-    fun isSinaInstall(context: Context): Boolean {
-        val packageManager = context.packageManager // 获取packagemanager
-        val pinfo =
-            packageManager.getInstalledPackages(0) // 获取所有已安装程序的包信息
-        if (pinfo != null) {
-            for (i in pinfo.indices) {
-                val pn = pinfo[i].packageName
-                if (pn == "com.sina.weibo") {
-                    return true
-                }
-            }
-        }
-        return false
     }
 
 }

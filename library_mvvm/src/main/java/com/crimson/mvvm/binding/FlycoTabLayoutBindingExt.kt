@@ -1,8 +1,12 @@
 package com.crimson.mvvm.binding
 
 import androidx.databinding.BindingAdapter
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentActivity
+import androidx.viewpager.widget.ViewPager
 import com.crimson.mvvm.binding.consumer.BindConsumer
 import com.flyco.tablayout.CommonTabLayout
+import com.flyco.tablayout.SlidingTabLayout
 import com.flyco.tablayout.listener.CustomTabEntity
 import com.flyco.tablayout.listener.OnTabSelectListener
 
@@ -43,6 +47,36 @@ fun CommonTabLayout.setSelectListener(consumer: BindConsumer<Int>?) {
 
 }
 
+@BindingAdapter("app:stabSelectChanged")
+fun SlidingTabLayout.setSelectListener(consumer: BindConsumer<Int>?){
+    consumer?.apply {
+        setOnTabSelectListener(object : OnTabSelectListener {
+
+            override fun onTabSelect(position: Int) {
+                consumer.accept(position)
+            }
+
+            override fun onTabReselect(position: Int) {
+            }
+        })
+    }
+}
+
+/**
+ * 设置当前选定tab
+ */
+@BindingAdapter("app:tabIndex")
+fun CommonTabLayout.currentTab(tabIndex: Int = 0) {
+    currentTab = tabIndex
+}
+
+@BindingAdapter("app:stabIndex")
+fun SlidingTabLayout.currentTab(tabIndex: Int = 0) {
+    currentTab = tabIndex
+}
+
+
+
 class TabEntity(
     val title: String,
     val unselectedIcon: Int = 0,
@@ -60,4 +94,17 @@ class TabEntity(
     override fun getTabTitle(): String {
         return title
     }
+}
+
+
+
+fun SlidingTabLayout.setDataWithFragment(
+    viewPager: ViewPager,
+    titles: Array<String>,
+    fa: FragmentActivity,
+    fragments: ArrayList<Fragment>
+) {
+
+    setViewPager(viewPager, titles, fa, fragments)
+
 }

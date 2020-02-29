@@ -50,6 +50,7 @@ import java.lang.reflect.Type
  * transaction.hide(aFragment);
  * transaction.show(aFragment);
  */
+@Suppress("DEPRECATION")
 abstract class BaseFragment<VB : ViewDataBinding, VM : BaseViewModel> : RxFragment(), IView {
 
     var vb: VB? = null
@@ -260,6 +261,21 @@ abstract class BaseFragment<VB : ViewDataBinding, VM : BaseViewModel> : RxFragme
         super.onViewCreated(view, savedInstanceState)
         //页面事件监听的方法，一般用于ViewModel层转到View层的事件注册
         initViewObservable()
+    }
+
+
+    /**
+     * 如果是与ViewPager一起使用，调用的是setUserVisibleHint
+     *
+     * @param isVisibleToUser 是否显示出来了
+     */
+    override fun setUserVisibleHint(isVisibleToUser: Boolean) {
+        super.setUserVisibleHint(isVisibleToUser)
+        if (userVisibleHint) {
+            onVisible()
+        } else {
+            onInvisible()
+        }
     }
 
     /**
