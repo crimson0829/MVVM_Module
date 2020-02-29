@@ -30,7 +30,7 @@ dataBinding {
 ```
 dependencies {
       
-      implementation "com.github.crimson0829:mvvm_library:1.1.4"
+     implementation 'com.github.crimson0829.MVVM_Module:library_mvvm:1.1.5'
     
 }
 ```
@@ -50,6 +50,10 @@ allprojects {
 提供了快速创建Activity和Fragment的模版：
 
 [模版文件](https://github.com/crimson0829/MVVMModuleTemplate)
+
+## 组件化方案
+
+提供了组件化实现方案，可进行组件化开发：[MVVM_Component](https://github.com/crimson0829/MVVM_Component)
 
 ## 使用
 
