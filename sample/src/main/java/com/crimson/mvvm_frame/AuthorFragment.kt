@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import android.webkit.WebView
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
+import androidx.recyclerview.widget.RecyclerView
 import com.afollestad.materialdialogs.MaterialDialog
 import com.afollestad.materialdialogs.MaterialDialog.Companion.DEFAULT_BEHAVIOR
 import com.afollestad.materialdialogs.bottomsheets.BottomSheet
@@ -15,8 +16,8 @@ import com.afollestad.materialdialogs.customview.customView
 import com.afollestad.materialdialogs.customview.getCustomView
 import com.crimson.mvvm.base.BaseFragment
 import com.crimson.mvvm.base.BaseViewModel
-import com.crimson.mvvm.binding.consumer.bindBiConsumer
 import com.crimson.mvvm.binding.consumer.bindConsumer
+import com.crimson.mvvm.binding.consumer.bindTiConsumer
 import com.crimson.mvvm.ext.logw
 import com.crimson.mvvm.livedata.SingleLiveData
 import com.crimson.mvvm.net.RetrofitResult
@@ -93,8 +94,8 @@ class AuthorViewModel(val id: Int) : BaseViewModel() {
     }
 
     val bindScrollConsumer =
-        bindBiConsumer<Int, Int> { t1, t2 ->
-            logw("dx -> $t1 dy -> $t2")
+        bindTiConsumer<RecyclerView, Int, Int> { rv, dx, dy ->
+            logw("dx -> $dx dy -> $dy")
         }
 
 

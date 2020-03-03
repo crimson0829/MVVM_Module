@@ -6,10 +6,13 @@ package com.crimson.mvvm.binding
 import android.view.View
 import android.view.ViewTreeObserver
 import androidx.databinding.BindingAdapter
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleOwner
 import com.crimson.mvvm.binding.consumer.BindConsumer
 import com.crimson.mvvm.rx.observeOnMainThread
 import com.jakewharton.rxbinding3.view.clicks
 import com.jakewharton.rxbinding3.view.longClicks
+import com.trello.rxlifecycle3.android.lifecycle.kotlin.bindUntilEvent
 import java.util.concurrent.TimeUnit
 
 
@@ -30,12 +33,15 @@ import java.util.concurrent.TimeUnit
 @BindingAdapter("app:bindClick", "app:clickDuration", requireAll = false)
 fun View.bindClick(clickConsumer: BindConsumer<Unit?>?, duration: Long = 500) {
     clickConsumer?.apply {
-        clicks()
-            .throttleLast(duration, TimeUnit.MILLISECONDS)
-            .observeOnMainThread()
-            .subscribe {
-                accept(it)
-            }
+        (context as? LifecycleOwner)?.let { owner ->
+            clicks()
+                .throttleLast(duration, TimeUnit.MILLISECONDS)
+                .bindUntilEvent(owner, Lifecycle.Event.ON_DESTROY)
+                .observeOnMainThread()
+                .subscribe {
+                    accept(it)
+                }
+        }
     }
 
 }
@@ -47,11 +53,16 @@ fun View.bindClick(clickConsumer: BindConsumer<Unit?>?, duration: Long = 500) {
 @BindingAdapter("app:bindLongClick")
 fun View.bindLongClick(clickConsumer: BindConsumer<Unit?>?) {
     clickConsumer?.apply {
-        longClicks()
-            .observeOnMainThread()
-            .subscribe {
-                accept(it)
-            }
+        (context as? LifecycleOwner)?.let { owner ->
+            longClicks()
+                .observeOnMainThread()
+                .bindUntilEvent(owner,Lifecycle.Event.ON_DESTROY)
+                .subscribe {
+                    accept(it)
+                }
+
+        }
+
     }
 
 }

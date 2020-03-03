@@ -15,12 +15,15 @@ import androidx.core.content.ContextCompat
 import androidx.core.text.PrecomputedTextCompat
 import androidx.core.widget.TextViewCompat
 import androidx.databinding.BindingAdapter
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleOwner
 import androidx.vectordrawable.graphics.drawable.ArgbEvaluator
 import com.crimson.mvvm.binding.consumer.BindConsumer
 import com.crimson.mvvm.ext.tryCatch
 import com.crimson.mvvm.rx.observeOnMainThread
 import com.google.android.material.textfield.TextInputLayout
 import com.jakewharton.rxbinding3.widget.textChanges
+import com.trello.rxlifecycle3.android.lifecycle.kotlin.bindUntilEvent
 
 
 /**
@@ -30,12 +33,17 @@ import com.jakewharton.rxbinding3.widget.textChanges
 @BindingAdapter("app:textChanges")
 fun TextView.textChanges(changesConsumer: BindConsumer<CharSequence>?) {
     changesConsumer?.apply {
-        textChanges()
-            .observeOnMainThread()
-            .subscribe {
-                accept(it.toString())
-            }
+        (context as? LifecycleOwner)?.let { owner ->
+            textChanges()
+                .observeOnMainThread()
+                .bindUntilEvent(owner, Lifecycle.Event.ON_DESTROY)
+                .subscribe {
+                    accept(it.toString())
+                }
+        }
+
     }
+
 
 }
 

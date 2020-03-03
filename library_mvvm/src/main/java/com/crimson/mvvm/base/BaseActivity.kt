@@ -264,7 +264,6 @@ abstract class BaseActivity<VB : ViewDataBinding, VM : BaseViewModel> : RxAppCom
      * 在BaseActivityLifecycle已全局调用
      */
     override fun initView() {}
-
     override fun initData() {}
     override fun initViewObservable() {}
 

@@ -8,7 +8,6 @@ import android.os.Build
 import android.view.View
 import android.webkit.WebView
 import android.widget.ScrollView
-import me.jessyan.autosize.utils.LogUtils
 import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
 import java.io.IOException
@@ -152,8 +151,6 @@ object CaptureUtils {
         for (i in 0 until scrollView.childCount) {
             h += scrollView.getChildAt(i).height
         }
-        LogUtils.w("实际高度:$h")
-        LogUtils.w(" 高度:" + scrollView.height)
         // 创建对应大小的bitmap
         bitmap = Bitmap.createBitmap(
             scrollView.width, h,

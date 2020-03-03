@@ -97,7 +97,9 @@ class TabEntity(
 }
 
 
-
+/**
+ *  绑定vp1
+ */
 fun SlidingTabLayout.setDataWithFragment(
     viewPager: ViewPager,
     titles: Array<String>,
