@@ -21,7 +21,7 @@ interface ITitleBar {
     /**
      * 初始化titleBar， 如果是true就消费，以下的方法都会失效；默认false默认设置在BaseActivityLifecycle中实现
      */
-    fun initTitleBar():Boolean
+    fun initTitleBar(): Boolean
 
     /**
      * 初始化返回按钮图标

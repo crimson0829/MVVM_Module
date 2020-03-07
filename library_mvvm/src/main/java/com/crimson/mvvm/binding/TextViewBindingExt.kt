@@ -31,7 +31,7 @@ import com.trello.rxlifecycle3.android.lifecycle.kotlin.bindUntilEvent
  * textChanges：绑定文字改变监听
  */
 @BindingAdapter("app:textChanges")
-fun TextView.textChanges(changesConsumer: BindConsumer<CharSequence>?) {
+fun TextView.textChanges(changesConsumer: BindConsumer<String>?) {
     changesConsumer?.apply {
         (context as? LifecycleOwner)?.let { owner ->
             textChanges()
@@ -234,13 +234,13 @@ fun TextView.preComputeCurrentText(){
 }
 
 @WorkerThread
-fun TextView.precomputeSpannableText(text: Spannable): PrecomputedTextCompat {
+fun TextView.preComputeSpannableText(text: Spannable): PrecomputedTextCompat {
     val textParams = TextViewCompat.getTextMetricsParams(this)
     return PrecomputedTextCompat.create(text, textParams)
 }
 
 @WorkerThread
-fun TextView.precomputeText(text: String): PrecomputedTextCompat {
+fun TextView.preComputeText(text: String): PrecomputedTextCompat {
     val textParams = TextViewCompat.getTextMetricsParams(this)
     return PrecomputedTextCompat.create(text, textParams)
 }

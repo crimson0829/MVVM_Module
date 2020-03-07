@@ -10,10 +10,9 @@ import org.koin.core.KoinComponent
 /**
  * @author crimson
  * @date   2019-12-21
- * view model impl interface
+ * view model interface
  */
 interface IViewModel : LifecycleObserver, KoinComponent {
-
 
     /**
      * aac lifecycle

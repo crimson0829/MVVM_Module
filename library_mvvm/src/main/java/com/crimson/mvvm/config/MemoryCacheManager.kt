@@ -10,7 +10,8 @@ package com.crimson.mvvm.config
  * Class for an InMemory Cache to keep your variables globally in heap and get them wherever you want.
  */
 object MemoryCacheManager {
-    private val map = HashMap<String, Any?>()
+
+    private val map = hashMapOf<String, Any?>()
     /**
      * put [key] & [value] where
      *

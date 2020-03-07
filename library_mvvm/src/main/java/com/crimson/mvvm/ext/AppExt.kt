@@ -36,14 +36,6 @@ inline fun <T, R> T.tryCatch(block: T.() -> R?): R? {
     }
 }
 
-/**
- * coroutine run on IO
- */
-fun <T> T.runOnIO(block: T.() -> Unit): Job {
-    return GlobalScope.launch(Dispatchers.IO) {
-        block()
-    }
-}
 
 val <T> T.exhaustive: T
     get() = this
@@ -124,7 +116,7 @@ inline val currentTimeMillis: Long get() = System.currentTimeMillis()
 
 
 /**
- * json转换对象
+ * json 转换对象
  */
 fun <T> String.json(clazz: Class<T>): T = GsonUtils.fromJson(this, clazz)
 

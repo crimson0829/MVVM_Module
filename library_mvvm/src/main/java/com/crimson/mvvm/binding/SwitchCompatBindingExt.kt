@@ -1,8 +1,9 @@
 package com.crimson.mvvm.binding
 
+import android.widget.CompoundButton
 import androidx.appcompat.widget.SwitchCompat
 import androidx.databinding.BindingAdapter
-import com.crimson.mvvm.binding.consumer.BindConsumer
+import com.crimson.mvvm.binding.consumer.BindBiConsumer
 
 /**
  * @author crimson
@@ -10,10 +11,10 @@ import com.crimson.mvvm.binding.consumer.BindConsumer
  * SwitchCompat 扩展
  */
 @BindingAdapter("app:checkChanged")
-fun SwitchCompat.setCheckedListener(consumer: BindConsumer<Boolean>?) {
+fun SwitchCompat.setCheckedListener(consumer: BindBiConsumer<CompoundButton,Boolean>?) {
     consumer?.apply {
-        setOnCheckedChangeListener { _, isChecked ->
-            consumer.accept(isChecked)
+        setOnCheckedChangeListener { buttonView, isChecked ->
+            consumer.accept(buttonView,isChecked)
 
         }
     }

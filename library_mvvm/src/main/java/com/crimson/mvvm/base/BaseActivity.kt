@@ -11,6 +11,8 @@ import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.lifecycle.Observer
 import com.crimson.mvvm.config.AppConfigOptions
+import com.crimson.mvvm.ext.isNotNull
+import com.crimson.mvvm.ext.isNull
 import com.crimson.mvvm.ext.tryCatch
 import com.trello.rxlifecycle3.components.support.RxAppCompatActivity
 import java.lang.reflect.ParameterizedType
@@ -50,12 +52,12 @@ abstract class BaseActivity<VB : ViewDataBinding, VM : BaseViewModel> : RxAppCom
 
         vb = DataBindingUtil.setContentView(this, initContentView(savedInstanceState))
         vm = initViewModel()
-        if (vm == null) {
+        if (vm.isNull) {
             val type: Type? = javaClass.genericSuperclass
             if (type is ParameterizedType && type.actualTypeArguments.size == 2) {
-                tryCatch {
+                vm = tryCatch {
                     val viewModel = type.actualTypeArguments[1] as? Class<VM>
-                    vm = viewModel?.newInstance()
+                    viewModel?.newInstance()
                 }
             }
         }
@@ -90,7 +92,7 @@ abstract class BaseActivity<VB : ViewDataBinding, VM : BaseViewModel> : RxAppCom
         })
 
         vm?.onLoadingViewResultLD?.observe(this, Observer {
-            onLoadingViewResult(it?:false)
+            onLoadingViewResult(it ?: false)
         })
 
         vm?.dataLoadingLD?.observe(this, Observer {
@@ -156,15 +158,15 @@ abstract class BaseActivity<VB : ViewDataBinding, VM : BaseViewModel> : RxAppCom
      * 如果想定制化单个页面的LoadingView，可重写该方法实现
      */
     open fun checkLoadingViewImpl() {
-        if (loadingView == null) {
+        if (loadingView.isNull) {
             val clazz = AppConfigOptions.LOADING_VIEW_CLAZZ
-            if (clazz != null) {
-                tryCatch {
-                    val constructor = clazz.getConstructor(Context::class.java)
-                    loadingView = constructor.newInstance(this)
+            if (clazz.isNotNull) {
+                loadingView = tryCatch {
+                    val constructor = clazz?.getConstructor(Context::class.java)
+                    constructor?.newInstance(this)
                 }
             }
-            if (loadingView == null) {
+            if (loadingView.isNull) {
                 loadingView = CommonViewLoading(this)
             }
         }

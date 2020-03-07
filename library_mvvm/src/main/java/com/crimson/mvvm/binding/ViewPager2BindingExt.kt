@@ -13,6 +13,7 @@ import com.crimson.mvvm.binding.transformer.ViewPager2DepthTransformer
 import com.crimson.mvvm.binding.transformer.ViewPager2ScaleTransformer
 import com.crimson.mvvm.binding.transformer.ViewPager2ZoomOutTransformer
 import com.crimson.mvvm.ext.dp2px
+import com.crimson.mvvm.ext.isNotNull
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 
@@ -58,9 +59,9 @@ fun ViewPager2.bindAdapter(
     //viewpager2绑定适配器，两种绑定方式；
     // 1：绑定 recyclerView adapter;
     // 2：绑定 FragmentStateAdapter；
-    if (adapter != null) {
+    if (adapter.isNotNull) {
         this.adapter = adapter
-    } else if (fragmentAdapter != null) {
+    } else if (fragmentAdapter.isNotNull) {
         this.adapter = fragmentAdapter
     }
 
@@ -104,7 +105,7 @@ fun ViewPager2.bindAdapter(
 
 
     //注册page监听事件
-    if (pageScrollStateChangedConsumer != null || pageSelectedConsumer != null || pageScrolledConsumer != null) {
+    if (pageScrollStateChangedConsumer.isNotNull || pageSelectedConsumer.isNotNull || pageScrolledConsumer.isNotNull) {
         registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
 
             override fun onPageScrollStateChanged(state: Int) {

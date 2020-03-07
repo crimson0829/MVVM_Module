@@ -6,8 +6,8 @@ ext {
             minSdkVersion    : 16,
             devSdkVersion    : 21,
             targetSdkVersion : 29,
-            versionCode      : 1,
-            versionName      : '1.0',
+            versionCode      : 17,
+            versionName      : '1.1.7',
             applicationId    : 'com.crimson.mvvm_frame'
     ]
 
@@ -32,7 +32,7 @@ ext {
             lifecycleArchVersion    : "2.2.0",
 
             //design
-            googleMaterialVersion   : "1.2.0-alpha04",
+            googleMaterialVersion   : "1.2.0-alpha05",
 
             //rxJava & network & db
             rxjava2Version          : "2.2.16",

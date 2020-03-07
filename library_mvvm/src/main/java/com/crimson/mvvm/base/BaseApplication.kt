@@ -1,10 +1,13 @@
 package com.crimson.mvvm.base
 
+import android.annotation.SuppressLint
 import android.app.Application
 import android.content.Context
 import androidx.multidex.MultiDex
 import com.crimson.mvvm.module.ModuleConfig
 import com.crimson.mvvm.module.appModule
+import com.crimson.mvvm.rx.bus.RxBus
+import com.crimson.mvvm.rx.bus.RxCode
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
 import org.koin.core.context.startKoin
@@ -50,12 +53,14 @@ open class BaseApplication : Application() {
 
         //组件初始化
         ModuleConfig.initModule(this)
+
     }
 
+
     /**
-     * 默认实现 BaseActivityLifecycle
+     * 默认实现 BaseActivityLifecycle,如果重写，这里的实现最好继承BaseActivityLifecycle
      */
-    open fun initActivityLifecycle(): ActivityLifecycleCallbacks?{
+    open fun initActivityLifecycle(): ActivityLifecycleCallbacks? {
         return BaseActivityLifecycle()
     }
 

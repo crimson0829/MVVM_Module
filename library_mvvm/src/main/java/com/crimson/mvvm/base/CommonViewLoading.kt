@@ -15,6 +15,7 @@ import com.crimson.widget.loading.LoadingLayout
  * @author crimson
  * @date   2019-12-29
  * 默认 view loading impl
+ *
  */
 class CommonViewLoading(context: Context) : IViewDataLoading {
 
@@ -44,7 +45,7 @@ class CommonViewLoading(context: Context) : IViewDataLoading {
             if (view.contains(emptyView)) {
                 view.removeView(emptyView)
             }
-            if (view.contains(loadingView)){
+            if (view.contains(loadingView)) {
                 view.removeView(loadingView)
             }
             view.addView(loadingView)
@@ -54,7 +55,7 @@ class CommonViewLoading(context: Context) : IViewDataLoading {
 
     override fun onLoadingViewResult(view: View?, needEmptyView: Boolean) {
         if (view is ViewGroup) {
-            if (view.contains(loadingView)){
+            if (view.contains(loadingView)) {
                 view.removeView(loadingView)
             }
 
@@ -86,7 +87,7 @@ class CommonViewLoading(context: Context) : IViewDataLoading {
                 view.removeView(loadingView)
             }
             //添加error view
-            if (view.contains(loadingError)){
+            if (view.contains(loadingError)) {
                 view.removeView(loadingError)
             }
             view.addView(loadingError)

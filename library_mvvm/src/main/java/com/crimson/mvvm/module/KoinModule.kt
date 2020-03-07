@@ -32,12 +32,6 @@ val localModule = module {
         SingleLiveData<Any?>()
     }
 
-    //handler
-    factory { Handler() }
-
-    //gson
-    factory { Gson() }
-
 }
 
 /**

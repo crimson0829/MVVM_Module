@@ -6,6 +6,7 @@ import android.view.View
  * @author crimson
  * @date   2019-12-29
  * data loading interface
+ * 全局的 Loading 操作
  */
 interface IViewDataLoading {
 
@@ -16,6 +17,7 @@ interface IViewDataLoading {
 
     /**
      * 获取数据完成时，调用该方法
+     * @param needEmptyView 当获取的数据为空时是否需要空布局 默认不需要 true 为展示空布局
      */
     fun onLoadingViewResult(root: View?,needEmptyView: Boolean = false)
 

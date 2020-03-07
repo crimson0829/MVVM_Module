@@ -16,11 +16,12 @@ import kotlinx.android.synthetic.main.activity_picture.*
 /**
  * @author crimson
  * @date   2020-01-03
- * 送福利
+ *
  */
 class PictureActivity : BaseActivity<ActivityPictureBinding, BaseViewModel>() {
 
-    val url = "https://uploadbeta.com/api/pictures/random/?key=%E6%8E%A8%E5%A5%B3%E9%83%8E"
+//    val url = "https://uploadbeta.com/api/pictures/random/?key=%E6%8E%A8%E5%A5%B3%E9%83%8E"
+    val url = "https://img.xjh.me/random_img.php?type=bg&ctype=nature&return=302&device=mobile"
 
     override fun initContentView(savedInstanceState: Bundle?): Int =
         R.layout.activity_picture

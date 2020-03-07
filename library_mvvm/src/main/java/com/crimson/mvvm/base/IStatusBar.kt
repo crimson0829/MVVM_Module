@@ -3,7 +3,7 @@ package com.crimson.mvvm.base
 /**
  * @author crimson
  * @date   2020-01-14
- * statusBar init interrface
+ * statusBar init interface
  */
 interface IStatusBar {
 

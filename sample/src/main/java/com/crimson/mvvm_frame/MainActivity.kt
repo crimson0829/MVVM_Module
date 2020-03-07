@@ -36,11 +36,10 @@ class MainViewModel : BaseViewModel() {
     }
 
 
-    val onClickPictureBtn =
-        bindConsumer<Unit> {
-            startActivity(PictureActivity::class.java)
+    val onClickPictureBtn = bindConsumer<Unit> {
+        startActivity(PictureActivity::class.java)
 
-        }
+    }
 
 
 }

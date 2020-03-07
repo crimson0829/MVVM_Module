@@ -196,10 +196,10 @@ fun <T> MutableLiveData<RetrofitResult<T>>.subscribe(response: Response<T>?, inc
                     if (this == null) {
                         RetrofitResult.EmptyData
                     } else {
-                        RetrofitResult.Success(this)
+                        RetrofitResult.Success<T>(this)
                     }
                 } else {
-                    RetrofitResult.Success(this)
+                    RetrofitResult.Success<T>(this)
                 }
             }
         } else {

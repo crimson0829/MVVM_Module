@@ -5,7 +5,8 @@ import org.koin.core.KoinComponent
 /**
  * @author crimson
  * @date   2019-12-21
- * view impl interface
+ * view interface
+ * BaseActivity 和 BaseFragment 默认实现该接口，在 BaseActivityLifecycle 做方法回调
  */
 interface IView : KoinComponent {
 

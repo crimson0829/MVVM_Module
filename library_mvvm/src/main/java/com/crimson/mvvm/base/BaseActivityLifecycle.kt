@@ -13,9 +13,9 @@ import androidx.fragment.app.FragmentActivity
 import com.crimson.mvvm.R
 import com.crimson.mvvm.config.AppConfigOptions
 import com.crimson.mvvm.config.ViewLifeCycleManager
+import com.crimson.mvvm.coroutines.ioCoroutineGlobal
 import com.crimson.mvvm.ext.Api
 import com.crimson.mvvm.ext.afterApi
-import com.crimson.mvvm.ext.runOnIO
 import com.crimson.mvvm.rx.bus.RxBus
 import com.crimson.mvvm.rx.bus.RxCode
 import com.crimson.mvvm.utils.StatusBarUtils
@@ -50,7 +50,6 @@ open class BaseActivityLifecycle : ActivityLifecycleCallbacks {
         initDefaultView(activity)
 
 
-
     }
 
     override fun onActivityStarted(activity: Activity) {
@@ -65,7 +64,7 @@ open class BaseActivityLifecycle : ActivityLifecycleCallbacks {
     override fun onActivityResumed(activity: Activity) {
         if (isBackground) {
             isBackground = false
-            RxBus.get().post(RxCode.APP_ISBACKGROUND,isBackground)
+            RxBus.get().post(RxCode.APP_ISBACKGROUND, isBackground)
         }
     }
 
@@ -78,7 +77,7 @@ open class BaseActivityLifecycle : ActivityLifecycleCallbacks {
             --foregroundCount
             if (foregroundCount <= 0) {
                 isBackground = true
-                RxBus.get().post(RxCode.APP_ISBACKGROUND,isBackground)
+                RxBus.get().post(RxCode.APP_ISBACKGROUND, isBackground)
             }
 
         }
@@ -98,16 +97,14 @@ open class BaseActivityLifecycle : ActivityLifecycleCallbacks {
      * 将activity添加到全局管理器
      */
     private fun addActivityToManager(activity: Activity) {
-        runOnIO {
-            //添加activity入栈
-            ViewLifeCycleManager.addActivityToStack(activity)
-            if (activity is FragmentActivity) {
-                //注册fragment生命周期
-                activity.supportFragmentManager.registerFragmentLifecycleCallbacks(
-                    fragmentLifeCycle,
-                    true
-                )
-            }
+        //添加activity入栈
+        ViewLifeCycleManager.addActivityToStack(activity)
+        if (activity is FragmentActivity) {
+            //注册fragment生命周期
+            activity.supportFragmentManager.registerFragmentLifecycleCallbacks(
+                fragmentLifeCycle,
+                true
+            )
         }
     }
 
@@ -115,13 +112,11 @@ open class BaseActivityLifecycle : ActivityLifecycleCallbacks {
      * 将activity在全局管理器中移除
      */
     private fun removeActivityFromManager(activity: Activity) {
-        runOnIO {
-            ViewLifeCycleManager.removeActivityFromStack(activity)
-            if (activity is FragmentActivity) {
-                activity.supportFragmentManager.unregisterFragmentLifecycleCallbacks(
-                    fragmentLifeCycle
-                )
-            }
+        ViewLifeCycleManager.removeActivityFromStack(activity)
+        if (activity is FragmentActivity) {
+            activity.supportFragmentManager.unregisterFragmentLifecycleCallbacks(
+                fragmentLifeCycle
+            )
         }
     }
 
