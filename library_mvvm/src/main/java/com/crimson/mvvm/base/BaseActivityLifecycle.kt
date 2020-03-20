@@ -111,6 +111,7 @@ open class BaseActivityLifecycle : ActivityLifecycleCallbacks {
      * 将activity在全局管理器中移除
      */
     private fun removeActivityFromManager(activity: Activity) {
+
         ViewLifeCycleManager.removeActivityFromStack(activity)
         if (activity is FragmentActivity) {
             activity.supportFragmentManager.unregisterFragmentLifecycleCallbacks(
