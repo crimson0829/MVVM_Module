@@ -1,10 +1,12 @@
 package com.crimson.mvvm_frame.app
 
+import android.graphics.Color
 import com.crimson.mvvm.base.BaseApplication
 import com.crimson.mvvm.base.CommonViewLoading
 import com.crimson.mvvm.config.AppConfigOptions
 import com.crimson.mvvm.config.RetrofitConfig
 import com.crimson.mvvm.config.SmartRefreshHeaderConfig
+import com.crimson.mvvm.config.ToastConfig
 import com.crimson.mvvm_frame.R
 import com.crimson.mvvm_frame.model.AndroidService
 
@@ -32,10 +34,11 @@ class AppApplication : BaseApplication() {
 //            .buildStatusBar(StatusBarConfig(R.color.colorPrimary,false,100))
 //            .buildTitleBar(TitleBarConfig(R.color.colorPrimary,R.drawable.app_back_icon,
 //                Color.parseColor("#ffffff"),16f,true))
-            .buildLoadingViewImplClass(CommonViewLoading::class.java)
-            .buildRetrofit(RetrofitConfig(AndroidService.BASE_URL, 20))
-            .initDefaultSmartRefresh(SmartRefreshHeaderConfig(R.drawable.refresh_head_arrow))
-            .initScreenAutoSize()
+                .buildLoadingViewImplClass(CommonViewLoading::class.java)
+                .buildRetrofit(RetrofitConfig(AndroidService.BASE_URL, 20))
+                .buildToast(ToastConfig(Color.YELLOW, 18f, Color.BLUE))
+                .initDefaultSmartRefresh(SmartRefreshHeaderConfig(R.drawable.refresh_head_arrow))
+                .initScreenAutoSize()
 
 
     }

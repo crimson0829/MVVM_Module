@@ -50,6 +50,11 @@ class AppConfigOptions(val context: Context) {
         var LOADING_VIEW_CLAZZ: Class<out IViewDataLoading>? = null
 
         /**
+         * app toast 参数设置
+         */
+        var TOAST_CONFIG = ToastConfig()
+
+        /**
          * 默认图片缓存路径
          */
         var APP_IMAGE_CACHE_PATH = appContext()?.let {
@@ -72,6 +77,7 @@ class AppConfigOptions(val context: Context) {
         }.also {
             FileUtils.createOrExistsDir(it)
         }
+
         /**
          * 默认文件缓存大小
          */
@@ -137,6 +143,15 @@ class AppConfigOptions(val context: Context) {
                 config.headers
             )
         return this
+    }
+
+    /**
+     * toas参数设置
+     */
+    fun buildToast(config: ToastConfig = ToastConfig()): AppConfigOptions {
+        TOAST_CONFIG = config
+        return this
+
     }
 
 
@@ -301,6 +316,18 @@ data class RetrofitConfig(
     var showResponse: Boolean = true,
     var showRequest: Boolean = true,
     var headers: HashMap<String, String> = hashMapOf()
+)
+
+/**
+ * app toast config
+ */
+data class ToastConfig(
+    //字体颜色
+    var textColor: Int = Color.BLACK,
+    //字体大小
+    var textSize: Float = 15f,
+    //背景色
+    var bgColor: Int = Color.WHITE
 )
 
 /**

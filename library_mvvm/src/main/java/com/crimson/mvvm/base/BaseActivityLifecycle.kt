@@ -13,7 +13,6 @@ import androidx.fragment.app.FragmentActivity
 import com.crimson.mvvm.R
 import com.crimson.mvvm.config.AppConfigOptions
 import com.crimson.mvvm.config.ViewLifeCycleManager
-import com.crimson.mvvm.coroutines.ioCoroutineGlobal
 import com.crimson.mvvm.ext.Api
 import com.crimson.mvvm.ext.afterApi
 import com.crimson.mvvm.rx.bus.RxBus
@@ -64,7 +63,7 @@ open class BaseActivityLifecycle : ActivityLifecycleCallbacks {
     override fun onActivityResumed(activity: Activity) {
         if (isBackground) {
             isBackground = false
-            RxBus.get().post(RxCode.APP_ISBACKGROUND, isBackground)
+            RxBus.get().post(RxCode.APP_BACKGROUND, isBackground)
         }
     }
 
@@ -77,7 +76,7 @@ open class BaseActivityLifecycle : ActivityLifecycleCallbacks {
             --foregroundCount
             if (foregroundCount <= 0) {
                 isBackground = true
-                RxBus.get().post(RxCode.APP_ISBACKGROUND, isBackground)
+                RxBus.get().post(RxCode.APP_BACKGROUND, isBackground)
             }
 
         }

@@ -2,11 +2,15 @@ package com.crimson.mvvm.binding
 
 import android.animation.ObjectAnimator
 import android.annotation.SuppressLint
+import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.Typeface
 import android.os.Build
 import android.text.*
+import android.text.method.LinkMovementMethod
+import android.text.style.ClickableSpan
 import android.text.style.ForegroundColorSpan
+import android.text.style.ImageSpan
 import android.view.View
 import android.widget.TextView
 import androidx.annotation.*
@@ -49,6 +53,7 @@ fun TextView.textChanges(changesConsumer: BindConsumer<String>?) {
 
 /**
  * 键盘搜索监听
+ *
  */
 @BindingAdapter("app:keyboardSearch")
 fun TextView.keyboardSearch(consumer: BindConsumer<Any>?) {
@@ -68,33 +73,11 @@ fun TextView.keyboardSearch(consumer: BindConsumer<Any>?) {
 
 
 /**
- * 设置图案方位，默认左边
- */
-fun TextView.drawable(@DrawableRes drawableRes: Int, direction: Direction = Direction.LEFT) {
-    val drawable = ContextCompat.getDrawable(context, drawableRes)
-    drawable?.setBounds(0, 0, drawable.minimumWidth, drawable.minimumHeight)
-    when (direction) {
-        Direction.LEFT -> setCompoundDrawables(drawable, null, null, null)
-        Direction.RIGHT -> setCompoundDrawables(null, null, drawable, null)
-        Direction.TOP -> setCompoundDrawables(null, drawable, null, null)
-        Direction.BOTTOM -> setCompoundDrawables(null, null, null, drawable)
-    }
-
-}
-
-/**
  * 设置颜色
  */
+@BindingAdapter("app:bindTextColor")
 fun TextView.textColor(@ColorRes colorRes: Int) =
     setTextColor(ContextCompat.getColor(context, colorRes))
-
-
-/**
- * 方位枚举
- */
-enum class Direction {
-    LEFT, RIGHT, TOP, BOTTOM
-}
 
 /**
  * UnderLine the TextView.
@@ -166,6 +149,7 @@ fun TextView.font(font: String) {
 /**
  * Set different color for substring TextView.
  */
+@BindingAdapter("app:textSubstring","app:textColorRes")
 fun TextView.setColorOfSubstring(substring: String, color: Int) {
     tryCatch {
         val spannable = android.text.SpannableString(text)
@@ -182,8 +166,76 @@ fun TextView.setColorOfSubstring(substring: String, color: Int) {
 }
 
 /**
+ * 设置text局部点击事件
+ */
+@BindingAdapter("app:textSubstring","app:textColorRes","app:textClickConsumer","app:textUnderLine")
+fun TextView.setClickableOfSubstring(
+    substring: String,
+    color: Int,
+    clickConsumer: BindConsumer<View>?,
+    underlined: Boolean
+) {
+    tryCatch {
+        val spannable = SpannableString(text)
+        val start = text.indexOf(substring)
+        clickConsumer?.apply {
+            spannable.setSpan(
+                object : ClickableSpan() {
+                    override fun onClick(widget: View) {
+                        clickConsumer.accept(widget)
+                    }
+
+                    override fun updateDrawState(ds: TextPaint) {
+//                        super.updateDrawState(ds)
+                        setTextColor(ContextCompat.getColor(context, color))
+                        underLine(underlined)
+
+                    }
+                }
+                ,
+                start,
+                start + substring.length,
+                Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+            )
+        }
+
+        movementMethod = LinkMovementMethod.getInstance();
+        text = spannable
+        highlightColor = Color.parseColor("#00000000")
+    }
+}
+
+/**
+ * 设置iamge 代替text
+ */
+@BindingAdapter("app:textSubstring","app:textDrawableRes")
+fun TextView.setImageOfSubstring(substring: String, drawableRes: Int) {
+
+    val spannable = SpannableString(text)
+    val start = text.indexOf(substring)
+
+    val drawable = context.resources.getDrawable(drawableRes)
+
+    val ratio = drawable.intrinsicWidth * 1.0f / drawable.intrinsicHeight
+
+    drawable.setBounds(0, 0, (textSize * ratio).toInt(), textSize.toInt())
+
+    spannable.setSpan(
+        ImageSpan(drawable, ImageSpan.ALIGN_BASELINE),
+        start,
+        start + substring.length,
+        Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+    )
+
+    text = spannable
+
+}
+
+
+/**
  * Set TextView from Html
  */
+@BindingAdapter("app:textHtml")
 fun TextView.setTextFromHtml(html: String) {
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
         this.text = Html.fromHtml(html, Html.FROM_HTML_MODE_LEGACY)
@@ -400,30 +452,8 @@ fun AppCompatTextView.setPrecomputedText(text:String?){
     }
 }
 
-fun TextView.setTextStrikeThru(strikeThru: Boolean) {
-    if (strikeThru) setTextStrikeThru() else setTextNotStrikeThru()
-}
 
-fun TextView.setTextStrikeThru() {
-    paintFlags = paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
-}
-
-fun TextView.setTextNotStrikeThru() {
-    paintFlags = paintFlags and Paint.STRIKE_THRU_TEXT_FLAG.inv()
-}
-
-fun TextView.setTextUnderlined(underlined: Boolean) {
-    if (underlined) setTextUnderlined() else setTextNotUnderlined()
-}
-
-fun TextView.setTextUnderlined() {
-    paintFlags = paintFlags or Paint.UNDERLINE_TEXT_FLAG
-}
-
-fun TextView.setTextNotUnderlined() {
-    paintFlags = paintFlags and Paint.UNDERLINE_TEXT_FLAG.inv()
-}
-
+@BindingAdapter("app:textOrHide")
 fun TextView.setTextOrHide(text: String?) {
     text?.let {
         this.text = it
@@ -432,10 +462,25 @@ fun TextView.setTextOrHide(text: String?) {
     }
 }
 
-fun AppCompatTextView.setTextOrHide(text: String?) {
-    text?.let {
-        this.text = it
-    } ?: run {
-        this.visibility = View.GONE
+
+/**
+ * 设置图案方位，默认左边
+ */
+fun TextView.drawable(@DrawableRes drawableRes: Int, direction: Direction = Direction.LEFT) {
+    val drawable = ContextCompat.getDrawable(context, drawableRes)
+    drawable?.setBounds(0, 0, drawable.minimumWidth, drawable.minimumHeight)
+    when (direction) {
+        Direction.LEFT -> setCompoundDrawables(drawable, null, null, null)
+        Direction.RIGHT -> setCompoundDrawables(null, null, drawable, null)
+        Direction.TOP -> setCompoundDrawables(null, drawable, null, null)
+        Direction.BOTTOM -> setCompoundDrawables(null, null, null, drawable)
     }
+
+}
+
+/**
+ * 方位枚举
+ */
+enum class Direction {
+    LEFT, RIGHT, TOP, BOTTOM
 }

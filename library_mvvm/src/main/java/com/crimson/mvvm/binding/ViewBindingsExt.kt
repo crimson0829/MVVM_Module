@@ -3,12 +3,17 @@
 package com.crimson.mvvm.binding
 
 
+import android.graphics.Color
+import android.graphics.drawable.GradientDrawable
+import android.graphics.drawable.StateListDrawable
+import android.os.Build
 import android.view.View
 import android.view.ViewTreeObserver
 import androidx.databinding.BindingAdapter
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import com.crimson.mvvm.binding.consumer.BindConsumer
+import com.crimson.mvvm.ext.dp2px
 import com.crimson.mvvm.rx.observeOnMainThread
 import com.jakewharton.rxbinding3.view.clicks
 import com.jakewharton.rxbinding3.view.longClicks
@@ -101,6 +106,57 @@ fun View.onGlobalLayout(globalLayoutConsumer: BindConsumer<Unit>?) {
     }
 
 }
+
+/**
+ * 设置简单背景shape 和stroke
+ * 可xml设置一些简单的shape和stroke
+ * 如果想设置更复杂背景 详见 DrawableExt
+ */
+@BindingAdapter(
+    "app:bg_bgColor",
+    "app:bg_cornerRadius",
+    "app:bg_strokeColor",
+    "app:bg_strokeWidth",
+    requireAll = false
+)
+fun View.bindBackGroundShape(
+    bgColor: Int = Color.BLACK,
+    cornerRadius: Int = 0,
+    strokeWidth: Int = 0,
+    strokeColor: Int = Color.TRANSPARENT
+) {
+
+    val bgColorInt = Color.argb(
+        Color.alpha(bgColor),
+        Color.red(bgColor),
+        Color.green(bgColor),
+        Color.blue(bgColor)
+    )
+
+
+    val stokeColorInt = Color.argb(
+        Color.alpha(strokeColor),
+        Color.red(strokeColor),
+        Color.green(strokeColor),
+        Color.blue(strokeColor)
+    )
+
+    val gd = GradientDrawable()
+    gd.setColor(bgColorInt)
+    gd.cornerRadius = dp2px(cornerRadius)?.toFloat() ?: 0f
+    gd.setStroke(dp2px(strokeWidth) ?: 0, stokeColorInt)
+
+
+    val bg = StateListDrawable()
+    bg.addState(intArrayOf(-android.R.attr.state_pressed), gd)
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+        background = bg
+    } else {
+        setBackgroundDrawable(bg)
+    }
+}
+
+
 
 
 

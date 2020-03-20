@@ -23,6 +23,7 @@ import com.crimson.mvvm.rx.bus.RxDisposable
 import com.crimson.mvvm_frame.databinding.ActivityTabBinding
 import com.crimson.mvvm_frame.model.AuthorModel
 import com.crimson.mvvm_frame.model.kdo.TabListEntity
+import com.trello.rxlifecycle3.android.lifecycle.kotlin.bindToLifecycle
 import io.reactivex.disposables.Disposable
 import org.koin.androidx.viewmodel.ext.android.getViewModel
 import org.koin.core.inject

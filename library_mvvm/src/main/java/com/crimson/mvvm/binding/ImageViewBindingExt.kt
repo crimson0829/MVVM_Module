@@ -90,24 +90,40 @@ fun ImageView.bindImage(
 }
 
 
+@BindingAdapter("app:imageRes")
 infix fun ImageView.set(@DrawableRes id: Int) {
     setImageResource(id)
 }
 
-infix fun ImageView.set(bitmap: Bitmap) {
-    setImageBitmap(bitmap)
+
+@BindingAdapter("app:imageGif")
+infix fun ImageView.bindGif(@DrawableRes id: Int) {
+    Glide.with(this).load(id).into(this)
 }
 
-infix fun ImageView.set(drawable: Drawable) {
-    setImageDrawable(drawable)
+@BindingAdapter("app:imageBitmap")
+infix fun ImageView.set(bitmap: Bitmap?) {
+    bitmap?.let {
+        setImageBitmap(it)
+    }
+}
+
+@BindingAdapter("app:imageDrawable")
+infix fun ImageView.set(drawable: Drawable?) {
+    drawable?.let {
+        setImageDrawable(it)
+    }
 }
 
 @RequiresApi(Build.VERSION_CODES.M)
+@BindingAdapter("app:imageIcon")
 infix fun ImageView.set(ic: Icon) {
     setImageIcon(ic)
 }
 
+@BindingAdapter("app:imageUri")
 infix fun ImageView.set(uri: Uri) {
     setImageURI(uri)
 }
+
 

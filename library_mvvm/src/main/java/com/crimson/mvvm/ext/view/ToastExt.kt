@@ -11,6 +11,7 @@ import android.view.ViewGroup
 import android.widget.FrameLayout
 import android.widget.TextView
 import android.widget.Toast
+import com.crimson.mvvm.config.AppConfigOptions
 import com.crimson.mvvm.ext.MESSAGE
 import com.crimson.mvvm.ext.appContext
 import com.crimson.mvvm.ext.dp2px
@@ -67,7 +68,7 @@ object ToastKt {
             RoundRectShape(floatArrayOf(rc, rc, rc, rc, rc, rc, rc, rc), null, null)
         val drawable = ShapeDrawable(shape)
 //        drawable.paint.color = Color.argb(225, 25, 240, 240)
-        drawable.paint.color = Color.WHITE
+        drawable.paint.color = AppConfigOptions.TOAST_CONFIG.bgColor
         drawable.paint.style = Paint.Style.FILL
         drawable.paint.isAntiAlias = true
         drawable.paint.flags = Paint.ANTI_ALIAS_FLAG
@@ -90,10 +91,10 @@ object ToastKt {
             FrameLayout.LayoutParams.WRAP_CONTENT,
             FrameLayout.LayoutParams.WRAP_CONTENT
         )
-        textView.textSize = 15f
+        textView.textSize = AppConfigOptions.TOAST_CONFIG.textSize
         textView.text = message
         textView.setLineSpacing(dp2px(4).toFloat(), 1f)
-        textView.setTextColor(Color.BLACK)
+        textView.setTextColor(AppConfigOptions.TOAST_CONFIG.textColor)
         layout.addView(textView)
         return layout
     }

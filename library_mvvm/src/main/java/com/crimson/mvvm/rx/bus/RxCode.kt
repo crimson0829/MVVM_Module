@@ -16,7 +16,7 @@ object RxCode {
     /**
      * app是否处于后台
      */
-    const val APP_ISBACKGROUND = 0xff0002
+    const val APP_BACKGROUND = 0xff0002
 
     /**
      * 加载错误布局点击

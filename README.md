@@ -71,7 +71,7 @@ class AppApplication : BaseApplication() {
     }
 
     /**
-     * 设置app_config，全局参数设置，包括状态栏设置，标题栏设置，加载视图设置，Retrofit设置等
+     * 设置app_config，全局参数设置，包括状态栏设置，标题栏设置，加载视图设置，Retrofit设置,toast设置等
      * more config will be add
      */
     private fun appConfig() {
@@ -83,6 +83,7 @@ class AppApplication : BaseApplication() {
         //     Color.parseColor("#ffffff"),16f,true))
             .buildLoadingViewImplClass(CommonViewLoading::class.java)
             .buildRetrofit(RetrofitConfig(AndroidService.BASE_URL, 20))
+            .buildToast(ToastConfig(Color.YELLOW, 18f, Color.BLUE))
             .initDefaultSmartRefresh(SmartRefreshHeaderConfig(R.drawable.refresh_head_arrow))
             .initScreenAutoSize()
     }
@@ -669,6 +670,7 @@ RxJava处理数据：提供了RxJava扩展类[RxJavaExt.kt](https://github.com/c
 订阅事件：在ViewModel中订阅和移除
 
 ```
+方法1：
  dispose=rxbus.toObservable(<对应code>,<对应类型>)
             .subscribe {
                //这里处理逻辑
@@ -685,6 +687,14 @@ RxJava处理数据：提供了RxJava扩展类[RxJavaExt.kt](https://github.com/c
  
  //移除事件
  RxDisposable.remove(dispose)   
+
+方法2：绑定生命周期
+
+rxbus.toObservable(<对应code>,<对应类型>)
+            .bindToLifecycle(lifecycleOwner)
+            .subscribe {
+               //这里处理逻辑
+            }
                  
 ```
 
