@@ -24,35 +24,11 @@ import java.lang.reflect.Type
  * @date 2019/11/15
  * 基类 databinding fragment
  *
+ * 29 Api 优化了与ViewPager的生命周期绑定事件 （通过setMaxLifecycle()方法实现）从而简化了懒加载方式
  *
- * initView();
- * 抽象方法
- * 与 onCreateView 类似.
- * initViews 是只要 Fragment 被创建就会执行的方法.
- * 也就是说如果我们不想用 LazyLoad 模式
- * 则把所有的初始化 和 加载数据方法都写在 initView 即可.
+ * 重写initData()方法即可实现懒加载
  *
- *
- * initData();
- * 抽象方法
- * 若将代码写在initData中, 则是在Fragment真正显示出来后才会去Load(懒加载).
- *
- *
- * setForceLoad();
- * 忽略isFirstLoad的值，强制刷新数据，前提是Visible & Prepared.
- * 未Visible & Prepared的页面需要注意在RefreshData的时候视图为空的问题, 具体请参见实例代码
- *
- *
- * 如果是通过FragmentTransaction的show和hide的方法来控制显示，调用的是onHiddenChanged.
- * 针对初始就show的Fragment 为了触发onHiddenChanged事件 达到lazy效果
- * 需要先hide再show
- * 需要先hide再show
- * 需要先hide再show
- * eg:
- * transaction.hide(aFragment);
- * transaction.show(aFragment);
  */
-@Suppress("DEPRECATION")
 abstract class BaseFragment<VB : ViewDataBinding, VM : BaseViewModel> : RxFragment(), IView {
 
     var vb: VB? = null
@@ -63,31 +39,10 @@ abstract class BaseFragment<VB : ViewDataBinding, VM : BaseViewModel> : RxFragme
     var loadingView: IViewDataLoading? = null
 
     /**
-     * 是否可见状态 为了避免和[Fragment.isVisible]冲突 换个名字
+     * 是否加载数据
      */
-    private var isFragmentVisible = false
+    private var isLoadData = true
 
-    /**
-     * 标志位，View已经初始化完成。
-     * 用isAdded()属性代替
-     * isPrepared还是准一些,isAdded有可能出现onCreateView没走完但是isAdded了
-     */
-    private var isPrepared = false
-
-    /**
-     * 是否第一次加载
-     */
-    private var isFirstLoad = true
-
-    /**
-     * <pre>
-     * 忽略isFirstLoad的值，强制刷新数据，但仍要Visible & Prepared
-     * 一般用于PagerAdapter需要刷新各个子Fragment的场景
-     * 不要new 新的 PagerAdapter 而采取reset数据的方式
-     * 所以要求Fragment重新走initData方法
-    </pre> *
-     */
-    private var forceLoad = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -105,8 +60,6 @@ abstract class BaseFragment<VB : ViewDataBinding, VM : BaseViewModel> : RxFragme
         initViewBindingAndViewModel(inflater, container, savedInstanceState)
         initRootLayout()
         initView()
-        isPrepared = true
-        lazyLoad()
         return rootLayout
     }
 
@@ -270,18 +223,16 @@ abstract class BaseFragment<VB : ViewDataBinding, VM : BaseViewModel> : RxFragme
 
 
     /**
-     * 如果是与ViewPager一起使用，调用的是setUserVisibleHint
-     *
-     * @param isVisibleToUser 是否显示出来了
+     * 如果与ViewPager2一起使用，想实现懒加载就要设置生命周期
      */
-    override fun setUserVisibleHint(isVisibleToUser: Boolean) {
-        super.setUserVisibleHint(isVisibleToUser)
-        if (userVisibleHint) {
-            onVisible()
-        } else {
-            onInvisible()
+    override fun onResume() {
+        super.onResume()
+        if (isLoadData) {
+            isLoadData = false
+            lazyLoad()
         }
     }
+
 
     /**
      * 如果是通过FragmentTransaction的show和hide的方法来控制显示，调用的是onHiddenChanged.
@@ -293,33 +244,19 @@ abstract class BaseFragment<VB : ViewDataBinding, VM : BaseViewModel> : RxFragme
     override fun onHiddenChanged(hidden: Boolean) {
         super.onHiddenChanged(hidden)
         if (!hidden) {
-            onVisible()
-        } else {
-            onInvisible()
-        }
-    }
-
-    protected fun onVisible() {
-        isFragmentVisible = true
-        lazyLoad()
-    }
-
-    protected fun onInvisible() {
-        isFragmentVisible = false
-    }
-
-    /**
-     * 要实现延迟加载Fragment内容,需要在 onCreateView
-     * isPrepared = true;
-     */
-    protected fun lazyLoad() {
-        if (isPrepared && isFragmentVisible) {
-            if (forceLoad || isFirstLoad) {
-                forceLoad = false
-                isFirstLoad = false
-                initData()
+            if (isLoadData) {
+                isLoadData = false
+                lazyLoad()
             }
         }
+    }
+
+
+    /**
+     * 在加载数据
+     */
+    private fun lazyLoad() {
+        initData()
     }
 
     /**
@@ -330,17 +267,14 @@ abstract class BaseFragment<VB : ViewDataBinding, VM : BaseViewModel> : RxFragme
      * args.putParcelable(KEY, info);
      * }
      */
-    fun initVariables(bundle: Bundle?) {}
+    open fun initVariables(bundle: Bundle?) {}
 
-    /**
-     * 忽略isFirstLoad的值，强制刷新数据，但仍要Visible & Prepared
-     */
-    fun setForceLoad(forceLoad: Boolean) {
-        this.forceLoad = forceLoad
-    }
 
     override fun onDestroy() {
         super.onDestroy()
+
+        isLoadData = true
+
         //解除ViewModel生命周期
         vm?.let {
             lifecycle.removeObserver(it)

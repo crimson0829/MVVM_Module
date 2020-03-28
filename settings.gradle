@@ -1,2 +1,2 @@
-include ':sample', ':library_mvvm', ':library_widget'
+include ':sample', ':library_mvvm', ':library_widget', ':library_tab'
 rootProject.name='mvvm_frame'

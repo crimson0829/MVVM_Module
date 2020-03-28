@@ -29,6 +29,11 @@ android {
         targetCompatibility JavaVersion.VERSION_1_8
     }
 
+    kotlinOptions {
+        jvmTarget = JavaVersion.VERSION_1_8.toString()
+    }
+
+
     dataBinding {
         enabled true
     }
@@ -128,16 +133,8 @@ dependencies {
     //log
     api rootProject.ext.dependencies["timber"]
 
-    //view
-    api rootProject.ext.dependencies["brvah"]
-    api rootProject.ext.dependencies["SmartRefresh"]
-    api rootProject.ext.dependencies["autosize"]
-    api rootProject.ext.dependencies["flycoTabLayout"]
-    api rootProject.ext.dependencies["dialogs-core"]
-    api rootProject.ext.dependencies["dialogs-bottomsheets"]
-    api rootProject.ext.dependencies["dialogs-lifecycle"]
-
     api project(":library_widget")
+
 
     //test
     testImplementation rootProject.ext.dependencies["junit"]

@@ -6,8 +6,8 @@ ext {
             minSdkVersion    : 16,
             devSdkVersion    : 21,
             targetSdkVersion : 29,
-            versionCode      : 17,
-            versionName      : '1.1.7',
+            versionCode      : 18,
+            versionName      : '1.1.8',
             applicationId    : 'com.crimson.mvvm_frame'
     ]
 
@@ -20,10 +20,10 @@ ext {
             koin_version            : "2.0.1",
 
             //androidx
-            androidx_coreVersion    : "1.1.0",
-            androidx_compatVersion  : "1.1.0",
+            androidx_coreVersion    : "1.2.0",
+            androidx_compatVersion  : "1.2.0-alpha03",
             androidx_activityVersion: "1.1.0",
-            androidx_fragmentVersion: "1.2.1",
+            androidx_fragmentVersion: "1.2.3",
             recyclerViewVersion     : "1.1.0",
             viewPager2Version       : "1.0.0",
             multidex_version        : "2.0.1",
@@ -48,11 +48,10 @@ ext {
             gsonVersion             : "2.8.6",
 
             //view
-            brvahVersion            : "3.0.0-beta11",
+            brvahVersion            : "3.0.1",
             smartRefreshVersion     : "1.1.0",
             autoSizeVersion         : "1.1.2",
             materialDialogsVersion  : "3.1.1",
-            flycoTabVersion         : "2.1.2@aar",
 
 
             //test库
@@ -100,7 +99,6 @@ ext {
             "brvah"                   : "com.github.CymChad:BaseRecyclerViewAdapterHelper:${version["brvahVersion"]}",
             "SmartRefresh"            : "com.scwang.smartrefresh:SmartRefreshLayout:${version["smartRefreshVersion"]}",
             "autosize"                : "me.jessyan:autosize:${version["autoSizeVersion"]}",
-            "flycoTabLayout"          : "com.flyco.tablayout:FlycoTabLayout_Lib:${version["flycoTabVersion"]}",
             "dialogs-core"            : "com.afollestad.material-dialogs:core:${version["materialDialogsVersion"]}",
             "dialogs-input"           : "com.afollestad.material-dialogs:input:${version["materialDialogsVersion"]}",
             "dialogs-datetime"        : "com.afollestad.material-dialogs:datetime:${version["materialDialogsVersion"]}",

@@ -21,12 +21,25 @@
 
         <include layout="@layout/base_title_bar" />
 
-        <com.google.android.material.tabs.TabLayout
+        <com.crimson.library.tab.AdvancedTabLayout
             android:id="@+id/tab_layout"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:tabIndicatorFullWidth="false"
-            app:tabMode="scrollable" />
+            android:layout_height="50dp"
+            android:background="#ffffff"
+            app:tabSelectChanged="@{viewModel.tabSelectChanged}"
+            app:tl_indicator_color="@color/colorPrimary"
+            app:tl_indicator_corner_radius="2dp"
+            app:tl_indicator_height="4dp"
+            app:tl_indicator_width="20dp"
+            app:tl_tab_space_equal="false"
+            app:tl_textBold="SELECT"
+            app:tl_textSelectColor="@color/colorPrimary"
+            app:tl_textUnselectColor="@color/textGray"
+            app:tl_textsize="15sp"
+            app:tl_underline_color="#99999999"
+            app:tl_underline_gravity="BOTTOM"
+            app:tl_underline_height="1px" />
+
 
         <androidx.viewpager2.widget.ViewPager2
             android:id="@+id/view_pager"
@@ -35,7 +48,7 @@
             android:orientation="horizontal"
             app:vp2_bindPageScrolled="@{viewModel.vp2ScrolledConsumer}"
             app:vp2_multiPagePadding="@{40}"
-            app:vp2_transformerType="@{2}"
+            app:vp2_transformerType="@{1}"
             app:vp2_bindPageSelected="@{viewModel.vp2SelectedConsumer}"
              />
 

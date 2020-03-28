@@ -9,6 +9,7 @@ import com.crimson.mvvm.base.BaseViewModel
 import com.crimson.mvvm.binding.adapter.ViewPager2FragmentAdapter
 import com.crimson.mvvm.binding.bindAdapter
 import com.crimson.mvvm.binding.bindTabLayout
+import com.crimson.mvvm.binding.bindViewPager2
 import com.crimson.mvvm.binding.consumer.bindConsumer
 import com.crimson.mvvm.binding.consumer.bindTiConsumer
 import com.crimson.mvvm.coroutines.callRemoteLiveDataAsync
@@ -25,6 +26,7 @@ import com.crimson.mvvm_frame.model.AuthorModel
 import com.crimson.mvvm_frame.model.kdo.TabListEntity
 import com.trello.rxlifecycle3.android.lifecycle.kotlin.bindToLifecycle
 import io.reactivex.disposables.Disposable
+import kotlinx.android.synthetic.main.activity_tab.*
 import org.koin.androidx.viewmodel.ext.android.getViewModel
 import org.koin.core.inject
 
@@ -86,20 +88,9 @@ class TabActivity : BaseActivity<ActivityTabBinding, TabViewModel>() {
     override fun initViewObservable() {
 
 
-        vm?.tabDataCompleteLD?.observe(this, Observer { it ->
+        vm?.tabDataCompleteLD?.observe(this, Observer {
 
-            vb?.viewPager?.apply {
-
-                vm?.fragments?.let {
-                    //设置viewpager2 adapter
-                    bindAdapter(null, ViewPager2FragmentAdapter(this@TabActivity, it))
-                }
-
-                bindTabLayout(vb?.tabLayout, it)
-
-
-            }
-
+            tab_layout.bindViewPager2(view_pager,this,vm?.fragments,it)
 
         })
 
@@ -125,17 +116,23 @@ class TabViewModel : BaseViewModel() {
 
     var errorDis: Disposable? = null
 
-    val vp2SelectedConsumer =
-        bindConsumer<Int> {
 
-            logw("vp2page -> $this")
-        }
+    val tabSelectChanged = bindConsumer<Int> {
+        logw("tabSelectChanged -> $this")
+
+    }
+
+
+    val vp2SelectedConsumer =
+            bindConsumer<Int> {
+
+                logw("vp2page -> $this")
+            }
 
     val vp2ScrolledConsumer =
-        bindTiConsumer<Int, Float, Int> { t1, t2, t3 ->
-            logw("vp2pos -> $t1 positionOffset->$t2 positionOffsetPixels -> $t3")
-        }
-
+            bindTiConsumer<Int, Float, Int> { t1, t2, t3 ->
+                logw("vp2pos -> $t1 positionOffset->$t2 positionOffsetPixels -> $t3")
+            }
 
 
     /**
@@ -152,42 +149,42 @@ class TabViewModel : BaseViewModel() {
             model.getData()
         }
                 //观察livedata
-            ?.observe(lifecycleOwner, Observer {
+                ?.observe(lifecycleOwner, Observer {
 
-                //LiveData.handle() 扩展
-            it.handle({
-                //when loading
-                onLoadingViewInjectToRoot()
+                    //LiveData.handle() 扩展
+                    it.handle({
+                        //when loading
+                        onLoadingViewInjectToRoot()
 
-            },{
-                //result empty
-                onLoadingViewResult()
+                    }, {
+                        //result empty
+                        onLoadingViewResult()
 
-            },{
-                //result error 可做错误处理
-                toast("网络错误")
-                onLoadingError()
+                    }, {
+                        //result error 可做错误处理
+                        toast("网络错误")
+                        onLoadingError()
 
-            },{_,responseCode->
+                    }, { _, responseCode ->
 
-                //result remote error,可根据responseCode做错误提示
-                errorResponseCode(responseCode)
-                onLoadingError()
+                        //result remote error,可根据responseCode做错误提示
+                        errorResponseCode(responseCode)
+                        onLoadingError()
 
-            },{
-                //result success
-                onLoadingViewResult()
-                ioCoroutineGlobal {
-                    handleData(this)
-                }
-            })
-        })
+                    }, {
+                        //result success
+                        onLoadingViewResult()
+                        ioCoroutineGlobal {
+                            handleData(this)
+                        }
+                    })
+                })
 
 
     }
 
 
-   private fun handleData(tabData: TabListEntity) {
+    private fun handleData(tabData: TabListEntity) {
         val titles = arrayListOf<String>()
 
         tabData.data.forEach {
@@ -206,11 +203,11 @@ class TabViewModel : BaseViewModel() {
     override fun registerRxBus() {
 
         errorDis = rxbus.toObservable(RxCode.POST_CODE, Integer::class.java)
-            .subscribe {
-                if (it.toInt() == RxCode.ERROR_LAYOUT_CLICK_CODE) {
-                    getData()
+                .subscribe {
+                    if (it.toInt() == RxCode.ERROR_LAYOUT_CLICK_CODE) {
+                        getData()
+                    }
                 }
-            }
 
         RxDisposable.add(errorDis)
 

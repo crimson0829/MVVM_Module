@@ -1,5 +1,6 @@
 package com.crimson.mvvm.binding
 
+import android.app.Activity
 import android.graphics.Bitmap
 import android.graphics.drawable.Drawable
 import android.graphics.drawable.Icon
@@ -10,7 +11,12 @@ import androidx.annotation.DrawableRes
 import androidx.annotation.RequiresApi
 import androidx.databinding.BindingAdapter
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.engine.DiskCacheStrategy
+import com.bumptech.glide.load.engine.GlideException
+import com.bumptech.glide.request.RequestListener
+import com.bumptech.glide.request.target.Target
+import com.crimson.mvvm.binding.consumer.BindConsumer
 import com.crimson.mvvm.ext.dp2px
 import jp.wasabeef.glide.transformations.BlurTransformation
 import jp.wasabeef.glide.transformations.RoundedCornersTransformation
@@ -34,6 +40,8 @@ import jp.wasabeef.glide.transformations.RoundedCornersTransformation
     "app:image_diskMemoryCache",
     "app:imagePlaceholder",
     "app:imageError",
+    "app:imageLoadSuc",
+    "app:imageLoadFail",
     requireAll = false
 )
 fun ImageView.bindImage(
@@ -43,7 +51,10 @@ fun ImageView.bindImage(
     skipMemoryCache: Boolean = false,
     diskMemoryCache: Int? = 1,
     @DrawableRes imagePlaceholder: Int = 0,
-    @DrawableRes imageError: Int = 0
+    @DrawableRes imageError: Int = 0,
+    loadSucConsumer: BindConsumer<Drawable>? = null,
+    loadFalConsumer: BindConsumer<GlideException>? = null
+
 ) {
 
     val builder = Glide.with(context)
@@ -52,6 +63,29 @@ fun ImageView.bindImage(
         .placeholder(imagePlaceholder)
         .centerCrop()
         .error(imageError)
+        .listener(object : RequestListener<Drawable> {
+            override fun onLoadFailed(
+                e: GlideException?,
+                model: Any?,
+                target: Target<Drawable>?,
+                isFirstResource: Boolean
+            ): Boolean {
+                loadFalConsumer?.accept(e)
+                return false
+            }
+
+            override fun onResourceReady(
+                resource: Drawable?,
+                model: Any?,
+                target: Target<Drawable>?,
+                dataSource: DataSource?,
+                isFirstResource: Boolean
+            ): Boolean {
+                loadSucConsumer?.accept(resource)
+                return false
+
+            }
+        })
 
     when (imageStyle) {
         //默认
@@ -89,7 +123,6 @@ fun ImageView.bindImage(
 
 }
 
-
 @BindingAdapter("app:imageRes")
 infix fun ImageView.set(@DrawableRes id: Int) {
     setImageResource(id)
@@ -125,5 +158,4 @@ infix fun ImageView.set(ic: Icon) {
 infix fun ImageView.set(uri: Uri) {
     setImageURI(uri)
 }
-
 

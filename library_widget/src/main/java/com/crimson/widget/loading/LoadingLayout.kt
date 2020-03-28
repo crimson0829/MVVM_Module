@@ -20,45 +20,64 @@ class LoadingLayout @JvmOverloads constructor(
     defStyleAttr: Int = 0
 ) : FrameLayout(context, attrs, defStyleAttr) {
 
+    var progressView: LoadingProgressView? = null
+    var textView: AppCompatTextView? = null
+
     init {
 
-        val progressView = LoadingProgressView(context)
-        val textView = AppCompatTextView(context)
+        progressView = LoadingProgressView(context)
+        textView = AppCompatTextView(context)
 
         addView(progressView)
         addView(textView)
 
-        progressView.apply {
+    }
+
+
+    /**
+     * 设置LoadingLayout属性
+     */
+    fun setProgressViewAttrs(attrs: LoadingLayoutProgressViewAttrs = LoadingLayoutProgressViewAttrs()): LoadingLayout {
+
+        progressView?.apply {
             val lp = layoutParams
-            lp.width = dp2px(40)
-            lp.height = dp2px(40)
-            if (lp is LayoutParams){
-                lp.gravity = Gravity.CENTER
+            lp.width = dp2px(attrs.width)
+            lp.height = dp2px(attrs.height)
+            if (lp is LayoutParams) {
+                lp.gravity = attrs.gravity
             }
             layoutParams = lp
-            setBarColor(ContextCompat.getColor(context, R.color.widget_colorPrimary))
+            setBarColor(ContextCompat.getColor(context, attrs.color))
             spin()
 
         }
 
-        textView.apply {
-            text = context.resources.getString(R.string.widget_loading)
-            setTextColor(ContextCompat.getColor(context, R.color.widget_text_color))
-            textSize = 14f
-            gravity = Gravity.CENTER
+        return this
+    }
+
+    /**
+     * 设置textView属性
+     */
+    fun setTextViewAttrs(attrs: LoadingLayoutTextViewAttrs = LoadingLayoutTextViewAttrs()): LoadingLayout {
+        textView?.apply {
+            text = context.resources.getString(attrs.text)
+            setTextColor(ContextCompat.getColor(context, attrs.color))
+            textSize = attrs.textSize
+            gravity = attrs.gravity
             val lp = layoutParams
             lp.width = ViewGroup.LayoutParams.WRAP_CONTENT
             lp.height = ViewGroup.LayoutParams.WRAP_CONTENT
-            if (lp is LayoutParams){
+            if (lp is LayoutParams) {
                 lp.gravity = Gravity.CENTER
-                lp.topMargin = dp2px(40)
+                lp.topMargin = dp2px(attrs.topMargin)
             }
             layoutParams = lp
 
         }
 
-
+        return this
     }
+
 
     /**
      * dip to px
@@ -68,3 +87,23 @@ class LoadingLayout @JvmOverloads constructor(
         return (dpValue * scale + 0.5).toInt()
     }
 }
+
+/**
+ * ProgressView属性
+ */
+data class LoadingLayoutProgressViewAttrs(
+    var width: Int = 40,
+    var height: Int = 40,
+    var gravity: Int = Gravity.CENTER,
+    var color: Int = R.color.widget_colorPrimary
+
+)
+
+data class LoadingLayoutTextViewAttrs(
+    var text: Int = R.string.widget_loading,
+    var color: Int = R.color.widget_text_color,
+    var textSize: Float = 14f,
+    var gravity: Int = Gravity.CENTER,
+    var topMargin: Int = 40
+
+)

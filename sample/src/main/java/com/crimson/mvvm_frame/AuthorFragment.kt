@@ -59,6 +59,10 @@ class AuthorFragment : BaseFragment<FragmentTabBinding, AuthorViewModel>() {
     }
 
     override fun initView() {
+
+    }
+
+    override fun initData() {
         vm?.getArticles()
 
     }
@@ -95,7 +99,7 @@ class AuthorViewModel(val id: Int) : BaseViewModel() {
 
     val bindScrollConsumer =
         bindTiConsumer<RecyclerView, Int, Int> { rv, dx, dy ->
-            logw("dx -> $dx dy -> $dy")
+//            logw("dx -> $dx dy -> $dy")
         }
 
 

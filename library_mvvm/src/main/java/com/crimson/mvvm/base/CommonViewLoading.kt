@@ -4,6 +4,7 @@ import android.content.Context
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.contains
+import com.crimson.mvvm.config.AppConfigOptions
 import com.crimson.mvvm.rx.bus.RxBus
 import com.crimson.mvvm.rx.bus.RxCode
 import com.crimson.widget.loading.EmptyLayout
@@ -21,6 +22,9 @@ class CommonViewLoading(context: Context) : IViewDataLoading {
 
     private val loadingView by lazy {
         LoadingLayout(context)
+            .setProgressViewAttrs(AppConfigOptions.LOADING_LAYOUT_CONFIG.progressConfig)
+            .setTextViewAttrs(AppConfigOptions.LOADING_LAYOUT_CONFIG.textViewConfig)
+
     }
 
     private val loadingDialog by lazy {

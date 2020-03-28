@@ -13,7 +13,7 @@ import androidx.databinding.BindingAdapter
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import com.crimson.mvvm.binding.consumer.BindConsumer
-import com.crimson.mvvm.ext.dp2px
+import com.crimson.mvvm.ext.view.dp2px
 import com.crimson.mvvm.rx.observeOnMainThread
 import com.jakewharton.rxbinding3.view.clicks
 import com.jakewharton.rxbinding3.view.longClicks
@@ -33,20 +33,26 @@ import java.util.concurrent.TimeUnit
 /**
  * bind click
  * bindClick：绑定点击
- * clickDuration：点击事件间隔
+ * clickDuration：下次点击事件间隔
  */
-@BindingAdapter("app:bindClick", "app:clickDuration", requireAll = false)
-fun View.bindClick(clickConsumer: BindConsumer<Unit?>?, duration: Long = 500) {
-    clickConsumer?.apply {
-        (context as? LifecycleOwner)?.let { owner ->
-            clicks()
-                .throttleLast(duration, TimeUnit.MILLISECONDS)
-                .bindUntilEvent(owner, Lifecycle.Event.ON_DESTROY)
-                .observeOnMainThread()
-                .subscribe {
-                    accept(it)
-                }
-        }
+@BindingAdapter("app:bindClick", "app:clickDuration", "app:bindClickError", requireAll = false)
+fun View.bindClick(
+    clickConsumer: BindConsumer<Unit?>?,
+    duration: Long = 500,
+    clickErrorConsumer: BindConsumer<Throwable>?=null
+) {
+
+    (context as? LifecycleOwner)?.let { owner ->
+        clicks()
+            .throttleLast(duration, TimeUnit.MILLISECONDS)
+            .bindUntilEvent(owner, Lifecycle.Event.ON_DESTROY)
+            .observeOnMainThread()
+            .subscribe({
+                clickConsumer?.accept(it)
+            }, {
+                clickErrorConsumer?.accept(it)
+            })
+
     }
 
 }
@@ -55,18 +61,22 @@ fun View.bindClick(clickConsumer: BindConsumer<Unit?>?, duration: Long = 500) {
  * bind long click
  * bindLongClick：绑定长按点击
  */
-@BindingAdapter("app:bindLongClick")
-fun View.bindLongClick(clickConsumer: BindConsumer<Unit?>?) {
-    clickConsumer?.apply {
-        (context as? LifecycleOwner)?.let { owner ->
-            longClicks()
-                .observeOnMainThread()
-                .bindUntilEvent(owner,Lifecycle.Event.ON_DESTROY)
-                .subscribe {
-                    accept(it)
+@BindingAdapter("app:bindLongClick", "app:bindLongClickError", requireAll = false)
+fun View.bindLongClick(
+    clickConsumer: BindConsumer<Unit?>?,
+    clickErrorConsumer: BindConsumer<Throwable>?=null
+) {
+    (context as? LifecycleOwner)?.let { owner ->
+        longClicks()
+            .observeOnMainThread()
+            .bindUntilEvent(owner, Lifecycle.Event.ON_DESTROY)
+            .subscribe(
+                {
+                    clickConsumer?.accept(it)
+                }, {
+                    clickErrorConsumer?.accept(it)
                 }
-
-        }
+            )
 
     }
 
@@ -108,9 +118,8 @@ fun View.onGlobalLayout(globalLayoutConsumer: BindConsumer<Unit>?) {
 }
 
 /**
- * 设置简单背景shape 和stroke
- * 可xml设置一些简单的shape和stroke
- * 如果想设置更复杂背景 详见 DrawableExt
+ * 设置背景shape 和stroke
+ *
  */
 @BindingAdapter(
     "app:bg_bgColor",
@@ -155,8 +164,6 @@ fun View.bindBackGroundShape(
         setBackgroundDrawable(bg)
     }
 }
-
-
 
 
 

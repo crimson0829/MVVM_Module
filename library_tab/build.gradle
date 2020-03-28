@@ -1,13 +1,13 @@
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
+
 android {
     compileSdkVersion 29
     buildToolsVersion "29.0.2"
 
-
     defaultConfig {
-        minSdkVersion 21
+        minSdkVersion 16
         targetSdkVersion 29
         versionCode 1
         versionName "1.0"
@@ -25,6 +25,7 @@ android {
         jvmTarget = JavaVersion.VERSION_1_8.toString()
     }
 
+
     buildTypes {
         release {
             minifyEnabled false
@@ -39,16 +40,7 @@ dependencies {
     api rootProject.ext.dependencies["kotlin-jdk8"]
     api rootProject.ext.dependencies["androidx-appcompat"]
     api rootProject.ext.dependencies["androidx-core"]
-
-    //view
-    api rootProject.ext.dependencies["brvah"]
-    api rootProject.ext.dependencies["SmartRefresh"]
-    api rootProject.ext.dependencies["autosize"]
-    api rootProject.ext.dependencies["dialogs-core"]
-    api rootProject.ext.dependencies["dialogs-bottomsheets"]
-    api rootProject.ext.dependencies["dialogs-lifecycle"]
-    api project(":library_tab")
-
+    api rootProject.ext.dependencies["androidx-viewpager2"]
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'

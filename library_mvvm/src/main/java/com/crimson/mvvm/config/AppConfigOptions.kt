@@ -13,6 +13,8 @@ import com.crimson.mvvm.ext.logd
 import com.crimson.mvvm.net.NetworkClient
 import com.crimson.mvvm.utils.FileUtils
 import com.crimson.mvvm.utils.constant.MemoryConstants
+import com.crimson.widget.loading.LoadingLayoutProgressViewAttrs
+import com.crimson.widget.loading.LoadingLayoutTextViewAttrs
 import com.scwang.smartrefresh.layout.SmartRefreshLayout
 import com.scwang.smartrefresh.layout.footer.ClassicsFooter
 import com.scwang.smartrefresh.layout.header.ClassicsHeader
@@ -53,6 +55,11 @@ class AppConfigOptions(val context: Context) {
          * app toast 参数设置
          */
         var TOAST_CONFIG = ToastConfig()
+
+        /**
+         * loadingLayout 参数设置
+         */
+        var LOADING_LAYOUT_CONFIG = LoadingLayoutConfig()
 
         /**
          * 默认图片缓存路径
@@ -152,6 +159,14 @@ class AppConfigOptions(val context: Context) {
         TOAST_CONFIG = config
         return this
 
+    }
+
+    /**
+     * loadingLayout参数设置,只有在这只默认CommonViewLoading实现时才有效果
+     */
+    fun buildLoadingLayout(config: LoadingLayoutConfig = LoadingLayoutConfig()): AppConfigOptions {
+        LOADING_LAYOUT_CONFIG = config
+        return this
     }
 
 
@@ -328,6 +343,14 @@ data class ToastConfig(
     var textSize: Float = 15f,
     //背景色
     var bgColor: Int = Color.WHITE
+)
+
+/**
+ * LoadingLayoutConfig
+ */
+data class LoadingLayoutConfig(
+    var progressConfig: LoadingLayoutProgressViewAttrs = LoadingLayoutProgressViewAttrs(),
+    var textViewConfig: LoadingLayoutTextViewAttrs = LoadingLayoutTextViewAttrs()
 )
 
 /**
