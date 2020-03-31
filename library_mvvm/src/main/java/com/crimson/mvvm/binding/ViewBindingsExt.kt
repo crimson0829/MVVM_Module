@@ -131,8 +131,8 @@ fun View.onGlobalLayout(globalLayoutConsumer: BindConsumer<Unit>?) {
 fun View.bindBackGroundShape(
     bgColor: Int = Color.BLACK,
     cornerRadius: Int = 0,
-    strokeWidth: Int = 0,
-    strokeColor: Int = Color.TRANSPARENT
+    strokeColor: Int = Color.TRANSPARENT,
+    strokeWidth: Int = 0
 ) {
 
     val bgColorInt = Color.argb(
