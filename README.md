@@ -2,7 +2,7 @@
 
 ## 介绍
 
-以MVVM模式为基础的快速集成组件,整合了大量优秀开源项目构建。
+以MVVM模式为基础的快速集成组件，整合了大量优秀开源项目构建。
 
 ## 特点
 
@@ -10,11 +10,11 @@
 * 支持AndroidX库，集成了AndroidX库下的一些常用组件，如RecyclerView,ViewPager2等
 * 提供了Base类(BaseActivity、BaseFragment、BaseViewModel等)统一封装，绑定生命周期，快速进行页面开发
 * 对LiveData，协程，RxJava进行了扩展，使用更方便
-* 使用Koin容器注入对象,可提供任何对象的依赖注入
+* 使用Koin容器注入对象，可提供任何对象的依赖注入
 * 扩展函数结合DataBinding，使DataBinding使用更方便
 * Retrofit封装和扩展，网络请求更方便，提供了协程和RxJava两种方式获取数据方式并通过LiveData处理数据更容易
 * RxBus全局处理事件
-* 提供全局的Activity,Fragment生命周期管理，提供App统一配置方案
+* 提供全局的Activity，Fragment生命周期管理，提供App统一配置方案
 * 提供了简单易用的扩展函数和工具类
 
 
