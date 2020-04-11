@@ -549,40 +549,6 @@ ViewModel:
 
 ```
 
-2.3.8 FlycoTabLayout 监听绑定：
-
-```
-
-/**
- * tabTitles：设置标题
- * tabSelectChanged：标题选中监听
- */
- <com.flyco.tablayout.CommonTabLayout
-     android:id="@+id/tab_layout"
-     android:layout_width="match_parent"
-     android:layout_height="50dp"
-     android:background="@color/colorWhite"
-     app:tabSelectChanged="@{viewModel.tabSelectChanged}"
-     app:tabTitles="@{viewModel.titles}"
-     app:tl_indicator_color="@color/colorPrimary"
-     app:tl_indicator_corner_radius="2dp"
-     app:tl_indicator_height="4dp"
-     app:tl_indicator_width="20dp"
-     app:tl_tab_space_equal="true"
-     app:tl_textBold="SELECT"
-     app:tl_textSelectColor="@color/colorPrimary"
-     app:tl_textUnselectColor="@color/colorText"
-     app:tl_textsize="17sp"
-     app:tl_underline_color="@color/divideLine"
-     app:tl_underline_gravity="BOTTOM"
-     app:tl_underline_height="1px" />
-     
- //viewModel中绑定
-   val titles = listOf("标题1", "标题2", "标题3")
-   val tabSelectChanged = bindConsumer<Int> {}
-
-```
-
 
 3.1 网络请求：使用
 
