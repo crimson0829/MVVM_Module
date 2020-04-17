@@ -140,6 +140,22 @@ fun TextView.cancelLine() {
     paint.flags = 0
 }
 
+/**
+ * 设置跑马灯
+ */
+@BindingAdapter("app:textMarqueeEnable")
+fun TextView.setMarqueeEnable(enable: Boolean) {
+    ellipsize = if (enable) {
+        TextUtils.TruncateAt.MARQUEE
+    } else {
+        TextUtils.TruncateAt.END
+    }
+    setSingleLine()
+    isSelected = enable
+    onWindowFocusChanged(enable)
+}
+
+
 
 /**
  * Removes the bolding of a text view

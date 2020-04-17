@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.MenuItem
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
+import androidx.recyclerview.widget.RecyclerView
 import com.crimson.mvvm.base.BaseActivity
 import com.crimson.mvvm.base.BaseViewModel
 import com.crimson.mvvm.binding.adapter.ViewPager2FragmentAdapter
@@ -91,6 +92,8 @@ class TabActivity : BaseActivity<ActivityTabBinding, TabViewModel>() {
         vm?.tabDataCompleteLD?.observe(this, Observer {
 
             tab_layout.bindViewPager2(view_pager,this,vm?.fragments,it)
+
+            (view_pager.getChildAt(0) as? RecyclerView)?.setItemViewCacheSize(vm?.fragments?.size?:4)
 
         })
 

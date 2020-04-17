@@ -7,5 +7,11 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
 
+    <application>
+
+        <meta-data
+            android:name="com.crimson.mvvm.net.glide.AppGlideOptions"
+            android:value="appGlide" />
+    </application>
 
 </manifest>

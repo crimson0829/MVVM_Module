@@ -416,6 +416,9 @@ class AdvancedTabLayout @JvmOverloads constructor(
                     tvTabTitle.paint.isFakeBoldText = true
                 } else if (mTextBold == TEXT_BOLD_NONE) {
                     tvTabTitle.paint.isFakeBoldText = false
+                }else if (mTextBold== TEXT_BOLD_WHEN_SELECT){
+                    tvTabTitle.paint.isFakeBoldText = i==mCurrentTab
+
                 }
             }
         }

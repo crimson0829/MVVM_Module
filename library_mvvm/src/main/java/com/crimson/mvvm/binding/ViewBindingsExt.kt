@@ -15,6 +15,8 @@ import androidx.lifecycle.LifecycleOwner
 import com.crimson.mvvm.binding.consumer.BindConsumer
 import com.crimson.mvvm.ext.view.dp2px
 import com.crimson.mvvm.rx.observeOnMainThread
+import com.crimson.mvvm.utils.AntiShakeUtils
+import com.crimson.mvvm.utils.RoomUtils
 import com.jakewharton.rxbinding3.view.clicks
 import com.jakewharton.rxbinding3.view.longClicks
 import com.trello.rxlifecycle3.android.lifecycle.kotlin.bindUntilEvent
@@ -42,18 +44,31 @@ fun View.bindClick(
     clickErrorConsumer: BindConsumer<Throwable>?=null
 ) {
 
-    (context as? LifecycleOwner)?.let { owner ->
-        clicks()
-            .throttleLast(duration, TimeUnit.MILLISECONDS)
-            .bindUntilEvent(owner, Lifecycle.Event.ON_DESTROY)
-            .observeOnMainThread()
-            .subscribe({
-                clickConsumer?.accept(it)
-            }, {
-                clickErrorConsumer?.accept(it)
-            })
+    if (RoomUtils.isOppo) {
+        //oppo手机如果调用了rxbinding3->throttleLast那么就一直会后台gc，导致app一到后台就有大概率被杀死，需判断
+        setOnClickListener {
+            if (AntiShakeUtils.isInvalidClick(this, 500)) {
+                return@setOnClickListener
+            }
+            clickConsumer?.accept(null)
+        }
+    } else {
+        (context as? LifecycleOwner)?.let { owner ->
 
+            clicks()
+                .throttleLast(duration, TimeUnit.MILLISECONDS)
+                .bindUntilEvent(owner, Lifecycle.Event.ON_DESTROY)
+                .observeOnMainThread()
+                .subscribe({
+                    clickConsumer?.accept(it)
+                }, {
+                    clickErrorConsumer?.accept(it)
+                })
+
+
+        }
     }
+
 
 }
 

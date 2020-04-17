@@ -1,6 +1,5 @@
 package com.crimson.mvvm.binding
 
-import android.app.Activity
 import android.graphics.Bitmap
 import android.graphics.drawable.Drawable
 import android.graphics.drawable.Icon
