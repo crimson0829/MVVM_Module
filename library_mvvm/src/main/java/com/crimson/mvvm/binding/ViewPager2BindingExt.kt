@@ -9,6 +9,7 @@ import androidx.viewpager2.widget.ViewPager2
 import com.chad.library.adapter.base.viewholder.BaseViewHolder
 import com.crimson.mvvm.binding.consumer.BindConsumer
 import com.crimson.mvvm.binding.consumer.BindTiConsumer
+import com.crimson.mvvm.binding.transformer.ViewPager2AlphaTransformer
 import com.crimson.mvvm.binding.transformer.ViewPager2DepthTransformer
 import com.crimson.mvvm.binding.transformer.ViewPager2ScaleTransformer
 import com.crimson.mvvm.binding.transformer.ViewPager2ZoomOutTransformer
@@ -87,6 +88,8 @@ fun ViewPager2.bindAdapter(
             2 -> compositePageTransformer.addTransformer(ViewPager2DepthTransformer())
             //ZoomOut
             3 -> compositePageTransformer.addTransformer(ViewPager2ZoomOutTransformer())
+            //alpga
+            4 -> compositePageTransformer.addTransformer(ViewPager2AlphaTransformer())
 
         }
 

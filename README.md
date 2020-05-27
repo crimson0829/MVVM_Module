@@ -35,7 +35,7 @@ dataBinding {
 ```
 dependencies {
       
-     implementation 'com.github.crimson0829.MVVM_Module:library_mvvm:1.1.9'
+     implementation 'com.github.crimson0829.MVVM_Module:library_mvvm:1.2.1'
     
 }
 ```
@@ -372,7 +372,18 @@ ViewModel:
 ```
 在adapter中设置:
  ```
-  helper.getBinding<AdapterItemArticleBinding>()?.model = item
+  class ArticleAdapter : BaseBindingAdapter<ArticleEntity, AdapterItemArticleBinding>
+      (R.layout.adapter_item_article) {
+  
+      override fun convert(holder: BaseViewHolder, item: ArticleEntity?) {
+  
+          //bind model
+          getDataBinding(holder)?.model=item
+          
+      }
+  
+  
+  }
  ```
  
  2.3 DataBinding扩展函数：提供了Glide，RecyclerView，ViewPager2，SmartRefreshLayout等绑定函数，方便扩展xml和控件调用；

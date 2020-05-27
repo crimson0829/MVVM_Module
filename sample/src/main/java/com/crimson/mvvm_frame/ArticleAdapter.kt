@@ -13,11 +13,12 @@ import com.crimson.mvvm_frame.model.kdo.ArticleEntity
 class ArticleAdapter : BaseBindingAdapter<ArticleEntity, AdapterItemArticleBinding>
     (R.layout.adapter_item_article) {
 
-    override fun convert(helper: BaseViewHolder, item: ArticleEntity?) {
-        helper.getBinding<AdapterItemArticleBinding>()?.model = item
-        super.convert(helper, item)
+    override fun convert(holder: BaseViewHolder, item: ArticleEntity?) {
+
+        getDataBinding(holder)?.model=item
 
     }
+
 
 
 }

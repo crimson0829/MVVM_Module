@@ -9,9 +9,8 @@ import java.lang.Math.abs
  * @date   2020-01-20
  * viewPager2 DepthTransformer
  */
-class ViewPager2DepthTransformer :ViewPager2.PageTransformer{
+class ViewPager2DepthTransformer(val minScale: Float = 0.75f) : ViewPager2.PageTransformer {
 
-    private val MIN_SCALE = 0.75f
 
     override fun transformPage(view: View, position: Float) {
         view.apply {
@@ -39,7 +38,7 @@ class ViewPager2DepthTransformer :ViewPager2.PageTransformer{
                     translationZ = -1f
 
                     // Scale the page down (between MIN_SCALE and 1)
-                    val scaleFactor = (MIN_SCALE + (1 - MIN_SCALE) * (1 - abs(position)))
+                    val scaleFactor = (minScale + (1 - minScale) * (1 - abs(position)))
                     scaleX = scaleFactor
                     scaleY = scaleFactor
                 }

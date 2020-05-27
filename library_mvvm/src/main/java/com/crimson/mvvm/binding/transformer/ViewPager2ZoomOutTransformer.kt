@@ -10,10 +10,8 @@ import kotlin.math.max
  * @date   2020-01-20
  * viewPager2 ZoomOutTransformer
  */
-class ViewPager2ZoomOutTransformer :ViewPager2.PageTransformer{
+class ViewPager2ZoomOutTransformer(val minScale:Float = 0.85f, val minAlpha:Float = 0.5f) :ViewPager2.PageTransformer{
 
-    private val MIN_SCALE = 0.85f
-    private val MIN_ALPHA = 0.5f
 
     override fun transformPage(view: View, position: Float) {
         view.apply {
@@ -26,7 +24,7 @@ class ViewPager2ZoomOutTransformer :ViewPager2.PageTransformer{
                 }
                 position <= 1 -> { // [-1,1]
                     // Modify the default slide transition to shrink the page as well
-                    val scaleFactor = max(MIN_SCALE, 1 - abs(position))
+                    val scaleFactor = max(minScale, 1 - abs(position))
                     val vertMargin = pageHeight * (1 - scaleFactor) / 2
                     val horzMargin = pageWidth * (1 - scaleFactor) / 2
                     translationX = if (position < 0) {
@@ -40,8 +38,8 @@ class ViewPager2ZoomOutTransformer :ViewPager2.PageTransformer{
                     scaleY = scaleFactor
 
                     // Fade the page relative to its size.
-                    alpha = (MIN_ALPHA +
-                            (((scaleFactor - MIN_SCALE) / (1 - MIN_SCALE)) * (1 - MIN_ALPHA)))
+                    alpha = (minAlpha +
+                            (((scaleFactor - minScale) / (1 - minScale)) * (1 - minAlpha)))
                 }
                 else -> { // (1,+Infinity]
                     // This page is way off-screen to the right.

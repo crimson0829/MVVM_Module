@@ -26,12 +26,12 @@ import com.crimson.mvvm.binding.recyclerview.LineManagers
     "app:rv_bindScrolled",
     requireAll = false
 )
-fun RecyclerView.bindAdapter(
+fun  RecyclerView.bindAdapter(
     adapter: RecyclerView.Adapter<BaseViewHolder>?,
     layoutManager: LayoutManagers.LayoutManagerFactory?,
     lineManager: LineManagers.LineManagerFactory? = null,
-    scrollStateChangedConsumer: BindBiConsumer<RecyclerView,Int>? = null,
-    scrolledConsumer: BindTiConsumer<RecyclerView,Int, Int>? = null
+    scrollStateChangedConsumer: BindBiConsumer<RecyclerView, Int>? = null,
+    scrolledConsumer: BindTiConsumer<RecyclerView, Int, Int>? = null
 ) {
 
     adapter?.let {
@@ -51,7 +51,7 @@ fun RecyclerView.bindAdapter(
             override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
                 super.onScrollStateChanged(recyclerView, newState)
                 scrollStateChangedConsumer?.apply {
-                    accept(recyclerView,newState)
+                    accept(recyclerView, newState)
                 }
 
             }
@@ -59,7 +59,7 @@ fun RecyclerView.bindAdapter(
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 super.onScrolled(recyclerView, dx, dy)
                 scrolledConsumer?.apply {
-                    accept(recyclerView,dx, dy)
+                    accept(recyclerView, dx, dy)
                 }
             }
         })

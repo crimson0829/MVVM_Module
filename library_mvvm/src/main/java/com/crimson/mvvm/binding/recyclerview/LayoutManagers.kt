@@ -5,6 +5,9 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
+import com.crimson.mvvm.binding.recyclerview.bugfix.BugFixGridLayoutManager
+import com.crimson.mvvm.binding.recyclerview.bugfix.BugFixLinearLayoutManager
+import com.crimson.mvvm.binding.recyclerview.bugfix.BugFixStaggeredGridLayoutManager
 
 /**
  * A collection of factories to create RecyclerView LayoutManagers so that you can easily set them
@@ -18,7 +21,7 @@ object LayoutManagers {
     fun linear(): LayoutManagerFactory {
         return object : LayoutManagerFactory {
             override fun create(recyclerView: RecyclerView): RecyclerView.LayoutManager {
-                return LinearLayoutManager(recyclerView.context)
+                return BugFixLinearLayoutManager(recyclerView.context)
             }
         }
     }
@@ -30,7 +33,7 @@ object LayoutManagers {
     fun linear(@Orientation orientation: Int, reverseLayout: Boolean): LayoutManagerFactory {
         return object : LayoutManagerFactory {
             override fun create(recyclerView: RecyclerView): RecyclerView.LayoutManager {
-                return LinearLayoutManager(recyclerView.context, orientation, reverseLayout)
+                return BugFixLinearLayoutManager(recyclerView.context, orientation, reverseLayout)
             }
         }
     }
@@ -42,7 +45,7 @@ object LayoutManagers {
     fun grid(spanCount: Int): LayoutManagerFactory {
         return object : LayoutManagerFactory {
             override fun create(recyclerView: RecyclerView): RecyclerView.LayoutManager {
-                return GridLayoutManager(recyclerView.context, spanCount)
+                return BugFixGridLayoutManager(recyclerView.context, spanCount)
             }
         }
     }
@@ -57,7 +60,7 @@ object LayoutManagers {
     ): LayoutManagerFactory {
         return object : LayoutManagerFactory {
             override fun create(recyclerView: RecyclerView): RecyclerView.LayoutManager {
-                return GridLayoutManager(
+                return BugFixGridLayoutManager(
                     recyclerView.context,
                     spanCount,
                     orientation,
@@ -74,7 +77,7 @@ object LayoutManagers {
     fun staggeredGrid(spanCount: Int, @Orientation orientation: Int): LayoutManagerFactory {
         return object : LayoutManagerFactory {
             override fun create(recyclerView: RecyclerView): RecyclerView.LayoutManager {
-                return StaggeredGridLayoutManager(spanCount, orientation)
+                return BugFixStaggeredGridLayoutManager(spanCount, orientation)
             }
         }
     }

@@ -1,5 +1,6 @@
 package com.crimson.mvvm_frame
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.MenuItem
 import androidx.fragment.app.Fragment
@@ -91,9 +92,11 @@ class TabActivity : BaseActivity<ActivityTabBinding, TabViewModel>() {
 
         vm?.tabDataCompleteLD?.observe(this, Observer {
 
-            tab_layout.bindViewPager2(view_pager,this,vm?.fragments,it)
+            tab_layout.bindViewPager2(view_pager, this, vm?.fragments, it)
 
-            (view_pager.getChildAt(0) as? RecyclerView)?.setItemViewCacheSize(vm?.fragments?.size?:4)
+            (view_pager.getChildAt(0) as? RecyclerView)?.setItemViewCacheSize(
+                vm?.fragments?.size ?: 4
+            )
 
         })
 
@@ -117,8 +120,6 @@ class TabViewModel : BaseViewModel() {
 
     val fragments = arrayListOf<Fragment>()
 
-    var errorDis: Disposable? = null
-
 
     val tabSelectChanged = bindConsumer<Int> {
         logw("tabSelectChanged -> $this")
@@ -127,15 +128,15 @@ class TabViewModel : BaseViewModel() {
 
 
     val vp2SelectedConsumer =
-            bindConsumer<Int> {
+        bindConsumer<Int> {
 
-                logw("vp2page -> $this")
-            }
+            logw("vp2page -> $this")
+        }
 
     val vp2ScrolledConsumer =
-            bindTiConsumer<Int, Float, Int> { t1, t2, t3 ->
-                logw("vp2pos -> $t1 positionOffset->$t2 positionOffsetPixels -> $t3")
-            }
+        bindTiConsumer<Int, Float, Int> { t1, t2, t3 ->
+            logw("vp2pos -> $t1 positionOffset->$t2 positionOffsetPixels -> $t3")
+        }
 
 
     /**
@@ -151,37 +152,37 @@ class TabViewModel : BaseViewModel() {
         callRemoteLiveDataAsync {
             model.getData()
         }
-                //观察livedata
-                ?.observe(lifecycleOwner, Observer {
+            //观察livedata
+            ?.observe(lifecycleOwner, Observer {
 
-                    //LiveData.handle() 扩展
-                    it.handle({
-                        //when loading
-                        onLoadingViewInjectToRoot()
+                //LiveData.handle() 扩展
+                it.handle({
+                    //when loading
+                    onLoadingViewInjectToRoot()
 
-                    }, {
-                        //result empty
-                        onLoadingViewResult()
+                }, {
+                    //result empty
+                    onLoadingViewResult()
 
-                    }, {
-                        //result error 可做错误处理
-                        toast("网络错误")
-                        onLoadingError()
+                }, {
+                    //result error 可做错误处理
+                    toast("网络错误")
+                    onLoadingError()
 
-                    }, { _, responseCode ->
+                }, { _, responseCode ->
 
-                        //result remote error,可根据responseCode做错误提示
-                        errorResponseCode(responseCode)
-                        onLoadingError()
+                    //result remote error,可根据responseCode做错误提示
+                    errorResponseCode(responseCode)
+                    onLoadingError()
 
-                    }, {
-                        //result success
-                        onLoadingViewResult()
-                        ioCoroutineGlobal {
-                            handleData(this)
-                        }
-                    })
+                }, {
+                    //result success
+                    onLoadingViewResult()
+                    ioCoroutineGlobal {
+                        handleData(this)
+                    }
                 })
+            })
 
 
     }
@@ -203,24 +204,20 @@ class TabViewModel : BaseViewModel() {
         tabDataCompleteLD.postValue(titles)
     }
 
+    @SuppressLint("CheckResult")
     override fun registerRxBus() {
 
-        errorDis = rxbus.toObservable(RxCode.POST_CODE, Integer::class.java)
-                .subscribe {
-                    if (it.toInt() == RxCode.ERROR_LAYOUT_CLICK_CODE) {
-                        getData()
-                    }
+        rxbus.toObservable(RxCode.POST_CODE, Integer::class.java)
+            .bindToLifecycle(lifecycleOwner)
+            .subscribe {
+                if (it.toInt() == RxCode.ERROR_LAYOUT_CLICK_CODE) {
+                    getData()
                 }
+            }
 
-        RxDisposable.add(errorDis)
-
-
-    }
-
-    override fun removeRxBus() {
-        RxDisposable.remove(errorDis)
 
     }
+
 
 }
 

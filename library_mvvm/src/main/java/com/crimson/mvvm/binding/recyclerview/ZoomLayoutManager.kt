@@ -3,13 +3,14 @@ package com.crimson.mvvm.binding.recyclerview
 import android.content.Context
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.crimson.mvvm.binding.recyclerview.bugfix.BugFixLinearLayoutManager
 import kotlin.math.abs
 
 
 /**
  * Zoom LayoutManager
  */
-class ZoomLayoutManager : LinearLayoutManager {
+class ZoomLayoutManager : BugFixLinearLayoutManager {
 
     private val shrinkAmount = 0.15f
     private val shrinkDistance = 0.9f

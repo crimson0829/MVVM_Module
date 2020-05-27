@@ -10,9 +10,9 @@ import kotlin.math.abs
  * @date   2020-01-08
  * viewPager2 ScaleTransformer
  */
-class ViewPager2ScaleTransformer : ViewPager2.PageTransformer {
+class ViewPager2ScaleTransformer(val minScale: Float = 0.85f, val defaultCenter: Float = 0.5f) :
+    ViewPager2.PageTransformer {
 
-    private val mMinScale = DEFAULT_MIN_SCALE
 
     override fun transformPage(view: View, position: Float) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -24,31 +24,27 @@ class ViewPager2ScaleTransformer : ViewPager2.PageTransformer {
         view.pivotY = (pageHeight / 2).toFloat()
         view.pivotX = (pageWidth / 2).toFloat()
         if (position < -1) {
-            view.scaleX = mMinScale
-            view.scaleY = mMinScale
+            view.scaleX = minScale
+            view.scaleY = minScale
             view.pivotX = pageWidth.toFloat()
         } else if (position <= 1) {
             if (position < 0) {
-                val scaleFactor = (1 + position) * (1 - mMinScale) + mMinScale
+                val scaleFactor = (1 + position) * (1 - minScale) + minScale
                 view.scaleX = scaleFactor
                 view.scaleY = scaleFactor
-                view.pivotX = pageWidth * (DEFAULT_CENTER + DEFAULT_CENTER * -position)
+                view.pivotX = pageWidth * (defaultCenter + defaultCenter * -position)
             } else {
-                val scaleFactor = (1 - position) * (1 - mMinScale) + mMinScale
+                val scaleFactor = (1 - position) * (1 - minScale) + minScale
                 view.scaleX = scaleFactor
                 view.scaleY = scaleFactor
-                view.pivotX = pageWidth * ((1 - position) * DEFAULT_CENTER)
+                view.pivotX = pageWidth * ((1 - position) * defaultCenter)
             }
         } else {
             view.pivotX = 0f
-            view.scaleX = mMinScale
-            view.scaleY = mMinScale
+            view.scaleX = minScale
+            view.scaleY = minScale
         }
     }
 
-    companion object {
 
-        const val DEFAULT_MIN_SCALE = 0.85f
-        const val DEFAULT_CENTER = 0.5f
-    }
 }

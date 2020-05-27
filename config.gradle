@@ -6,8 +6,8 @@ ext {
             minSdkVersion    : 16,
             devSdkVersion    : 21,
             targetSdkVersion : 29,
-            versionCode      : 18,
-            versionName      : '1.1.8',
+            versionCode      : 21,
+            versionName      : '1.2.1',
             applicationId    : 'com.crimson.mvvm_frame'
     ]
 
@@ -15,13 +15,13 @@ ext {
     version = [
 
             //kotlin库
-            coroutines_version      : "1.3.3",
+            coroutines_version      : "1.3.7",
             rx2kotlin_version       : "2.4.0",
-            koin_version            : "2.0.1",
+            koin_version            : "2.1.5",
 
             //androidx
             androidx_coreVersion    : "1.2.0",
-            androidx_compatVersion  : "1.2.0-alpha03",
+            androidx_compatVersion  : "1.2.0-rc01",
             androidx_activityVersion: "1.1.0",
             androidx_fragmentVersion: "1.2.3",
             recyclerViewVersion     : "1.1.0",
@@ -32,7 +32,7 @@ ext {
             lifecycleArchVersion    : "2.2.0",
 
             //design
-            googleMaterialVersion   : "1.2.0-alpha05",
+            googleMaterialVersion   : "1.2.0-alpha06",
 
             //rxJava & network & db
             rxjava2Version          : "2.2.16",
@@ -48,9 +48,9 @@ ext {
             gsonVersion             : "2.8.6",
 
             //view
-            brvahVersion            : "3.0.1",
-            smartRefreshVersion     : "1.1.0",
-            autoSizeVersion         : "1.1.2",
+            brvahVersion            : "3.0.4",
+            smartRefreshVersion     : "1.1.2",
+            autoSizeVersion         : "1.2.1",
             materialDialogsVersion  : "3.3.0",
 
 

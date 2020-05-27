@@ -193,6 +193,7 @@ fun TextView.font(font: String) {
 /**
  * Set different color for substring TextView.
  */
+@BindingAdapter("app:textSubstring","app:textSubstringColor",requireAll = true)
 fun TextView.setColorOfSubstring(
     substring: String,
     color: Int

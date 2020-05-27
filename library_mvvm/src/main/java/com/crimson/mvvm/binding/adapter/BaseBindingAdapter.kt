@@ -10,28 +10,31 @@ import com.chad.library.adapter.base.viewholder.BaseViewHolder
  *
  * recyclerView adapter dataBinding
  *
+ * 由于 RecyclerViewBindingExt 中adapter ViewHolder 不能是BaseDataBindingHolder
+ * (ERROR: Cannot find a setter for <androidx.recyclerview.widget.RecyclerView app:rv_adapter> that accepts parameter type 'com.crimson.mvvm_frame.ArticleAdapter');
+ * 所以为了绑定DataBinding 只能在这里做处理获取 DataBinding
+ *
  */
-open class BaseBindingAdapter<T, B : ViewDataBinding>
-@JvmOverloads constructor(@LayoutRes private val layoutResId: Int,
-                          data: MutableList<T?>? = null)
-    : BaseQuickAdapter<T?,BaseViewHolder>(layoutResId, data) {
+
+abstract class BaseBindingAdapter<T, B : ViewDataBinding>
+@JvmOverloads constructor(
+    @LayoutRes private val layoutResId: Int,
+    data: MutableList<T?>? = null
+) : BaseQuickAdapter<T?, BaseViewHolder>(layoutResId, data) {
 
 
     override fun onItemViewHolderCreated(
-        viewHolder: BaseViewHolder,
+        holder: BaseViewHolder,
         viewType: Int
-    ) { // 绑定 view
-        DataBindingUtil.bind<B>(viewHolder.itemView)
+    ) {
+        // 绑定 view
+        DataBindingUtil.bind<B>(holder.itemView)
     }
 
-    override fun convert(helper: BaseViewHolder, item: T?) {
-        if (item == null) {
-            return
-        }
-        // 获取 Binding
-        val binding = helper.getBinding<B>()
-        binding?.executePendingBindings()
-    }
+    /**
+     * 获取ViewBinding
+     */
+    fun getDataBinding(holder: BaseViewHolder) = DataBindingUtil.getBinding<B>(holder.itemView)
 
 
 }

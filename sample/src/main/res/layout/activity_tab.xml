@@ -47,7 +47,6 @@
             android:layout_height="match_parent"
             android:orientation="horizontal"
             app:vp2_bindPageScrolled="@{viewModel.vp2ScrolledConsumer}"
-            app:vp2_multiPagePadding="@{40}"
             app:vp2_transformerType="@{1}"
             app:vp2_bindPageSelected="@{viewModel.vp2SelectedConsumer}"
              />
