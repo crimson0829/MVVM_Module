@@ -74,7 +74,7 @@ class AppApplication : BaseApplication() {
     }
 
     /**
-     * 设置app_config，全局参数设置，包括状态栏设置，标题栏设置，加载视图设置，Retrofit设置,toast设置等
+     * 设置app_config，全局参数设置，包括状态栏设置，标题栏设置，加载视图设置，Retrofit设置，Glide，toast设置等
      * more config will be add
      */
     private fun appConfig() {
@@ -86,6 +86,7 @@ class AppApplication : BaseApplication() {
         //     Color.parseColor("#ffffff"),16f,true))
             .buildLoadingViewImplClass(CommonViewLoading::class.java)
             .buildRetrofit(RetrofitConfig(AndroidService.BASE_URL, 20))
+            .buildGlide(GlideConfig(true, 1.5f, 1.5f, 20, 20))
             .buildToast(ToastConfig(Color.YELLOW, 18f, Color.BLUE))
             .initDefaultSmartRefresh(SmartRefreshHeaderConfig(R.drawable.refresh_head_arrow))
             .initScreenAutoSize()

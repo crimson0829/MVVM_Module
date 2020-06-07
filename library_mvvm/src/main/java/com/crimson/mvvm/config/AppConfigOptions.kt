@@ -104,6 +104,12 @@ class AppConfigOptions(val context: Context) {
          */
         var APP_HTTP_CACHE_SIZE = 20L * MemoryConstants.MB
 
+        /**
+         * glide配置
+         */
+        var GLIDE_CONFIG = GlideConfig()
+
+
     }
 
     /**
@@ -151,6 +157,15 @@ class AppConfigOptions(val context: Context) {
             )
         return this
     }
+
+    /**
+     * 配置Glide
+     */
+    fun buildGlide(config: GlideConfig = GlideConfig()): AppConfigOptions {
+        GLIDE_CONFIG=config
+        return this
+    }
+
 
     /**
      * toas参数设置
@@ -331,6 +346,23 @@ data class RetrofitConfig(
     var showResponse: Boolean = true,
     var showRequest: Boolean = true,
     var headers: HashMap<String, String> = hashMapOf()
+)
+
+/**
+ * GlideConfig 配置 在@AppGlideOptions中配置
+ * needUseNetworkClientOkHttp:是否需要使用@NetworkClient构建的okhttp
+ * memoryCacheSizeFactor:内存大小因子，用于默认内存大小背书背
+ * bitmapPoolSizeFactor：图片池大小因子
+ * sourceExecutorThreadCount：资源线程池最大线程执行数 -1:Glide 默认sourceExecutor 线程数
+ * diskExecutorThreadCount：磁盘线程池最大线程执行数 -1:Glide 默认diskExecutor 线程数
+ *
+ */
+data class GlideConfig(
+    var needUseNetworkClientOkHttp: Boolean = true,
+    var memoryCacheSizeFactor: Float = 1.2f,
+    var bitmapPoolSizeFactor: Float = 1.2f,
+    var sourceExecutorThreadCount: Int = -1,
+    var diskExecutorThreadCount: Int = -1
 )
 
 /**

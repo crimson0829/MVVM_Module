@@ -36,6 +36,7 @@ class AppApplication : BaseApplication() {
 //                Color.parseColor("#ffffff"),16f,true))
             .buildLoadingViewImplClass(CommonViewLoading::class.java)
             .buildRetrofit(RetrofitConfig(AndroidService.BASE_URL, 20))
+            .buildGlide(GlideConfig(true, 1.5f, 1.5f, 20, 20))
             .buildToast(ToastConfig(Color.YELLOW, 18f, Color.BLUE))
             .buildLoadingLayout(
                 LoadingLayoutConfig(

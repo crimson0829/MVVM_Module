@@ -9,6 +9,7 @@ import android.view.Gravity
  */
 
 
+
 /**
  * Tab属性
  */
@@ -17,11 +18,13 @@ data class TabAttrs(
     var width: Int = -1,
     var space_equal: Boolean = false,
     var textsize: Int = 14,
+    var textSelectSize: Int = 18,
     var textSelectColor: Int = Color.parseColor("#ffffff"),
     var textUnselectColor: Int = Color.parseColor("#AAffffff"),
     var textBold: Int = 0,
     val textAllCaps: Boolean = false
 )
+
 
 /**
  * 指示器属性

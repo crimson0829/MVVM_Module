@@ -10,6 +10,7 @@ import androidx.annotation.DrawableRes
 import androidx.annotation.RequiresApi
 import androidx.databinding.BindingAdapter
 import com.bumptech.glide.Glide
+import com.bumptech.glide.Priority
 import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.engine.GlideException
@@ -30,6 +31,7 @@ import jp.wasabeef.glide.transformations.RoundedCornersTransformation
  * image_diskMemoryCache：本地缓存策略
  * imagePlaceholder：欲加载显示图片
  * imageError：加载错误显示图片
+ * imagePriority:请求优先级
  */
 @BindingAdapter(
     "app:imageUrl",
@@ -39,6 +41,7 @@ import jp.wasabeef.glide.transformations.RoundedCornersTransformation
     "app:image_diskMemoryCache",
     "app:imagePlaceholder",
     "app:imageError",
+    "app:imagePriority",
     "app:imageLoadSuc",
     "app:imageLoadFail",
     requireAll = false
@@ -51,6 +54,7 @@ fun ImageView.bindImage(
     diskMemoryCache: Int? = 1,
     @DrawableRes imagePlaceholder: Int = 0,
     @DrawableRes imageError: Int = 0,
+    priority: Int = 3,
     loadSucConsumer: BindConsumer<Drawable>? = null,
     loadFalConsumer: BindConsumer<GlideException>? = null
 
@@ -115,6 +119,16 @@ fun ImageView.bindImage(
         4 -> builder.diskCacheStrategy(DiskCacheStrategy.NONE)
         5 -> builder.diskCacheStrategy(DiskCacheStrategy.ALL)
         else -> builder.diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
+
+    }
+
+    when (priority) {
+
+        1 -> builder.priority(Priority.IMMEDIATE)
+        2 -> builder.priority(Priority.HIGH)
+        3 -> builder.priority(Priority.NORMAL)
+        4 -> builder.priority(Priority.LOW)
+        else -> builder.priority(Priority.NORMAL)
 
     }
 

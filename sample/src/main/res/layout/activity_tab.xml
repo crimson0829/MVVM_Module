@@ -32,6 +32,7 @@
             app:tl_indicator_height="4dp"
             app:tl_indicator_width="20dp"
             app:tl_tab_space_equal="false"
+            app:tl_textSelectSize="16sp"
             app:tl_textBold="SELECT"
             app:tl_textSelectColor="@color/colorPrimary"
             app:tl_textUnselectColor="@color/textGray"
