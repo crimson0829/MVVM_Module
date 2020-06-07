@@ -35,7 +35,7 @@ dataBinding {
 ```
 dependencies {
       
-     implementation 'com.github.crimson0829.MVVM_Module:library_mvvm:1.2.1'
+     implementation 'com.github.crimson0829.MVVM_Module:library_mvvm:1.2.2'
     
 }
 ```
