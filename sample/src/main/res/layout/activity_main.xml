@@ -37,6 +37,8 @@
             android:text="get a picture ^_^"
             app:bindClick="@{viewModel.onClickPictureBtn}" />
 
+
+
     </LinearLayout>
     
 
