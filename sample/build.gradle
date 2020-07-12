@@ -10,7 +10,7 @@ android {
     compileSdkVersion 29
     buildToolsVersion "29.0.2"
     defaultConfig {
-        applicationId "com.crimson.mvvm_frame"
+        applicationId "com.crimson.mvvm_frame8"
         minSdkVersion 21
         targetSdkVersion 29
         versionCode 21

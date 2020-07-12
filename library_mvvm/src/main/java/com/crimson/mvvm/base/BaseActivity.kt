@@ -10,6 +10,7 @@ import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.lifecycle.Observer
+import com.crimson.mvvm.R
 import com.crimson.mvvm.config.AppConfigOptions
 import com.crimson.mvvm.ext.isNotNull
 import com.crimson.mvvm.ext.isNull
@@ -50,7 +51,7 @@ abstract class BaseActivity<VB : ViewDataBinding, VM : BaseViewModel> : RxAppCom
      */
     private fun initViewBindingAndViewModel(savedInstanceState: Bundle?) {
 
-        vb = DataBindingUtil.setContentView(this, initContentView(savedInstanceState))
+        vb = DataBindingUtil.setContentView(this,initContentView(savedInstanceState))
         vm = initViewModel()
         if (vm.isNull) {
             val type: Type? = javaClass.genericSuperclass
@@ -78,7 +79,9 @@ abstract class BaseActivity<VB : ViewDataBinding, VM : BaseViewModel> : RxAppCom
             registerRxBus()
         }
 
+        vb?.executePendingBindings()
         initViewModelLiveDataObserver()
+
 
     }
 

@@ -36,50 +36,62 @@ import java.util.concurrent.TimeUnit
  * bind click
  * bindClick：绑定点击
  * clickDuration：下次点击事件间隔
+ * 注意：rxbinding3 会导致一直gc，消耗大量cpu资源，不建议使用
  */
-@BindingAdapter("app:bindClick", "app:clickDuration", "app:bindClickError", requireAll = false)
-fun View.bindClick(
+@BindingAdapter(
+    "app:bindClickRx",
+    "app:clickDurationRx",
+    "app:bindClickErrorRx",
+    requireAll = false
+)
+fun View.bindClickWithRx(
     clickConsumer: BindConsumer<Unit?>?,
     duration: Long = 500,
-    clickErrorConsumer: BindConsumer<Throwable>?=null
+    clickErrorConsumer: BindConsumer<Throwable>? = null
 ) {
 
-    if (RoomUtils.isOppo) {
-        //oppo手机如果调用了rxbinding3->throttleLast那么就一直会后台gc，导致app一到后台就有大概率被杀死，需判断
-        setOnClickListener {
-            if (AntiShakeUtils.isInvalidClick(this, 500)) {
-                return@setOnClickListener
-            }
-            clickConsumer?.accept(null)
-        }
-    } else {
-        (context as? LifecycleOwner)?.let { owner ->
-
-            clicks()
-                .throttleLast(duration, TimeUnit.MILLISECONDS)
-                .bindUntilEvent(owner, Lifecycle.Event.ON_DESTROY)
-                .observeOnMainThread()
-                .subscribe({
-                    clickConsumer?.accept(it)
-                }, {
-                    clickErrorConsumer?.accept(it)
-                })
+    (context as? LifecycleOwner)?.let { owner ->
+        clicks()
+            .throttleLast(duration, TimeUnit.MILLISECONDS)
+            .bindUntilEvent(owner, Lifecycle.Event.ON_DESTROY)
+            .observeOnMainThread()
+            .subscribe({
+                clickConsumer?.accept(it)
+            }, {
+                clickErrorConsumer?.accept(it)
+            })
 
 
-        }
     }
 
+
+}
+
+@BindingAdapter("app:bindClick", "app:clickDuration", requireAll = false)
+fun View.bindClick(
+    clickConsumer: BindConsumer<View?>?,
+    duration: Long = 0
+) {
+
+    setOnClickListener {
+
+        if (duration != 0L && AntiShakeUtils.isInvalidClick(this, 500)) {
+            return@setOnClickListener
+        }
+        clickConsumer?.accept(it)
+    }
 
 }
 
 /**
  * bind long click
  * bindLongClick：绑定长按点击
+ * rxbinding3 会导致一直gc，消耗大量cpu资源，不建议使用
  */
-@BindingAdapter("app:bindLongClick", "app:bindLongClickError", requireAll = false)
-fun View.bindLongClick(
+@BindingAdapter("app:bindLongClickRx", "app:bindLongClickErrorRx", requireAll = false)
+fun View.bindLongClickRx(
     clickConsumer: BindConsumer<Unit?>?,
-    clickErrorConsumer: BindConsumer<Throwable>?=null
+    clickErrorConsumer: BindConsumer<Throwable>? = null
 ) {
     (context as? LifecycleOwner)?.let { owner ->
         longClicks()
@@ -97,38 +109,47 @@ fun View.bindLongClick(
 
 }
 
+@BindingAdapter("app:bindLongClick")
+fun View.bindLongClick(
+    clickConsumer: BindConsumer<View?>?
+) {
+
+    setOnLongClickListener {
+        clickConsumer?.accept(it)
+        false
+
+    }
+
+}
+
 
 /**
  * 视图树绑定
  */
 @BindingAdapter("app:bindPreDraw")
 fun View.bindViewTreeObserver(preDrawConsumer: BindConsumer<Unit>?) {
-    preDrawConsumer?.apply {
-        viewTreeObserver.addOnPreDrawListener(object : ViewTreeObserver.OnPreDrawListener {
-            override fun onPreDraw(): Boolean {
-                viewTreeObserver.removeOnPreDrawListener(this)
-                preDrawConsumer.accept(null)
-                return true
-            }
-        })
-    }
+    viewTreeObserver.addOnPreDrawListener(object : ViewTreeObserver.OnPreDrawListener {
+        override fun onPreDraw(): Boolean {
+            viewTreeObserver.removeOnPreDrawListener(this)
+            preDrawConsumer?.accept(null)
+            return true
+        }
+    })
 
 }
 
 @BindingAdapter("app:bindGlobalLayout")
 fun View.onGlobalLayout(globalLayoutConsumer: BindConsumer<Unit>?) {
-    globalLayoutConsumer?.apply {
-        viewTreeObserver.addOnGlobalLayoutListener(object :
-            ViewTreeObserver.OnGlobalLayoutListener {
-            override fun onGlobalLayout() {
-                if (measuredWidth > 0 && measuredHeight > 0) {
-                    viewTreeObserver.removeOnGlobalLayoutListener(this)
-                    globalLayoutConsumer.accept(null)
+    viewTreeObserver.addOnGlobalLayoutListener(object :
+        ViewTreeObserver.OnGlobalLayoutListener {
+        override fun onGlobalLayout() {
+            if (measuredWidth > 0 && measuredHeight > 0) {
+                viewTreeObserver.removeOnGlobalLayoutListener(this)
+                globalLayoutConsumer?.accept(null)
 
-                }
             }
-        })
-    }
+        }
+    })
 
 }
 

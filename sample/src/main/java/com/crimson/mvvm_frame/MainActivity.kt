@@ -1,6 +1,8 @@
 package com.crimson.mvvm_frame
 
 import android.os.Bundle
+import android.util.Log
+import android.view.View
 import com.crimson.mvvm.base.BaseActivity
 import com.crimson.mvvm.base.BaseViewModel
 import com.crimson.mvvm.binding.consumer.bindConsumer
@@ -31,12 +33,12 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>() {
 class MainViewModel : BaseViewModel() {
 
 
-    val onClickListBtn = bindConsumer<Unit> {
+    val onClickListBtn = bindConsumer<View> {
         startActivity(TabActivity::class.java)
     }
 
 
-    val onClickPictureBtn = bindConsumer<Unit> {
+    val onClickPictureBtn = bindConsumer<View> {
         startActivity(PictureActivity::class.java)
 
     }

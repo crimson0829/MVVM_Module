@@ -542,7 +542,7 @@ ViewModel:
  android:layout_height="wrap_content" 
  app:bindClick="@{viewModel.viewClick}"
  app:clickDuration="@{200}"
- app:bindLongClick="@{viewMoedl.viewLongClick}"
+ app:bindLongClick="@{viewModel.viewLongClick}"
  />
 
 

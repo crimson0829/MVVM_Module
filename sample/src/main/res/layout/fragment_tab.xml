@@ -26,21 +26,16 @@
         app:srlEnableAutoLoadMore="true">
 
 
-        <RelativeLayout
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recycler_view"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:overScrollMode="never"
+            app:rv_adapter="@{viewModel.adapter}"
+            app:rv_lineManager="@{LineManagers.horizontal()}"
+            app:rv_bindScrolled="@{viewModel.bindScrollConsumer}"
+            app:rv_layoutManager="@{LayoutManagers.linear()}" />
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/recycler_view"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:overScrollMode="never"
-                app:rv_adapter="@{viewModel.adapter}"
-                app:rv_lineManager="@{LineManagers.horizontal()}"
-                app:rv_bindScrolled="@{viewModel.bindScrollConsumer}"
-                app:rv_layoutManager="@{LayoutManagers.linear()}" />
-
-        </RelativeLayout>
 
 
         <com.scwang.smartrefresh.layout.footer.ClassicsFooter
